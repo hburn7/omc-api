@@ -14,7 +14,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "fastify": "^5.5.0"
+    "fastify": "^5.5.0",
+    "osu-api-v2-js": "^2.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
