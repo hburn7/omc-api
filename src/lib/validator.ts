@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs';
+import type { Beatmap } from 'osu-api-v2-js';
 import { join } from 'path';
+import type { b } from 'vitest/dist/chunks/suite.d.FvehnV49.js';
 
 // Enums
 export enum RankStatus {
@@ -10,6 +12,26 @@ export enum RankStatus {
   APPROVED = 2,
   QUALIFIED = 3,
   LOVED = 4
+}
+
+export enum ComplianceStatus {
+  OK = 0,
+  POTENTIALLY_DISALLOWED = 1,
+  DISALLOWED = 2,
+}
+
+export enum ComplianceFailureReasons {
+  DMCA,
+  DISALLOWED_ARTIST,
+  DISALLOWED_SOURCE,
+  DISALLOWED_BY_RIGHTSHOLDER,
+  FA_TRACKS_ONLY
+}
+
+export interface ValidationResult {
+  beatmap: Beatmap;
+  complianceStatus: ComplianceStatus;
+  reason: string | undefined;
 }
 
 // Interfaces
@@ -33,10 +55,47 @@ export interface FlaggedArtistData {
   notes: string | null;
 }
 
+interface OverrideMeta {
+  title: {
+    equalsIgnoreCase: string | undefined;
+    contains: string | undefined;
+  }
+}
+
 export interface Override {
-  title: string;
+  meta: OverrideMeta;
   artist: string;
-  status: string;
+  /**
+   * Special string which forces the listed status if the conditions are met.
+   * Options are: 'ok', 'potential', 'disallowed'
+   */
+  resultOverride: string;
+  /**
+   * Special string which overrides the complianceFailureReason.
+   * Options are: 'disallowedByRightsholder'
+   */
+  failureReasonOverride: string | undefined;
+}
+
+export function getStatuses(beatmaps: Beatmap[]) {
+  const statuses = [];
+  
+  beatmaps.forEach(b => {
+    statuses.push(validate(b))
+  });
+
+  return statuses;
+}
+
+export function validate(beatmapset: Beatmapset): ValidationResult {
+  return {
+    beatmap: beatmap,
+    complianceStatus
+  }
+}
+
+export function getStatus(beatmapset: Beatmapset) {
+  beatmap.
 }
 
 // Constants
@@ -51,16 +110,23 @@ const flaggedArtists: Record<string, FlaggedArtistData> = JSON.parse(
 const overrides: Override[] = JSON.parse(
   readFileSync(join(dataPath, 'overrides', 'edge-cases.json'), 'utf-8')
 );
-const bannedSources: string[] = JSON.parse(
+const disallowedSources: string[] = JSON.parse(
   readFileSync(join(dataPath, 'sources', 'banned.json'), 'utf-8')
 );
+
+export function parseResult(status: string) {
+  switch(status) {
+    case "ok":
+      return 
+  }
+}
 
 export function isBannedSource(beatmapset: Beatmapset): boolean {
   if (!beatmapset.source) {
     return false;
   }
 
-  for (const source of bannedSources) {
+  for (const source of disallowedSources) {
     if (beatmapset.source.toLowerCase().includes(source.toLowerCase())) {
       return true;
     }
@@ -210,7 +276,7 @@ export function descriptionContainsBannedSource(beatmapset: Beatmapset): boolean
     return false;
   }
 
-  for (const source of bannedSources) {
+  for (const source of disallowedSources) {
     if (lowerDesc.includes(source.toLowerCase())) {
       return true;
     }

@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import * as validator from '../lib/validator.js';
-import type { Beatmapset } from '../lib/validator.js';
-import { RankStatus } from '../lib/validator.js';
+import * as validator from '../lib/validator';
+import { ComplianceFailureReasons, ComplianceStatus, RankStatus, type Beatmapset } from '../lib/validator';
 
 function createNoDmcaRankedBeatmap(): Beatmapset {
   return {
     artist: 'Some cool allowed artist',
     title: 'Some title',
+    
     availability: {
       download_disabled: false,
       more_information: null
@@ -32,6 +32,77 @@ function createDescription(description: string | null): { description?: string |
 }
 
 describe('Validator', () => {
+  describe('validator', () => {
+    it('is compliant', () => {
+      const beatmapset = createNoDmcaGraveyardBeatmap();
+      beatmapset.artist = "Camellia";
+      beatmapset.title = "Whoa there hoss";
+      expect(validator.validate(beatmapset)).toMatchObject({
+        beatmapset: beatmapset,
+        complianceStatus: ComplianceStatus.OK
+      });
+    });
+
+    it('is not compliant due to not an FA track', () => {
+      const beatmapset = createNoDmcaGraveyardBeatmap();
+      beatmapset.artist = "Zekk";
+      beatmapset.title = "Freefall";
+      expect(validator.validate(beatmapset)).toMatchObject({
+        beatmapset: beatmapset,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason: ComplianceFailureReasons.FA_TRACKS_ONLY,
+        notes: "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+      });
+    });
+
+    it('is compliant due to FA track', () => {
+      const beatmapset = createNoDmcaGraveyardBeatmap();
+      beatmapset.artist = "Zekk";
+      beatmapset.title = "Freefall IS NOW FA WHAAAAT";
+      beatmapset.track_id = 1; // positive int = FA
+      expect(validator.validate(beatmapset)).toMatchObject({
+        beatmapset: beatmapset,
+        complianceStatus: ComplianceStatus.OK
+      });
+    });
+
+    it('is disallowed artist', () => {
+      const beatmapset = createNoDmcaGraveyardBeatmap();
+      beatmapset.artist = "Igorrr";
+      beatmapset.title = "What the cat?!?";
+      expect(validator.validate(beatmapset)).toMatchObject({
+        beatmapset: beatmapset,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason: ComplianceFailureReasons.DISALLOWED_ARTIST,
+      });
+    });
+
+    it('is disallowed by rightsholder', () => {
+      const beatmapset = createNoDmcaGraveyardBeatmap();
+      beatmapset.artist = "Who the hecc is this new arteest";
+      beatmapset.title = "What the skibidi?!?";
+      beatmapset.source = "MEGAREX"
+      expect(validator.validate(beatmapset)).toMatchObject({
+        beatmapset: beatmapset,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason: ComplianceFailureReasons.DISALLOWED_BY_RIGHTSHOLDER,
+      });
+    });
+
+    it('is would be disallowed by rightsholder except not this time because it\'s FA, kapeesh?', () => {
+      const beatmapset = createNoDmcaGraveyardBeatmap();
+      beatmapset.artist = "Who the hecc is this new FA that megarex is cool with being on osu!?!";
+      beatmapset.title = "What the skibidi?!?";
+      beatmapset.source = "MEGAREX"
+      beatmapset.track_id = 1;
+
+      expect(validator.validate(beatmapset)).toMatchObject({
+        beatmapset: beatmapset,
+        complianceStatus: ComplianceStatus.OK,
+      });
+    });
+  })
+
   describe('artistFlagged', () => {
     it('should flag known artist', () => {
       const artist = 'Igorrr';
@@ -273,7 +344,9 @@ describe('Validator', () => {
         { ...createNoDmcaGraveyardBeatmap(), source: "DJ MAX" },
         { ...createNoDmcaGraveyardBeatmap(), source: "djmax" },
         { ...createNoDmcaGraveyardBeatmap(), source: "neowiz" },
-        { ...createNoDmcaGraveyardBeatmap(), source: "DJMAX Portable 3" }
+        { ...createNoDmcaGraveyardBeatmap(), source: "DJMAX Portable 3" },
+        { ...createNoDmcaGraveyardBeatmap(), source: "megarex" },
+        { ...createNoDmcaGraveyardBeatmap(), source: "MEGAREX" },
       ];
 
       for (const beatmapset of beatmapsets) {

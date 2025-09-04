@@ -1,5 +1,8 @@
 import * as osu from "osu-api-v2-js"
 
+import dotenv from 'dotenv'
+dotenv.config()
+
 class ApiWrapper {
     private static instance: osu.API | null = null;
     private static initPromise: Promise<osu.API> | null = null;

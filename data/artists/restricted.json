@@ -1,38 +1,28 @@
 {
   "a_hisa": {
-    "status": "partial",
-    "notes": "Contact before uploading. Can be reached via email or Bandcamp."
+    "status": "potential",
+    "notes": "Contact before uploading. Can be reached via [email](mailto:hisaweb_info@yahoo.co.jp) or [Bandcamp](https://a-hisa.bandcamp.com/)."
   },
   "ak+q": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+    "status": "fa_only"
   },
   "Akira Complex": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+    "status": "fa_only"
   },
   "HoneyComeBear": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+    "status": "fa_only"
   },
   "Jun Kuroda": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
-  },
-  "Lusumi": {
-    "status": "partial",
-    "notes": "Do not use the track titled 'execution_program'."
+    "status": "fa_only"
   },
   "Morimori Atsushi": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+    "status": "fa_only"
   },
   "Synthion": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+    "status": "fa_only"
   },
   "Yuyoyuppe": {
-    "status": "partial",
+    "status": "potential",
     "notes": "Tracks from or themed around Touhou should not be uploaded or used."
   },
   "DJ'TEKINA//SOMETHING": {
@@ -40,51 +30,39 @@
     "notes": "Tracks from or themed around Touhou should not be uploaded or used."
   },
   "Zekk": {
-    "status": "partial",
-    "notes": "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+    "status": "fa_only"
   },
   "40mP": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "DJMax": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "Neowiz": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "Draw the Emotional": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "Enter Shikari": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "EZFG": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "Hatsuki Yura": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "Igorrr": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "kamome sano": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "Kozato": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   },
   "NOMA": {
-    "status": "disallowed",
-    "notes": null
+    "status": "disallowed"
   }
 }
