@@ -24,15 +24,18 @@ const validateOpts = {
 server.post("/validate", validateOpts, async (request, reply) => {
   const chunkSize = 50;
   const beatmapIds = request.body as number[];
-
+  const allResults = [];
+  
   for (let i = 0; i < beatmapIds.length; i += chunkSize) {
     const chunk = beatmapIds.slice(i, i + chunkSize);
-    const data = await fetchBeatmaps(chunk);
-
-    const validation = validator.
-
-    console.log(data);
+    const beatmaps = await fetchBeatmaps(chunk);
+    
+    // Validate beatmaps and get results per beatmapset
+    const results = validator.validate(beatmaps);
+    allResults.push(...results);
   }
+  
+  return allResults;
 });
 
 server.listen({ port: 8080 }, (err, address) => {
