@@ -20,7 +20,7 @@ export enum ComplianceStatus {
   DISALLOWED = 2,
 }
 
-export enum ComplianceFailureReasons {
+export enum ComplianceFailureReason {
   DMCA,
   DISALLOWED_ARTIST,
   DISALLOWED_SOURCE,

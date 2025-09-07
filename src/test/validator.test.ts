@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as validator from '../lib/validator';
-import { ComplianceFailureReasons, ComplianceStatus, RankStatus, type Beatmapset } from '../lib/validator';
+import { ComplianceFailureReason, ComplianceStatus, RankStatus, type Beatmapset } from '../lib/validator';
 
 function createNoDmcaRankedBeatmap(): Beatmapset {
   return {
@@ -50,7 +50,7 @@ describe('Validator', () => {
       expect(validator.validate(beatmapset)).toMatchObject({
         beatmapset: beatmapset,
         complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReasons.FA_TRACKS_ONLY,
+        complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
         notes: "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
       });
     });
@@ -73,7 +73,7 @@ describe('Validator', () => {
       expect(validator.validate(beatmapset)).toMatchObject({
         beatmapset: beatmapset,
         complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReasons.DISALLOWED_ARTIST,
+        complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
       });
     });
 
@@ -85,7 +85,7 @@ describe('Validator', () => {
       expect(validator.validate(beatmapset)).toMatchObject({
         beatmapset: beatmapset,
         complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReasons.DISALLOWED_BY_RIGHTSHOLDER,
+        complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
       });
     });
 
