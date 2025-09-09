@@ -97,6 +97,19 @@ describe('Validator', () => {
       });
     });
 
+    it('is not compliant due to DMCA', () => {
+      const beatmap = createNoDmcaGraveyardBeatmap();
+      beatmap.beatmapset.availability.download_disabled = true;
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapset_id: 1,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason: ComplianceFailureReason.DMCA,
+        notes: "This beatmapset contains content which has been removed due to a DMCA takedown."
+      });
+    });
+
     it('is not compliant due to not an FA track', () => {
       const beatmap = createNoDmcaGraveyardBeatmap();
       beatmap.beatmapset.artist = "Zekk";
@@ -107,7 +120,7 @@ describe('Validator', () => {
         beatmapset_id: 1,
         complianceStatus: ComplianceStatus.DISALLOWED,
         complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
-        notes: "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
+        notes: "This artist prohibits usage of tracks which are not licensed through the Featured Artist program."
       });
     });
 
@@ -134,6 +147,7 @@ describe('Validator', () => {
         beatmapset_id: 1,
         complianceStatus: ComplianceStatus.DISALLOWED,
         complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
+        notes: "The artist has prohibited usage of their tracks."
       });
     });
 
@@ -148,6 +162,7 @@ describe('Validator', () => {
         beatmapset_id: 1,
         complianceStatus: ComplianceStatus.DISALLOWED,
         complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+        notes: "The track is from a prohibited source."
       });
     });
 
@@ -409,6 +424,8 @@ describe('Validator', () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER);
+        expect(results[0]!.notes).toBe("The rightsholder has prohibited use of this track.");
       });
 
       it('should check overrides correctly', () => {
@@ -514,6 +531,8 @@ describe('Validator', () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+        expect(results[0]!.notes).toBe("The artist has prohibited usage of their tracks.");
       });
 
       it('should mark FA only artist in title', () => {
@@ -540,6 +559,8 @@ describe('Validator', () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+        expect(results[0]!.notes).toBe("The artist has prohibited usage of their tracks.");
       });
     });
   });

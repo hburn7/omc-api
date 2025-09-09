@@ -390,7 +390,7 @@ function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
           beatmapset,
           ComplianceStatus.DISALLOWED,
           ComplianceFailureReason.DISALLOWED_ARTIST,
-          flaggedArtist?.notes
+          flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST)
         );
       }
     }
@@ -432,7 +432,7 @@ function checkFlaggedArtistInTitle(beatmapset: any, beatmapsetId: number): Valid
           beatmapset,
           ComplianceStatus.DISALLOWED,
           ComplianceFailureReason.DISALLOWED_ARTIST,
-          flaggedArtist?.notes
+          flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST)
         );
       }
     }
