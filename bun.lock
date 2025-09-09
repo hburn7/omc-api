@@ -6,7 +6,7 @@
       "dependencies": {
         "dotenv": "^17.2.2",
         "fastify": "^5.5.0",
-        "osu-api-v2-js": "^2.1.0",
+        "osu-api-v2-js": "^2.1.1",
       },
       "devDependencies": {
         "@types/node": "^24.3.0",
@@ -235,7 +235,7 @@
 
     "on-exit-leak-free": ["on-exit-leak-free@2.1.2", "", {}, "sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA=="],
 
-    "osu-api-v2-js": ["osu-api-v2-js@2.1.0", "", {}, "sha512-NpqkdEJ2eDsehSoj/n2+J+F+jc8ox5f0RMMoGNbXnkB50S+omRVw/jG0IiVra53gE+weQzGgedH7dhaHGEllxg=="],
+    "osu-api-v2-js": ["osu-api-v2-js@2.1.1", "", {}, "sha512-4I6wel8hW7K9jtxpKuZ3KIUeJiXl58x2eMtNlCuKddkYqm/FbDs2ULXqGV7mF9w3+TlR163PV7NHT7dqbO3Ohg=="],
 
     "pathe": ["pathe@2.0.3", "", {}, "sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w=="],
 

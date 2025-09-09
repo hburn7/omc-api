@@ -1,29 +1,31 @@
 import type { Beatmap } from 'osu-api-v2-js';
 
-// Enums
-export enum RankStatus {
-  GRAVEYARD = -2,
-  WIP = -1,
-  PENDING = 0,
-  RANKED = 1,
-  APPROVED = 2,
-  QUALIFIED = 3,
-  LOVED = 4
-}
+export const RankStatus = {
+  GRAVEYARD: -2,
+  WIP: -1,
+  PENDING: 0,
+  RANKED: 1,
+  APPROVED: 2,
+  QUALIFIED: 3,
+  LOVED: 4
+} as const;
+export type RankStatus = typeof RankStatus[keyof typeof RankStatus];
 
-export enum ComplianceStatus {
-  OK = 0,
-  POTENTIALLY_DISALLOWED = 1,
-  DISALLOWED = 2,
-}
+export const ComplianceStatus = {
+  OK: 0,
+  POTENTIALLY_DISALLOWED: 1,
+  DISALLOWED: 2,
+} as const;
+export type ComplianceStatus = typeof ComplianceStatus[keyof typeof ComplianceStatus];
 
-export enum ComplianceFailureReason {
-  DMCA,
-  DISALLOWED_ARTIST,
-  DISALLOWED_SOURCE,
-  DISALLOWED_BY_RIGHTSHOLDER,
-  FA_TRACKS_ONLY
-}
+export const ComplianceFailureReason = {
+  DMCA: 0,
+  DISALLOWED_ARTIST: 1,
+  DISALLOWED_SOURCE: 2,
+  DISALLOWED_BY_RIGHTSHOLDER: 3,
+  FA_TRACKS_ONLY: 4
+} as const;
+export type ComplianceFailureReason = typeof ComplianceFailureReason[keyof typeof ComplianceFailureReason];
 
 // Interfaces
 export interface ValidationResult {

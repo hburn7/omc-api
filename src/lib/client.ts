@@ -13,7 +13,5 @@ export async function fetchBeatmaps(
   const promises = chunk(beatmapIds, 50).map((arr) => api.getBeatmaps(arr));
   const beatmaps = await Promise.all(promises);
 
-  console.log(JSON.stringify(beatmaps));
-
   return beatmaps.flat();
 }

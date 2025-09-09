@@ -9,7 +9,7 @@ import {
   type LabelData,
   type Override,
   type ValidationResult
-} from './dataTypes';
+} from './dataTypes.ts';
 
 
 // Constants
