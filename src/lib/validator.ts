@@ -69,16 +69,46 @@ export function validate(beatmaps: BeatmapWithBeatmapset[]): ValidationResult[] 
   return results;
 }
 
+// Helper function to build ValidationResult with common fields
+function buildValidationResult(
+  beatmapsetId: number, 
+  beatmapset: any, 
+  status: ComplianceStatus, 
+  failureReason?: ComplianceFailureReason,
+  notes?: string | null
+): ValidationResult {
+  const result: ValidationResult = {
+    beatmapset_id: beatmapsetId,
+    complianceStatus: status,
+    complianceStatusString: getComplianceStatusString(status),
+    cover: beatmapset.covers?.cover || beatmapset.covers?.['cover@2x'] || undefined,
+    artist: beatmapset.artist,
+    title: beatmapset.title
+  };
+  
+  if (failureReason !== undefined) {
+    result.complianceFailureReason = failureReason;
+    result.complianceFailureReasonString = getComplianceFailureReasonString(failureReason);
+  }
+  
+  if (notes !== undefined && notes !== null) {
+    result.notes = notes;
+  }
+  
+  return result;
+}
+
 // Validate a single beatmapset
 function validateBeatmapset(beatmapsetId: number, beatmapset: any): ValidationResult {
   // Check for DMCA
   if (isDmca(beatmapset)) {
-    return {
-      beatmapset_id: beatmapsetId,
-      complianceStatus: ComplianceStatus.DISALLOWED,
-      complianceFailureReason: ComplianceFailureReason.DMCA,
-      notes: "This beatmapset has been taken down due to a DMCA request."
-    };
+    return buildValidationResult(
+      beatmapsetId,
+      beatmapset,
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DMCA,
+      getNotesForReason(ComplianceFailureReason.DMCA)
+    );
   }
   
   // Check for overrides first
@@ -86,63 +116,64 @@ function validateBeatmapset(beatmapsetId: number, beatmapset: any): ValidationRe
   if (override) {
     const status = parseOverrideStatus(override.resultOverride);
     if (status === ComplianceStatus.OK) {
-      return {
-        beatmapset_id: beatmapsetId,
-        complianceStatus: ComplianceStatus.OK
-      };
+      return buildValidationResult(
+        beatmapsetId,
+        beatmapset,
+        ComplianceStatus.OK
+      );
     }
     
     const failureReason = parseFailureReason(override.failureReasonOverride);
     const notes = getNotesForReason(failureReason);
-    const result: ValidationResult = {
-      beatmapset_id: beatmapsetId,
-      complianceStatus: status
-    };
-    if (failureReason !== undefined) {
-      result.complianceFailureReason = failureReason;
-    }
-    if (notes !== undefined) {
-      result.notes = notes;
-    }
-    return result;
+    return buildValidationResult(
+      beatmapsetId,
+      beatmapset,
+      status,
+      failureReason,
+      notes
+    );
   }
   
   // Check if licensed or approved
   if (isLicensed(beatmapset.track_id) || isStatusApproved(getRankStatus(beatmapset.status))) {
-    return {
-      beatmapset_id: beatmapsetId,
-      complianceStatus: ComplianceStatus.OK
-    };
+    return buildValidationResult(
+      beatmapsetId,
+      beatmapset,
+      ComplianceStatus.OK
+    );
   }
   
   // Check for banned sources in tags
   if (tagContainsBannedSource(beatmapset)) {
-    return {
-      beatmapset_id: beatmapsetId,
-      complianceStatus: ComplianceStatus.DISALLOWED,
-      complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
-      notes: "This beatmapset contains a banned source."
-    };
+    return buildValidationResult(
+      beatmapsetId,
+      beatmapset,
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_SOURCE,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE)
+    );
   }
   
   // Check for banned sources in source field
   if (isBannedSource(beatmapset)) {
-    return {
-      beatmapset_id: beatmapsetId,
-      complianceStatus: ComplianceStatus.DISALLOWED,
-      complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
-      notes: "This beatmapset contains a banned source."
-    };
+    return buildValidationResult(
+      beatmapsetId,
+      beatmapset,
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_SOURCE,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE)
+    );
   }
   
   // Check for label violations
   if (isLabelViolation(beatmapset)) {
-    return {
-      beatmapset_id: beatmapsetId,
-      complianceStatus: ComplianceStatus.DISALLOWED,
-      complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-      notes: "This beatmapset has been disallowed by the rightsholder."
-    };
+    return buildValidationResult(
+      beatmapsetId,
+      beatmapset,
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER)
+    );
   }
   
   // Check for flagged artists
@@ -158,13 +189,44 @@ function validateBeatmapset(beatmapsetId: number, beatmapset: any): ValidationRe
   }
   
   // Default to OK
-  return {
-    beatmapset_id: beatmapsetId,
-    complianceStatus: ComplianceStatus.OK
-  };
+  return buildValidationResult(
+    beatmapsetId,
+    beatmapset,
+    ComplianceStatus.OK
+  );
 }
 
 // Helper functions
+
+function getComplianceStatusString(status: ComplianceStatus): string {
+  switch (status) {
+    case ComplianceStatus.OK:
+      return 'OK';
+    case ComplianceStatus.POTENTIALLY_DISALLOWED:
+      return 'POTENTIALLY_DISALLOWED';
+    case ComplianceStatus.DISALLOWED:
+      return 'DISALLOWED';
+    default:
+      return 'UNKNOWN';
+  }
+}
+
+function getComplianceFailureReasonString(reason: ComplianceFailureReason): string {
+  switch (reason) {
+    case ComplianceFailureReason.DMCA:
+      return 'DMCA';
+    case ComplianceFailureReason.DISALLOWED_ARTIST:
+      return 'DISALLOWED_ARTIST';
+    case ComplianceFailureReason.DISALLOWED_SOURCE:
+      return 'DISALLOWED_SOURCE';
+    case ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER:
+      return 'DISALLOWED_BY_RIGHTSHOLDER';
+    case ComplianceFailureReason.FA_TRACKS_ONLY:
+      return 'FA_TRACKS_ONLY';
+    default:
+      return 'UNKNOWN';
+  }
+}
 
 function isDmca(beatmapset: any): boolean {
   return beatmapset.availability.download_disabled ||
@@ -304,34 +366,32 @@ function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
     switch (flaggedArtist.status) {
       case FA_ONLY_STATUS:
         if (!isLicensed(beatmapset.track_id)) {
-          return {
-            beatmapset_id: beatmapset.id,
-            complianceStatus: ComplianceStatus.DISALLOWED,
-            complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
-            notes: flaggedArtist?.notes || "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
-          };
+          return buildValidationResult(
+            beatmapset.id,
+            beatmapset,
+            ComplianceStatus.DISALLOWED,
+            ComplianceFailureReason.FA_TRACKS_ONLY,
+            flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY)
+          );
         }
         break;
       case POTENTIAL_STATUS: {
-        const result: ValidationResult = {
-          beatmapset_id: beatmapset.id,
-          complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED
-        };
-        if (flaggedArtist?.notes) {
-          result.notes = flaggedArtist.notes;
-        }
-        return result;
+        return buildValidationResult(
+          beatmapset.id,
+          beatmapset,
+          ComplianceStatus.POTENTIALLY_DISALLOWED,
+          undefined,
+          flaggedArtist?.notes
+        );
       }
       case DISALLOWED_STATUS: {
-        const result: ValidationResult = {
-          beatmapset_id: beatmapset.id,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST
-        };
-        if (flaggedArtist?.notes) {
-          result.notes = flaggedArtist.notes;
-        }
-        return result;
+        return buildValidationResult(
+          beatmapset.id,
+          beatmapset,
+          ComplianceStatus.DISALLOWED,
+          ComplianceFailureReason.DISALLOWED_ARTIST,
+          flaggedArtist?.notes
+        );
       }
     }
   }
@@ -348,34 +408,32 @@ function checkFlaggedArtistInTitle(beatmapset: any, beatmapsetId: number): Valid
     switch (titleStatus) {
       case FA_ONLY_STATUS:
         if (!isLicensed(beatmapset.track_id)) {
-          return {
-            beatmapset_id: beatmapsetId,
-            complianceStatus: ComplianceStatus.DISALLOWED,
-            complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
-            notes: flaggedArtist?.notes || "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
-          };
+          return buildValidationResult(
+            beatmapsetId,
+            beatmapset,
+            ComplianceStatus.DISALLOWED,
+            ComplianceFailureReason.FA_TRACKS_ONLY,
+            flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY)
+          );
         }
         break;
       case POTENTIAL_STATUS: {
-        const result: ValidationResult = {
-          beatmapset_id: beatmapsetId,
-          complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED
-        };
-        if (flaggedArtist?.notes) {
-          result.notes = flaggedArtist.notes;
-        }
-        return result;
+        return buildValidationResult(
+          beatmapsetId,
+          beatmapset,
+          ComplianceStatus.POTENTIALLY_DISALLOWED,
+          undefined,
+          flaggedArtist?.notes
+        );
       }
       case DISALLOWED_STATUS: {
-        const result: ValidationResult = {
-          beatmapset_id: beatmapsetId,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST
-        };
-        if (flaggedArtist?.notes) {
-          result.notes = flaggedArtist.notes;
-        }
-        return result;
+        return buildValidationResult(
+          beatmapsetId,
+          beatmapset,
+          ComplianceStatus.DISALLOWED,
+          ComplianceFailureReason.DISALLOWED_ARTIST,
+          flaggedArtist?.notes
+        );
       }
     }
   }
@@ -446,15 +504,15 @@ function getNotesForReason(reason: ComplianceFailureReason | undefined): string 
   
   switch (reason) {
     case ComplianceFailureReason.DMCA:
-      return "This beatmapset has been taken down due to a DMCA request.";
+      return "This beatmapset contains content which has been removed due to a DMCA takedown.";
     case ComplianceFailureReason.DISALLOWED_ARTIST:
-      return "This artist has been disallowed from use.";
+      return "The artist has prohibited usage of their tracks.";
     case ComplianceFailureReason.DISALLOWED_SOURCE:
-      return "This beatmapset contains a banned source.";
+      return "The track is from a prohibited source.";
     case ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER:
-      return "This beatmapset has been disallowed by the rightsholder.";
+      return "The rightsholder has prohibited use of this track.";
     case ComplianceFailureReason.FA_TRACKS_ONLY:
-      return "Do not use or upload tracks that are not available on the creator's Featured Artist listing.";
+      return "This artist prohibits usage of tracks which are not licensed through the Featured Artist program.";
     default:
       return undefined;
   }

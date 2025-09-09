@@ -31,8 +31,13 @@ export type ComplianceFailureReason = typeof ComplianceFailureReason[keyof typeo
 export interface ValidationResult {
   beatmapset_id: number;
   complianceStatus: ComplianceStatus;
+  complianceStatusString?: string;
   complianceFailureReason?: ComplianceFailureReason;
+  complianceFailureReasonString?: string;
   notes?: string;
+  cover?: string;
+  artist?: string;
+  title?: string;
 }
 
 export interface Availability {
