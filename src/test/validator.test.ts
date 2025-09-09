@@ -299,6 +299,24 @@ describe('Validator', () => {
       });
     });
 
+    describe('checkFlaggedArtist', () => {
+      it('should return null if the track is FA licensed', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.track_id = 1;
+        expect(validator.checkFlaggedArtist(beatmap.beatmapset)).toBe(null);
+      });
+
+      it('should return potentially disallowed for potentially disallowed artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'a_hisa'
+
+        const result = validator.checkFlaggedArtist(beatmap.beatmapset);
+
+        expect(result?.complianceStatus).toBe(ComplianceStatus.POTENTIALLY_DISALLOWED);
+        expect(result?.notes).toBe("Contact before uploading. Can be reached via [email](mailto:hisaweb_info@yahoo.co.jp) or [Bandcamp](https://a-hisa.bandcamp.com/).")
+      });
+    })
+
     describe('Edge cases', () => {
       it('should handle uma vs. Morimori Atsushi FA only', () => {
         const beatmap = createNoDmcaGraveyardBeatmap();

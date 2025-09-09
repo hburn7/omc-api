@@ -10,6 +10,7 @@ import {
   type Override,
   type ValidationResult
 } from './dataTypes.ts';
+import type { Beatmapset } from 'osu-api-v2-js';
 
 
 // Constants
@@ -145,7 +146,7 @@ function validateBeatmapset(beatmapsetId: number, beatmapset: any): ValidationRe
   }
   
   // Check for flagged artists
-  const artistResult = checkFlaggedArtist(beatmapset, beatmapsetId);
+  const artistResult = checkFlaggedArtist(beatmapset);
   if (artistResult) {
     return artistResult;
   }
@@ -292,7 +293,7 @@ function parseFailureReason(reason: string | undefined): ComplianceFailureReason
   }
 }
 
-function checkFlaggedArtist(beatmapset: any, beatmapsetId: number): ValidationResult | null {
+function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
   const artist = beatmapset.artist;
   const key = flagKeyMatch(artist);
   
@@ -304,7 +305,7 @@ function checkFlaggedArtist(beatmapset: any, beatmapsetId: number): ValidationRe
       case FA_ONLY_STATUS:
         if (!isLicensed(beatmapset.track_id)) {
           return {
-            beatmapset_id: beatmapsetId,
+            beatmapset_id: beatmapset.id,
             complianceStatus: ComplianceStatus.DISALLOWED,
             complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
             notes: flaggedArtist?.notes || "Do not use or upload tracks that are not available on the creator's Featured Artist listing."
@@ -313,7 +314,7 @@ function checkFlaggedArtist(beatmapset: any, beatmapsetId: number): ValidationRe
         break;
       case POTENTIAL_STATUS: {
         const result: ValidationResult = {
-          beatmapset_id: beatmapsetId,
+          beatmapset_id: beatmapset.id,
           complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED
         };
         if (flaggedArtist?.notes) {
@@ -323,19 +324,9 @@ function checkFlaggedArtist(beatmapset: any, beatmapsetId: number): ValidationRe
       }
       case DISALLOWED_STATUS: {
         const result: ValidationResult = {
-          beatmapset_id: beatmapsetId,
+          beatmapset_id: beatmapset.id,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST
-        };
-        if (flaggedArtist?.notes) {
-          result.notes = flaggedArtist.notes;
-        }
-        return result;
-      }
-      case PARTIAL_STATUS: { // Legacy support
-        const result: ValidationResult = {
-          beatmapset_id: beatmapsetId,
-          complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED
         };
         if (flaggedArtist?.notes) {
           result.notes = flaggedArtist.notes;
@@ -380,16 +371,6 @@ function checkFlaggedArtistInTitle(beatmapset: any, beatmapsetId: number): Valid
           beatmapset_id: beatmapsetId,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST
-        };
-        if (flaggedArtist?.notes) {
-          result.notes = flaggedArtist.notes;
-        }
-        return result;
-      }
-      case PARTIAL_STATUS: { // Legacy support
-        const result: ValidationResult = {
-          beatmapset_id: beatmapsetId,
-          complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED
         };
         if (flaggedArtist?.notes) {
           result.notes = flaggedArtist.notes;
