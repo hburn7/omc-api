@@ -289,7 +289,7 @@ describe('Validator', () => {
     describe('tagContainsBannedSource', () => {
       it('should detect banned source in tags', () => {
         const beatmapset = {
-          tags: ['some', 'djmax', 'tag']
+          tags: ['some', 'djmax', 'tag', 'megarex']
         };
         expect(validator.tagContainsBannedSource(beatmapset)).toBe(true);
       });
@@ -472,6 +472,221 @@ describe('Validator', () => {
         const override = validator.findOverride(beatmapset);
         expect(override).toBeTruthy();
         expect(override?.resultOverride).toBe("disallowed");
+      });
+    });
+
+    describe('MEGAREX label validation', () => {
+      it('should allow FA tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix';
+        beatmap.beatmapset.title = 'NEO GRAVITY';
+        beatmap.beatmapset.track_id = 1234; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK
+        });
+      });
+
+      it('should allow ranked tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaRankedBeatmap();
+        beatmap.beatmapset.artist = 'Camellia';
+        beatmap.beatmapset.title = 'What Is Hitech?';
+        beatmap.beatmapset.track_id = null; // Not FA
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK
+        });
+      });
+
+      it('should allow approved tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'PSYQUI';
+        beatmap.beatmapset.title = 'Hype feat. Such';
+        beatmap.beatmapset.status = 'approved';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK
+        });
+      });
+
+      it('should allow loved tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'Mameyudoufu';
+        beatmap.beatmapset.title = 'Quality Control';
+        beatmap.beatmapset.status = 'loved';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK
+        });
+      });
+
+      it('should disallow non-FA graveyard tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix';
+        beatmap.beatmapset.title = 'NEO GRAVITY';
+        beatmap.beatmapset.track_id = null; // Not FA
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+          notes: "The rightsholder has prohibited use of this track."
+        });
+      });
+
+      it('should disallow non-FA pending tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'Zekk';
+        beatmap.beatmapset.title = 'Swampgator';
+        beatmap.beatmapset.status = 'pending';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+          notes: "The rightsholder has prohibited use of this track."
+        });
+      });
+
+      it('should disallow non-FA qualified tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'Blacklolita';
+        beatmap.beatmapset.title = 'FlashWarehouse(^-^)';
+        beatmap.beatmapset.status = 'qualified';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+          notes: "The rightsholder has prohibited use of this track."
+        });
+      });
+
+      it('should disallow non-FA WIP tracks by MEGAREX artists', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'DJ Noriken';
+        beatmap.beatmapset.title = 'Smokey';
+        beatmap.beatmapset.status = 'wip';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+          notes: "The rightsholder has prohibited use of this track."
+        });
+      });
+
+      it('should handle case-insensitive artist matching for MEGAREX', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'LAPIX'; // Different case
+        beatmap.beatmapset.title = 'Duality Rave';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+        });
+      });
+
+      it('should handle case-insensitive title matching for MEGAREX', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix';
+        beatmap.beatmapset.title = 'neo gravity'; // Different case
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+        });
+      });
+
+      it('should handle partial title matches for MEGAREX', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix';
+        beatmap.beatmapset.title = 'NEO GRAVITY (Extended Mix)';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+        });
+      });
+
+      it('should allow non-MEGAREX artists even with similar names', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'NotLapix';
+        beatmap.beatmapset.title = 'Some Song';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK
+        });
+      });
+
+      it('should allow MEGAREX artist with non-MEGAREX track', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix';
+        beatmap.beatmapset.title = 'Not In The MEGAREX List';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK
+        });
+      });
+
+      it('should handle collab artists with MEGAREX members', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix & Camellia';
+        beatmap.beatmapset.title = 'Dead Music';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+        });
+      });
+
+      it('should handle feat. artists with MEGAREX members', () => {
+        const beatmap = createNoDmcaGraveyardBeatmap();
+        beatmap.beatmapset.artist = 'lapix feat. Numb\'n\'dub';
+        beatmap.beatmapset.title = 'BRAND NEW DAY';
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+        });
       });
     });
 
