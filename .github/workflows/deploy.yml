@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+    push:
+        branches: [ "master" ]
+    workflow_dispatch:
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+    steps:
+        - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: latest
+    deploy:
+        needs: publish
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout Code
+            uses: actions/checkout@v4
+
+        - name: Create .env files
+            run: echo "${{ secrets.ENV }}" > .env
+
+        - name: Copy files to server
+            uses: appleboy/scp-action@master
+            with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USER }}
+            key: ${{ secrets.SSH_KEY }}
+            source: '.env'
+            target: '${{ secrets.SSH_TARGET_DIR }}/'
+
+        - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
+            docker stop ${{ secrets.DOCKER_IMAGE_NAME }} || true
+            docker rm ${{ secrets.DOCKER_IMAGE_NAME }} || true
+            docker run -d -p 8080:8080 --restart always \
+              --name ${{ secrets.DOCKER_IMAGE_NAME }} \
+              --env-file ${{ secrets.SSH_TARGET_DIR }}/.env \
+              ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
