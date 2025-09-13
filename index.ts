@@ -24,8 +24,11 @@ const validateOpts = {
 
 server.post("/validate", validateOpts, async (request, reply) => {
   const chunkSize = 50;
+
   const beatmapIds = request.body as number[];
   const allResults: ValidationResult[] = [];
+  let allFailures: Set<number> = new Set<number>();
+
   const secret = process.env.API_KEY_SECRET!;
   const providedSecret = request.headers["x-api-key"];
 
@@ -35,14 +38,18 @@ server.post("/validate", validateOpts, async (request, reply) => {
 
   for (let i = 0; i < beatmapIds.length; i += chunkSize) {
     const chunk = beatmapIds.slice(i, i + chunkSize);
-    const beatmaps = await fetchBeatmaps(chunk);
+    const fetchResult = await fetchBeatmaps(chunk);
+    allFailures = allFailures.union(new Set(fetchResult.failures));
 
     // Validate beatmaps and get results per beatmapset
-    const results = validator.validate(beatmaps);
+    const results = validator.validate(fetchResult.beatmaps);
     allResults.push(...results);
   }
 
-  return allResults;
+  return {
+    results: allResults,
+    failures: Array.from(allFailures)
+  };
 });
 
 server.listen({ port: 8080 }, (err, address) => {
