@@ -33,15 +33,16 @@ export type ComplianceFailureReason =
 export interface ValidationResult {
   beatmapset_id: number;
   complianceStatus: ComplianceStatus;
-  complianceStatusString?: string;
-  complianceFailureReason?: ComplianceFailureReason;
-  complianceFailureReasonString?: string;
-  notes?: string;
-  cover?: string;
-  artist?: string;
-  title?: string;
-  owner_id?: number;
-  owner_username?: string;
+  complianceStatusString?: string | undefined;
+  complianceFailureReason?: ComplianceFailureReason | undefined;
+  complianceFailureReasonString?: string | undefined;
+  notes?: string | undefined;
+  cover?: string | undefined;
+  artist?: string | undefined;
+  title?: string | undefined;
+  owner_id?: number | undefined;
+  owner_username?: string | undefined;
+  status: string;
 }
 
 export interface Availability {

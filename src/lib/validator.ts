@@ -13,7 +13,6 @@ import {
 import type { Beatmapset } from "osu-api-v2-js";
 
 // Constants
-const PARTIAL_STATUS = "partial";
 const DISALLOWED_STATUS = "disallowed";
 const FA_ONLY_STATUS = "fa_only";
 const POTENTIAL_STATUS = "potential";
@@ -74,14 +73,13 @@ export function validate(
 
 // Helper function to build ValidationResult with common fields
 function buildValidationResult(
-  beatmapsetId: number,
-  beatmapset: any,
+  beatmapset: Beatmapset,
   status: ComplianceStatus,
   failureReason?: ComplianceFailureReason,
   notes?: string | null,
 ): ValidationResult {
   const result: ValidationResult = {
-    beatmapset_id: beatmapsetId,
+    beatmapset_id: beatmapset.id,
     complianceStatus: status,
     complianceStatusString: getComplianceStatusString(status),
     cover:
@@ -90,6 +88,7 @@ function buildValidationResult(
     title: beatmapset.title,
     owner_id: beatmapset.user_id,
     owner_username: beatmapset.creator,
+    status: beatmapset.status
   };
 
   if (failureReason !== undefined) {
@@ -113,7 +112,6 @@ function validateBeatmapset(
   // Check for DMCA
   if (isDmca(beatmapset)) {
     return buildValidationResult(
-      beatmapsetId,
       beatmapset,
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DMCA,
@@ -127,7 +125,6 @@ function validateBeatmapset(
     const status = parseOverrideStatus(override.resultOverride);
     if (status === ComplianceStatus.OK) {
       return buildValidationResult(
-        beatmapsetId,
         beatmapset,
         ComplianceStatus.OK,
       );
@@ -136,7 +133,6 @@ function validateBeatmapset(
     const failureReason = parseFailureReason(override.failureReasonOverride);
     const notes = getNotesForReason(failureReason);
     return buildValidationResult(
-      beatmapsetId,
       beatmapset,
       status,
       failureReason,
@@ -149,13 +145,12 @@ function validateBeatmapset(
     isLicensed(beatmapset.track_id) ||
     isStatusApproved(getRankStatus(beatmapset.status))
   ) {
-    return buildValidationResult(beatmapsetId, beatmapset, ComplianceStatus.OK);
+    return buildValidationResult(beatmapset, ComplianceStatus.OK);
   }
 
   // Check for banned sources in tags
   if (tagContainsBannedSource(beatmapset)) {
     return buildValidationResult(
-      beatmapsetId,
       beatmapset,
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_SOURCE,
@@ -166,7 +161,6 @@ function validateBeatmapset(
   // Check for banned sources in source field
   if (isBannedSource(beatmapset)) {
     return buildValidationResult(
-      beatmapsetId,
       beatmapset,
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_SOURCE,
@@ -177,7 +171,6 @@ function validateBeatmapset(
   // Check for label violations
   if (isLabelViolation(beatmapset)) {
     return buildValidationResult(
-      beatmapsetId,
       beatmapset,
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -198,7 +191,7 @@ function validateBeatmapset(
   }
 
   // Default to OK
-  return buildValidationResult(beatmapsetId, beatmapset, ComplianceStatus.OK);
+  return buildValidationResult(beatmapset, ComplianceStatus.OK);
 }
 
 // Helper functions
@@ -396,7 +389,6 @@ function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
       case FA_ONLY_STATUS:
         if (!isLicensed(beatmapset.track_id)) {
           return buildValidationResult(
-            beatmapset.id,
             beatmapset,
             ComplianceStatus.DISALLOWED,
             ComplianceFailureReason.FA_TRACKS_ONLY,
@@ -407,7 +399,6 @@ function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
         break;
       case POTENTIAL_STATUS: {
         return buildValidationResult(
-          beatmapset.id,
           beatmapset,
           ComplianceStatus.POTENTIALLY_DISALLOWED,
           undefined,
@@ -416,7 +407,6 @@ function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
       }
       case DISALLOWED_STATUS: {
         return buildValidationResult(
-          beatmapset.id,
           beatmapset,
           ComplianceStatus.DISALLOWED,
           ComplianceFailureReason.DISALLOWED_ARTIST,
@@ -443,7 +433,6 @@ function checkFlaggedArtistInTitle(
       case FA_ONLY_STATUS:
         if (!isLicensed(beatmapset.track_id)) {
           return buildValidationResult(
-            beatmapsetId,
             beatmapset,
             ComplianceStatus.DISALLOWED,
             ComplianceFailureReason.FA_TRACKS_ONLY,
@@ -454,7 +443,6 @@ function checkFlaggedArtistInTitle(
         break;
       case POTENTIAL_STATUS: {
         return buildValidationResult(
-          beatmapsetId,
           beatmapset,
           ComplianceStatus.POTENTIALLY_DISALLOWED,
           undefined,
@@ -463,7 +451,6 @@ function checkFlaggedArtistInTitle(
       }
       case DISALLOWED_STATUS: {
         return buildValidationResult(
-          beatmapsetId,
           beatmapset,
           ComplianceStatus.DISALLOWED,
           ComplianceFailureReason.DISALLOWED_ARTIST,
