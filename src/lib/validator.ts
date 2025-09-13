@@ -83,7 +83,9 @@ function buildValidationResult(
     complianceStatusString: getComplianceStatusString(status),
     cover: beatmapset.covers?.cover || beatmapset.covers?.['cover@2x'] || undefined,
     artist: beatmapset.artist,
-    title: beatmapset.title
+    title: beatmapset.title,
+    owner_id: beatmapset.user_id,
+    owner_username: beatmapset.creator
   };
   
   if (failureReason !== undefined) {

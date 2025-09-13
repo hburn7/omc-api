@@ -1,45 +1,49 @@
-import { describe, it, expect } from 'vitest';
-import * as validator from '../lib/validator';
-import { ComplianceFailureReason, ComplianceStatus, RankStatus } from '../lib/dataTypes';
-import type { BeatmapWithBeatmapset } from '../lib/dataTypes';
+import { describe, it, expect } from "vitest";
+import * as validator from "../lib/validator";
+import {
+  ComplianceFailureReason,
+  ComplianceStatus,
+  RankStatus,
+} from "../lib/dataTypes";
+import type { BeatmapWithBeatmapset } from "../lib/dataTypes";
 
 function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
   return {
     id: 1,
     beatmapset_id: beatmapsetId,
-    mode: 'osu',
+    mode: "osu",
     mode_int: 0,
     convert: false,
     difficulty_rating: 5.0,
-    version: 'Normal',
+    version: "Normal",
     total_length: 120,
     user_id: 1,
     passcount: 100,
     playcount: 1000,
     ranked: 1,
-    url: 'https://osu.ppy.sh/beatmaps/1',
-    checksum: 'abc123',
+    url: "https://osu.ppy.sh/beatmaps/1",
+    checksum: "abc123",
     max_combo: 500,
     beatmapset: {
       id: beatmapsetId,
-      artist: 'Some cool allowed artist',
-      title: 'Some title',
-      creator: 'Test Creator',
+      artist: "Test Artist",
+      title: "Test Title",
+      creator: "Test Creator",
       user_id: 1,
       source: null,
       covers: {
-        cover: '',
-        cover2x: '',
-        card: '',
-        card2x: '',
-        list: '',
-        list2x: '',
-        slimcover: '',
-        slimcover2x: ''
+        cover: "",
+        cover2x: "",
+        card: "",
+        card2x: "",
+        list: "",
+        list2x: "",
+        slimcover: "",
+        slimcover2x: "",
       },
       favourite_count: 0,
       play_count: 0,
-      preview_url: '',
+      preview_url: "",
       video: false,
       bpm: 180,
       can_be_hyped: false,
@@ -54,124 +58,361 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
         eligible_main_rulesets: [],
         required_meta: {
           main_ruleset: 0,
-          non_main_ruleset: 0
-        }
+          non_main_ruleset: 0,
+        },
       },
       ranked_date: null,
       storyboard: false,
       submitted_date: new Date().toISOString(),
-      tags: [],
+      tags: "" as any, // Note: validator expects array but API returns string
       availability: {
         download_disabled: false,
-        more_information: null
+        more_information: null,
       },
       track_id: null,
-      status: 'graveyard'
-    }
+      status: "graveyard",
+    },
   } as any as BeatmapWithBeatmapset;
 }
 
-function createNoDmcaRankedBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
-  const beatmap = createTestBeatmap(beatmapsetId);
-  beatmap.beatmapset.status = 'ranked';
-  return beatmap;
-}
-
-function createNoDmcaGraveyardBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
-  const beatmap = createTestBeatmap(beatmapsetId);
-  beatmap.beatmapset.status = 'graveyard';
-  return beatmap;
-}
-
-describe('Validator', () => {
-  describe('validate', () => {
-    it('is compliant', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.artist = "Camellia";
-      beatmap.beatmapset.title = "Whoa there hoss";
-      const results = validator.validate([beatmap]);
-      expect(results).toHaveLength(1);
-      expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
-        complianceStatus: ComplianceStatus.OK
+describe("Validator", () => {
+  describe("Core Rules", () => {
+    describe("Owner fields are included in results", () => {
+      it("should include owner_id and owner_username in validation results", () => {
+        const beatmap = createTestBeatmap();
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          owner_id: 1,
+          owner_username: "Test Creator",
+        });
       });
     });
 
-    it('is not compliant due to DMCA', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.availability.download_disabled = true;
-      const results = validator.validate([beatmap]);
-      expect(results).toHaveLength(1);
-      expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
-        complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReason.DMCA,
-        notes: "This beatmapset contains content which has been removed due to a DMCA takedown."
+    describe("DMCA takes precedence over everything", () => {
+      it("should disallow even ranked beatmaps with DMCA", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "ranked";
+        beatmap.beatmapset.availability.download_disabled = true;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DMCA,
+          notes:
+            "This beatmapset contains content which has been removed due to a DMCA takedown.",
+          owner_id: 1,
+          owner_username: "Test Creator",
+        });
       });
     });
 
-    it('is not compliant due to not an FA track', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.artist = "Zekk";
-      beatmap.beatmapset.title = "Freefall";
-      const results = validator.validate([beatmap]);
-      expect(results).toHaveLength(1);
-      expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
-        complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
-        notes: "This artist prohibits usage of tracks which are not licensed through the Featured Artist program."
+    describe("Ranked/Approved/Loved tracks are always allowed", () => {
+      it("should allow ranked tracks even with flagged artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "ranked";
+        beatmap.beatmapset.artist = "Igorrr"; // Disallowed artist
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow approved tracks even with banned sources", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "approved";
+        beatmap.beatmapset.source = "MEGAREX"; // Banned source
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow loved tracks even with FA-only artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "loved";
+        beatmap.beatmapset.artist = "Morimori Atsushi"; // FA-only artist
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow ranked MEGAREX artist tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "ranked";
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Cave of Points";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
       });
     });
 
-    it('is compliant due to FA track', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.artist = "Zekk";
-      beatmap.beatmapset.title = "Freefall IS NOW FA WHAAAAT";
-      beatmap.beatmapset.track_id = 1; // positive int = FA
-      const results = validator.validate([beatmap]);
-      expect(results).toHaveLength(1);
-      expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
-        complianceStatus: ComplianceStatus.OK
+    describe("FA Licensed tracks are always allowed", () => {
+      it("should allow FA tracks even with disallowed artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Igorrr"; // Disallowed artist
+        beatmap.beatmapset.track_id = 1234; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow FA tracks even with banned sources", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.source = "MEGAREX"; // Banned source
+        beatmap.beatmapset.track_id = 1; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow FA tracks from MEGAREX artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Cave of Points";
+        beatmap.beatmapset.track_id = 1234; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
       });
     });
 
-    it('is disallowed artist', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.artist = "Igorrr";
-      beatmap.beatmapset.title = "What the cat?!?";
-      const results = validator.validate([beatmap]);
-      expect(results).toHaveLength(1);
-      expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
-        complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
-        notes: "The artist has prohibited usage of their tracks."
+    describe("Multiple beatmaps handling", () => {
+      it("should handle multiple beatmaps from same beatmapset", () => {
+        const beatmap1 = createTestBeatmap(100);
+        const beatmap2 = createTestBeatmap(100);
+        beatmap2.id = 2;
+        beatmap2.version = "Hard";
+
+        const results = validator.validate([beatmap1, beatmap2]);
+        expect(results).toHaveLength(1); // Should only have one result for the beatmapset
+        expect(results[0]!.beatmapset_id).toBe(100);
+      });
+
+      it("should handle multiple beatmaps from different beatmapsets", () => {
+        const beatmap1 = createTestBeatmap(100);
+        const beatmap2 = createTestBeatmap(200);
+
+        const results = validator.validate([beatmap1, beatmap2]);
+        expect(results).toHaveLength(2); // Should have two results for two beatmapsets
+        expect(results[0]!.beatmapset_id).toBe(100);
+        expect(results[1]!.beatmapset_id).toBe(200);
+      });
+    });
+  });
+
+  describe("data/artists/restricted.json validation", () => {
+    describe("fa_only status", () => {
+      it("should disallow non-FA tracks from FA-only artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Morimori Atsushi";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
+          notes:
+            "This artist prohibits usage of tracks which are not licensed through the Featured Artist program.",
+        });
+      });
+
+      it("should allow FA tracks from FA-only artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Zekk";
+        beatmap.beatmapset.track_id = 1234; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should detect FA-only artist in collabs", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "uma vs. Morimori Atsushi";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
+        });
+      });
+
+      it("should detect FA-only artist in title (remix)", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.title = "Song Name (Akira Complex Remix)";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
+        });
+      });
+
+      it("should allow FA-only artist in title when FA licensed", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.title = "Song Name (Akira Complex Remix)";
+        beatmap.beatmapset.track_id = 1234; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
       });
     });
 
-    it('is disallowed by rightsholder', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.artist = "Who the hecc is this new arteest";
-      beatmap.beatmapset.title = "What the skibidi?!?";
-      beatmap.beatmapset.source = "MEGAREX";
-      const results = validator.validate([beatmap]);
-      expect(results).toHaveLength(1);
-      expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
-        complianceStatus: ComplianceStatus.DISALLOWED,
-        complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
-        notes: "The track is from a prohibited source."
+    describe("disallowed status", () => {
+      it("should disallow tracks from disallowed artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Igorrr";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
+          notes: "The artist has prohibited usage of their tracks.",
+        });
+      });
+
+      it("should detect disallowed artist case-insensitive", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "IgOrRr";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
+        });
+      });
+
+      it("should detect disallowed artist with spaces in name", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Hatsuki Yura";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
+        });
+      });
+
+      it("should detect disallowed artist in title", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.title = "Amazing Track (feat. Igorrr)";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
+        });
       });
     });
 
-    it('is would be disallowed by rightsholder except not this time because it\'s FA, kapeesh?', () => {
-      const beatmap = createNoDmcaGraveyardBeatmap();
-      beatmap.beatmapset.artist = "Who the hecc is this new FA that megarex is cool with being on osu!?!";
-      beatmap.beatmapset.title = "What the skibidi?!?";
-      beatmap.beatmapset.source = "MEGAREX";
-      beatmap.beatmapset.track_id = 1;
+    describe("potential status", () => {
+      it("should mark potentially disallowed artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "a_hisa";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED,
+          notes:
+            "Contact before uploading. Can be reached via [email](mailto:hisaweb_info@yahoo.co.jp) or [Bandcamp](https://a-hisa.bandcamp.com/).",
+        });
+      });
+    });
+
+    describe("Word boundary matching", () => {
+      it("should detect NOMA as standalone word", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "NOMA feat. Someone";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      });
+
+      it("should not flag NOMA in NOMANOA", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "nomanoa";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
+      });
+
+      it("should not flag NOMA in Tsunomaki Watame", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Tsunomaki Watame";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
+      });
+
+      it("should flag NOMA vs. Someone", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "NOMA vs. Good Artist";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      });
+
+      it("should flag NOMA in parentheses", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Track (NOMA Remix)";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      });
+
+      it("should not flag partial matches in other words", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Binomaly"; // Contains "noma" but shouldn't flag
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
+      });
+    });
+  });
+
+  describe("data/overrides/edge-cases.json validation", () => {
+    it("should apply override with equalsIgnoreCase matching", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Morimori Atsushi";
+      beatmap.beatmapset.title = "Tits or get the fuck out!!";
+
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
@@ -180,602 +421,737 @@ describe('Validator', () => {
       });
     });
 
-    it('handles multiple beatmaps from same beatmapset', () => {
-      const beatmap1 = createNoDmcaGraveyardBeatmap(100);
-      const beatmap2 = createNoDmcaGraveyardBeatmap(100);
-      beatmap2.id = 2;
-      beatmap2.version = 'Hard';
-      
-      const results = validator.validate([beatmap1, beatmap2]);
-      expect(results).toHaveLength(1); // Should only have one result for the beatmapset
-      expect(results[0]!.beatmapset_id).toBe(100);
+    it("should apply override with contains matching", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Lusumi";
+      beatmap.beatmapset.title = "Something /execution_program.wav Something";
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapset_id: 1,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason:
+          ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        notes: "The rightsholder has prohibited use of this track.",
+      });
     });
 
-    it('handles multiple beatmaps from different beatmapsets', () => {
-      const beatmap1 = createNoDmcaGraveyardBeatmap(100);
-      const beatmap2 = createNoDmcaGraveyardBeatmap(200);
-      
-      const results = validator.validate([beatmap1, beatmap2]);
-      expect(results).toHaveLength(2); // Should have two results for two beatmapsets
-      expect(results[0]!.beatmapset_id).toBe(100);
-      expect(results[1]!.beatmapset_id).toBe(200);
+    it("should handle missing failureReasonOverride field", () => {
+      // The first override in edge-cases.json doesn't have failureReasonOverride
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Morimori Atsushi";
+      beatmap.beatmapset.title = "TITS OR GET THE FUCK OUT!!"; // Different case
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapset_id: 1,
+        complianceStatus: ComplianceStatus.OK,
+      });
+    });
+
+    it("should not match override with wrong artist", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Different Artist";
+      beatmap.beatmapset.title = "Different Title";
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should not match override with wrong title", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Lusumi";
+      beatmap.beatmapset.title = "Different Title";
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should take precedence over other validation rules", () => {
+      // Morimori Atsushi is FA-only, but the override should allow this specific track
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Morimori Atsushi";
+      beatmap.beatmapset.title = "Tits or get the fuck out!!";
+
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapset_id: 1,
+        complianceStatus: ComplianceStatus.OK,
+      });
     });
   });
 
-  describe('Helper functions', () => {
-    describe('flagKeyMatch', () => {
-      it('should flag known artist', () => {
-        const artist = 'Igorrr';
-        expect(validator.flagKeyMatch(artist)).toBe('Igorrr');
+  describe("data/sources/banned.json validation", () => {
+    describe("Source field matching", () => {
+      it("should disallow beatmaps with MEGAREX source", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.source = "MEGAREX";
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+          notes: "The track is from a prohibited source.",
+        });
       });
 
-      it('should flag artist case-insensitive', () => {
-        const artist = 'IgOrRr';
-        expect(validator.flagKeyMatch(artist)).toBe('Igorrr');
-      });
-
-      it('should flag artist in collab', () => {
-        const artist = 'igorrr vs. Camellia';
-        expect(validator.flagKeyMatch(artist)).toBe('Igorrr');
-      });
-    });
-
-    describe('isLicensed', () => {
-      it('should return true for licensed track', () => {
-        const trackId = 1234;
-        expect(validator.isLicensed(trackId)).toBe(true);
-      });
-
-      it('should return false for non-licensed track', () => {
-        const trackId = null;
-        expect(validator.isLicensed(trackId)).toBe(false);
-      });
-    });
-
-    describe('isStatusApproved', () => {
-      it('should approve ranked, approved, and loved statuses', () => {
-        const statuses = [RankStatus.RANKED, RankStatus.APPROVED, RankStatus.LOVED];
-        for (const status of statuses) {
-          expect(validator.isStatusApproved(status)).toBe(true);
-        }
-      });
-    });
-
-    describe('isDmca', () => {
-      it('should detect DMCA when download disabled', () => {
-        const beatmapset = {
-          availability: {
-            download_disabled: true,
-            more_information: null
-          }
-        };
-        expect(validator.isDmca(beatmapset)).toBe(true);
-      });
-
-      it('should detect DMCA when more info present', () => {
-        const beatmapset = {
-          availability: {
-            download_disabled: false,
-            more_information: 'blah'
-          }
-        };
-        expect(validator.isDmca(beatmapset)).toBe(true);
-      });
-    });
-
-    describe('isBannedSource', () => {
-      const beatmapsets = [
-        { source: "DJMAX" },
-        { source: "DJ MAX" },
-        { source: "djmax" },
-        { source: "neowiz" },
-        { source: "DJMAX Portable 3" },
-        { source: "megarex" },
-        { source: "MEGAREX" },
-      ];
-
-      it('should detect banned sources', () => {
-        for (const beatmapset of beatmapsets) {
-          expect(validator.isBannedSource(beatmapset)).toBe(true);
+      it("should disallow beatmaps with DJMax source variations", () => {
+        const sources = ["DJMax", "DJ Max", "djmax", "DJMAX Portable 3"];
+        for (const source of sources) {
+          const beatmap = createTestBeatmap();
+          beatmap.beatmapset.source = source;
+          const results = validator.validate([beatmap]);
+          expect(results).toHaveLength(1);
+          expect(results[0]).toMatchObject({
+            beatmapset_id: 1,
+            complianceStatus: ComplianceStatus.DISALLOWED,
+            complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+          });
         }
       });
 
-      it('should allow non-banned source', () => {
-        const beatmapset = { source: "chillierpear" };
-        expect(validator.isBannedSource(beatmapset)).toBe(false);
-      });
-    });
-
-    describe('tagContainsBannedSource', () => {
-      it('should detect banned source in tags', () => {
-        const beatmapset = {
-          tags: ['some', 'djmax', 'tag', 'megarex']
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(true);
-      });
-
-      it('should allow beatmapset without banned sources in tags', () => {
-        const beatmapset = {
-          tags: ['chillierpear', 'osu', 'game']
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
-      });
-
-      it('should handle empty tags', () => {
-        const beatmapset = {
-          tags: []
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
-      });
-
-      it('should handle missing tags', () => {
-        const beatmapset = {};
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
-      });
-    });
-
-    describe('checkFlaggedArtist', () => {
-      it('should return null if the track is FA licensed', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.track_id = 1;
-        expect(validator.checkFlaggedArtist(beatmap.beatmapset)).toBe(null);
-      });
-
-      it('should return potentially disallowed for potentially disallowed artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'a_hisa'
-
-        const result = validator.checkFlaggedArtist(beatmap.beatmapset);
-
-        expect(result?.complianceStatus).toBe(ComplianceStatus.POTENTIALLY_DISALLOWED);
-        expect(result?.notes).toBe("Contact before uploading. Can be reached via [email](mailto:hisaweb_info@yahoo.co.jp) or [Bandcamp](https://a-hisa.bandcamp.com/).")
-      });
-    })
-
-    describe('Edge cases', () => {
-      it('should handle uma vs. Morimori Atsushi FA only', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'uma vs. Morimori Atsushi';
+      it("should disallow beatmaps with neowiz source", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.source = "neowiz";
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.FA_TRACKS_ONLY);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+        });
       });
 
-      it('should not flag NOMA in NOMANOA', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'nomanoa';
+      it("should detect banned source case-insensitive", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.source = "megarex"; // lowercase
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+        });
+      });
+    });
+
+    describe("Tags containing banned sources", () => {
+      it("should disallow beatmaps with banned sources in tags", () => {
+        const beatmap = createTestBeatmap();
+        (beatmap.beatmapset as any).tags = ["some", "djmax", "tag"];
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+        });
+      });
+
+      it("should disallow multiple banned sources in tags", () => {
+        const beatmap = createTestBeatmap();
+        (beatmap.beatmapset as any).tags = ["djmax", "megarex", "neowiz"];
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
+        });
+      });
+
+      it("should handle empty tags", () => {
+        const beatmap = createTestBeatmap();
+        (beatmap.beatmapset as any).tags = [];
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
       });
 
-      it('should not flag NOMA in Tsunomaki Watame', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Tsunomaki Watame';
+      it("should handle missing tags", () => {
+        const beatmap = createTestBeatmap();
+        delete (beatmap.beatmapset as any).tags;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
-      });
-
-      it('should flag NOMA vs. Someone', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'NOMA vs. Good Artist';
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      });
-
-      it('should handle various word boundary edge cases', () => {
-        // Test 1: Artist name at the beginning
-        let beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'NOMA feat. Someone';
-        let results = validator.validate([beatmap]);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-
-        // Test 2: Artist name at the end
-        beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Someone feat. NOMA';
-        results = validator.validate([beatmap]);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-
-        // Test 3: Artist name in parentheses
-        beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Track (NOMA Remix)';
-        results = validator.validate([beatmap]);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-
-        // Test 4: Artist name with punctuation
-        beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'NOMA, Someone Else';
-        results = validator.validate([beatmap]);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-
-        // Test 5: Partial match should not flag when part of another word
-        beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Binomaly'; // Contains "noma" but shouldn't flag
-        results = validator.validate([beatmap]);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
-      });
-
-      it('should disallow space in name', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Hatsuki Yura';
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
       });
     });
 
-    describe('Overrides', () => {
-      it('should allow override', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = "Morimori Atsushi";
-        beatmap.beatmapset.title = "Tits or get the fuck out!!";
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
-      });
-
-      it('should disallow override', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = "Lusumi";
-        beatmap.beatmapset.title = "/execution_program.wav";
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER);
-        expect(results[0]!.notes).toBe("The rightsholder has prohibited use of this track.");
-      });
-
-      it('should check overrides correctly', () => {
-        let beatmapset = {
-          artist: "Morimori Atsushi",
-          title: "Tits or get the fuck out!!"
-        };
-        const override1 = validator.findOverride(beatmapset);
-        expect(override1).toBeTruthy();
-        expect(override1?.resultOverride).toBe("ok");
-
-        beatmapset = {
-          artist: "Lusumi",
-          title: "/execution_program.wav"
-        };
-        const override2 = validator.findOverride(beatmapset);
-        expect(override2).toBeTruthy();
-        expect(override2?.resultOverride).toBe("disallowed");
-      });
-
-      it('should not match override with wrong artist', () => {
-        const beatmapset = {
-          artist: "Morimori Sushi",
-          title: "Tits or get the fuck out!!"
-        };
-        const override = validator.findOverride(beatmapset);
-        expect(override).toBeNull();
-      });
-
-      it('should not match override with wrong title', () => {
-        const beatmapset = {
-          artist: "Morimori Atsushi",
-          title: "Tits or get the fuck outt!!"
-        };
-        const override = validator.findOverride(beatmapset);
-        expect(override).toBeNull();
-      });
-
-      it('should match override with contains', () => {
-        const beatmapset = {
-          artist: "Lusumi",
-          title: "Something /execution_program.wav Something"
-        };
-        const override = validator.findOverride(beatmapset);
-        expect(override).toBeTruthy();
-        expect(override?.resultOverride).toBe("disallowed");
-      });
-    });
-
-    describe('MEGAREX label validation', () => {
-      it('should allow FA tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix';
-        beatmap.beatmapset.title = 'NEO GRAVITY';
+    describe("FA licensed overrides banned source", () => {
+      it("should allow FA tracks even with banned source", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.source = "MEGAREX";
         beatmap.beatmapset.track_id = 1234; // FA track
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK
+          complianceStatus: ComplianceStatus.OK,
         });
       });
+    });
+  });
 
-      it('should allow ranked tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaRankedBeatmap();
-        beatmap.beatmapset.artist = 'Camellia';
-        beatmap.beatmapset.title = 'What Is Hitech?';
-        beatmap.beatmapset.track_id = null; // Not FA
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK
-        });
-      });
+  describe("data/labels/MEGAREX.json validation", () => {
+    describe("Artist and title matching", () => {
+      it("should disallow non-FA MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Cave of Points";
 
-      it('should allow approved tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'PSYQUI';
-        beatmap.beatmapset.title = 'Hype feat. Such';
-        beatmap.beatmapset.status = 'approved';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK
-        });
-      });
-
-      it('should allow loved tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Mameyudoufu';
-        beatmap.beatmapset.title = 'Quality Control';
-        beatmap.beatmapset.status = 'loved';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK
-        });
-      });
-
-      it('should disallow non-FA graveyard tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix';
-        beatmap.beatmapset.title = 'NEO GRAVITY';
-        beatmap.beatmapset.track_id = null; // Not FA
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-          notes: "The rightsholder has prohibited use of this track."
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+          notes: "The rightsholder has prohibited use of this track.",
         });
       });
 
-      it('should disallow non-FA pending tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Zekk';
-        beatmap.beatmapset.title = 'Swampgator';
-        beatmap.beatmapset.status = 'pending';
+      it("should allow FA MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Cave of Points";
+        beatmap.beatmapset.track_id = 1234; // FA track
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should handle case-insensitive artist matching", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "LAPIX"; // Different case
+        beatmap.beatmapset.title = "Cave of Points";
         beatmap.beatmapset.track_id = null;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-          notes: "The rightsholder has prohibited use of this track."
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
         });
       });
 
-      it('should disallow non-FA qualified tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'Blacklolita';
-        beatmap.beatmapset.title = 'FlashWarehouse(^-^)';
-        beatmap.beatmapset.status = 'qualified';
+      it("should handle case-insensitive title matching", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "CAVE OF POINTS"; // Different case
         beatmap.beatmapset.track_id = null;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-          notes: "The rightsholder has prohibited use of this track."
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
         });
       });
 
-      it('should disallow non-FA WIP tracks by MEGAREX artists', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'DJ Noriken';
-        beatmap.beatmapset.title = 'Smokey';
-        beatmap.beatmapset.status = 'wip';
+      it("should handle partial title matches", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "NEO GRAVITY (Extended)";
         beatmap.beatmapset.track_id = null;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-          notes: "The rightsholder has prohibited use of this track."
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
         });
       });
 
-      it('should handle case-insensitive artist matching for MEGAREX', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'LAPIX'; // Different case
-        beatmap.beatmapset.title = 'Duality Rave';
+      it("should disallow multiple MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Camellia";
+        beatmap.beatmapset.title = "What Is Hitech?";
         beatmap.beatmapset.track_id = null;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
         });
       });
 
-      it('should handle case-insensitive title matching for MEGAREX', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix';
-        beatmap.beatmapset.title = 'neo gravity'; // Different case
+      it("should disallow collab artists with MEGAREX members", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix & Camellia";
+        beatmap.beatmapset.title = "Dead Music";
         beatmap.beatmapset.track_id = null;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapset_id: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
-        });
-      });
-
-      it('should handle partial title matches for MEGAREX', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix';
-        beatmap.beatmapset.title = 'NEO GRAVITY (Extended Mix)';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
-        });
-      });
-
-      it('should allow non-MEGAREX artists even with similar names', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'NotLapix';
-        beatmap.beatmapset.title = 'Some Song';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK
-        });
-      });
-
-      it('should allow MEGAREX artist with non-MEGAREX track', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix';
-        beatmap.beatmapset.title = 'Not In The MEGAREX List';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK
-        });
-      });
-
-      it('should handle collab artists with MEGAREX members', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix & Camellia';
-        beatmap.beatmapset.title = 'Dead Music';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
-        });
-      });
-
-      it('should handle feat. artists with MEGAREX members', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.artist = 'lapix feat. Numb\'n\'dub';
-        beatmap.beatmapset.title = 'BRAND NEW DAY';
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason: ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
         });
       });
     });
 
-    describe('Artist in title', () => {
-      it('should flag artist in title - remix', () => {
+    describe("MEGAREX tracks with approved status", () => {
+      it("should allow ranked MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "ranked";
+        beatmap.beatmapset.artist = "Camellia";
+        beatmap.beatmapset.title = "What Is Hitech?";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow approved MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "approved";
+        beatmap.beatmapset.artist = "PSYQUI";
+        beatmap.beatmapset.title = "Hype feat. Such";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow loved MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "loved";
+        beatmap.beatmapset.artist = "Mameyudoufu";
+        beatmap.beatmapset.title = "Quality Control";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+    });
+
+    describe("MEGAREX tracks with non-approved status", () => {
+      it("should disallow graveyard MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "graveyard";
+        beatmap.beatmapset.artist = "Zekk";
+        beatmap.beatmapset.title = "Swampgator";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+
+      it("should disallow pending MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "pending";
+        beatmap.beatmapset.artist = "Blacklolita";
+        beatmap.beatmapset.title = "FlashWarehouse(^-^)";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+
+      it("should disallow qualified MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "qualified";
+        beatmap.beatmapset.artist = "DJ Noriken";
+        beatmap.beatmapset.title = "Smokey";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+
+      it("should disallow WIP MEGAREX tracks", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.status = "wip";
+        beatmap.beatmapset.artist = "PSYQUI";
+        beatmap.beatmapset.title = "Hype feat. Such";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+    });
+
+    describe("Non-MEGAREX tracks", () => {
+      it("should allow non-MEGAREX artists", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "NotLapix";
+        beatmap.beatmapset.title = "Some Song";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should allow MEGAREX artist with non-MEGAREX track", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Not In The MEGAREX List";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+    });
+  });
+
+  describe("Helper functions", () => {
+    describe("flagKeyMatch", () => {
+      it("should match known artist", () => {
+        const artist = "Igorrr";
+        expect(validator.flagKeyMatch(artist)).toBe("Igorrr");
+      });
+
+      it("should match artist case-insensitive", () => {
+        const artist = "IgOrRr";
+        expect(validator.flagKeyMatch(artist)).toBe("Igorrr");
+      });
+
+      it("should match artist in collab", () => {
+        const artist = "igorrr vs. Camellia";
+        expect(validator.flagKeyMatch(artist)).toBe("Igorrr");
+      });
+
+      it("should match artist with word boundaries", () => {
+        const artist = "NOMA feat. Someone";
+        expect(validator.flagKeyMatch(artist)).toBe("NOMA");
+      });
+
+      it("should not match partial word", () => {
+        const artist = "NOMANOA";
+        expect(validator.flagKeyMatch(artist)).toBe(null);
+      });
+    });
+
+    describe("isLicensed", () => {
+      it("should return true for positive track ID", () => {
+        expect(validator.isLicensed(1234)).toBe(true);
+      });
+
+      it("should return false for null track ID", () => {
+        expect(validator.isLicensed(null)).toBe(false);
+      });
+
+      it("should return false for undefined track ID", () => {
+        expect(validator.isLicensed(undefined)).toBe(false);
+      });
+
+      it("should return false for zero track ID", () => {
+        expect(validator.isLicensed(0)).toBe(false);
+      });
+
+      it("should return false for negative track ID", () => {
+        expect(validator.isLicensed(-1)).toBe(false);
+      });
+    });
+
+    describe("isStatusApproved", () => {
+      it("should approve ranked status", () => {
+        expect(validator.isStatusApproved(RankStatus.RANKED)).toBe(true);
+      });
+
+      it("should approve approved status", () => {
+        expect(validator.isStatusApproved(RankStatus.APPROVED)).toBe(true);
+      });
+
+      it("should approve loved status", () => {
+        expect(validator.isStatusApproved(RankStatus.LOVED)).toBe(true);
+      });
+
+      it("should not approve graveyard status", () => {
+        expect(validator.isStatusApproved(RankStatus.GRAVEYARD)).toBe(false);
+      });
+
+      it("should not approve pending status", () => {
+        expect(validator.isStatusApproved(RankStatus.PENDING)).toBe(false);
+      });
+
+      it("should not approve qualified status", () => {
+        expect(validator.isStatusApproved(RankStatus.QUALIFIED)).toBe(false);
+      });
+
+      it("should not approve WIP status", () => {
+        expect(validator.isStatusApproved(RankStatus.WIP)).toBe(false);
+      });
+    });
+
+    describe("isDmca", () => {
+      it("should detect DMCA when download disabled", () => {
+        const beatmapset = {
+          availability: {
+            download_disabled: true,
+            more_information: null,
+          },
+        };
+        expect(validator.isDmca(beatmapset)).toBe(true);
+      });
+
+      it("should detect DMCA when more info present", () => {
+        const beatmapset = {
+          availability: {
+            download_disabled: false,
+            more_information: "DMCA notice",
+          },
+        };
+        expect(validator.isDmca(beatmapset)).toBe(true);
+      });
+
+      it("should not detect DMCA when both false/null", () => {
+        const beatmapset = {
+          availability: {
+            download_disabled: false,
+            more_information: null,
+          },
+        };
+        expect(validator.isDmca(beatmapset)).toBe(false);
+      });
+    });
+
+    describe("isBannedSource", () => {
+      it("should detect MEGAREX source", () => {
+        const beatmapset = { source: "MEGAREX" };
+        expect(validator.isBannedSource(beatmapset)).toBe(true);
+      });
+
+      it("should detect DJMax variations", () => {
+        const beatmapsets = [
+          { source: "DJMax" },
+          { source: "DJ Max" },
+          { source: "djmax" },
+          { source: "DJMAX Portable 3" },
+        ];
+        for (const beatmapset of beatmapsets) {
+          expect(validator.isBannedSource(beatmapset)).toBe(true);
+        }
+      });
+
+      it("should detect neowiz source", () => {
+        const beatmapset = { source: "neowiz" };
+        expect(validator.isBannedSource(beatmapset)).toBe(true);
+      });
+
+      it("should allow non-banned source", () => {
+        const beatmapset = { source: "Original" };
+        expect(validator.isBannedSource(beatmapset)).toBe(false);
+      });
+
+      it("should handle null source", () => {
+        const beatmapset = { source: null };
+        expect(validator.isBannedSource(beatmapset)).toBe(false);
+      });
+    });
+
+    describe("tagContainsBannedSource", () => {
+      it("should detect banned source in tags", () => {
+        const beatmapset = {
+          tags: ["some", "djmax", "tag"],
+        };
+        expect(validator.tagContainsBannedSource(beatmapset)).toBe(true);
+      });
+
+      it("should detect multiple banned sources", () => {
+        const beatmapset = {
+          tags: ["megarex", "neowiz"],
+        };
+        expect(validator.tagContainsBannedSource(beatmapset)).toBe(true);
+      });
+
+      it("should allow beatmapset without banned sources in tags", () => {
+        const beatmapset = {
+          tags: ["rhythm", "game", "original"],
+        };
+        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
+      });
+
+      it("should handle empty tags", () => {
+        const beatmapset = {
+          tags: [],
+        };
+        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
+      });
+
+      it("should handle missing tags", () => {
+        const beatmapset = {};
+        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
+      });
+    });
+
+    describe("findOverride", () => {
+      it("should find override with exact artist and title match", () => {
+        const beatmapset = {
+          artist: "Morimori Atsushi",
+          title: "Tits or get the fuck out!!",
+        };
+        const override = validator.findOverride(beatmapset);
+        expect(override).toBeTruthy();
+        expect(override?.resultOverride).toBe("ok");
+      });
+
+      it("should find override with contains match", () => {
+        const beatmapset = {
+          artist: "Lusumi",
+          title: "Something /execution_program.wav Something",
+        };
+        const override = validator.findOverride(beatmapset);
+        expect(override).toBeTruthy();
+        expect(override?.resultOverride).toBe("disallowed");
+      });
+
+      it("should not find override with wrong artist", () => {
+        const beatmapset = {
+          artist: "Wrong Artist",
+          title: "Tits or get the fuck out!!",
+        };
+        const override = validator.findOverride(beatmapset);
+        expect(override).toBeNull();
+      });
+
+      it("should not find override with wrong title", () => {
+        const beatmapset = {
+          artist: "Morimori Atsushi",
+          title: "Wrong Title",
+        };
+        const override = validator.findOverride(beatmapset);
+        expect(override).toBeNull();
+      });
+    });
+
+    describe("getFlaggedArtistInTitle", () => {
+      it("should detect flagged artist in remix", () => {
         const title = "Flower Petal (Igorrr Remix)";
         const [artist, status] = validator.getFlaggedArtistInTitle(title);
-        expect(artist).toBe('Igorrr');
-        expect(status).toBe('disallowed');
+        expect(artist).toBe("Igorrr");
+        expect(status).toBe("disallowed");
       });
 
-      it('should flag artist in title - feat', () => {
+      it("should detect flagged artist in feat", () => {
         const title = "Really Long Name (feat. Igorrr)";
         const [artist, status] = validator.getFlaggedArtistInTitle(title);
-        expect(artist).toBe('Igorrr');
-        expect(status).toBe('disallowed');
+        expect(artist).toBe("Igorrr");
+        expect(status).toBe("disallowed");
       });
 
-      it('should flag artist in title - vs', () => {
-        const title = "Song Name (Igorrr vs. Camellia)";
-        const [artist, status] = validator.getFlaggedArtistInTitle(title);
-        expect(artist).toBe('Igorrr');
-        expect(status).toBe('disallowed');
-      });
-
-      it('should flag artist in title case-insensitive', () => {
+      it("should detect flagged artist case-insensitive", () => {
         const title = "Some Song (IgOrRr Remix)";
         const [artist, status] = validator.getFlaggedArtistInTitle(title);
-        expect(artist).toBe('Igorrr');
-        expect(status).toBe('disallowed');
+        expect(artist).toBe("Igorrr");
+        expect(status).toBe("disallowed");
       });
 
-      it('should not flag normal title', () => {
+      it("should detect artist with space in name", () => {
+        const title = "Something (Hatsuki Yura Remix)";
+        const [artist, status] = validator.getFlaggedArtistInTitle(title);
+        expect(artist).toBe("Hatsuki Yura");
+        expect(status).toBe("disallowed");
+      });
+
+      it("should not detect in normal title", () => {
         const title = "Normal Song Title";
         const [artist, status] = validator.getFlaggedArtistInTitle(title);
         expect(artist).toBeNull();
         expect(status).toBeNull();
       });
 
-      it('should not flag partial word match', () => {
+      it("should not detect partial word match", () => {
         const title = "NOMANOA Remix";
         const [artist, status] = validator.getFlaggedArtistInTitle(title);
         expect(artist).toBeNull();
         expect(status).toBeNull();
       });
+    });
 
-      it('should flag artist with space in name', () => {
-        const title = "Something (Hatsuki Yura Remix)";
-        const [artist, status] = validator.getFlaggedArtistInTitle(title);
-        expect(artist).toBe('Hatsuki Yura');
-        expect(status).toBe('disallowed');
+    describe("checkFlaggedArtist", () => {
+      it("should return null if track is FA licensed", () => {
+        const beatmapset = {
+          id: 1,
+          artist: "Morimori Atsushi",
+          track_id: 1234,
+        } as any;
+        expect(validator.checkFlaggedArtist(beatmapset)).toBe(null);
       });
 
-      it('should disallow artist in title', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.title = "Song Name (Igorrr Remix)";
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
-        expect(results[0]!.notes).toBe("The artist has prohibited usage of their tracks.");
+      it("should return disallowed for disallowed artists", () => {
+        const beatmapset = {
+          id: 1,
+          artist: "Igorrr",
+          track_id: null,
+        } as any;
+        const result = validator.checkFlaggedArtist(beatmapset);
+        expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+        expect(result?.complianceFailureReason).toBe(
+          ComplianceFailureReason.DISALLOWED_ARTIST
+        );
       });
 
-      it('should mark FA only artist in title', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.title = "Song Name (Akira Complex Remix)";
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.FA_TRACKS_ONLY);
+      it("should return potentially disallowed for potential artists", () => {
+        const beatmapset = {
+          id: 1,
+          artist: "a_hisa",
+          track_id: null,
+        } as any;
+        const result = validator.checkFlaggedArtist(beatmapset);
+        expect(result?.complianceStatus).toBe(
+          ComplianceStatus.POTENTIALLY_DISALLOWED
+        );
+        expect(result?.notes).toContain("Contact before uploading");
       });
 
-      it('should allow artist in title when licensed', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.title = "Song Name (Akira Complex Remix)";
-        beatmap.beatmapset.track_id = 1234;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
-      });
-
-      it('should disallow artist in title with feat', () => {
-        const beatmap = createNoDmcaGraveyardBeatmap();
-        beatmap.beatmapset.title = "Amazing Track (feat. Igorrr)";
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-        expect(results[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
-        expect(results[0]!.notes).toBe("The artist has prohibited usage of their tracks.");
+      it("should return disallowed for FA-only artists without FA", () => {
+        const beatmapset = {
+          id: 1,
+          artist: "Zekk",
+          track_id: null,
+        } as any;
+        const result = validator.checkFlaggedArtist(beatmapset);
+        expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+        expect(result?.complianceFailureReason).toBe(
+          ComplianceFailureReason.FA_TRACKS_ONLY
+        );
       });
     });
   });

@@ -38,6 +38,8 @@ export interface ValidationResult {
   cover?: string;
   artist?: string;
   title?: string;
+  owner_id?: number;
+  owner_username?: string;
 }
 
 export interface Availability {
