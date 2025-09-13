@@ -838,6 +838,94 @@ describe("Validator", () => {
         });
       });
     });
+
+    describe("Parenthetical content matching", () => {
+      it("should flag 'Flying Castle' when label has 'Flying Castle (Extended Mix)'", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Flying Castle";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+
+      it("should flag 'Flying Castle (Extended Mix)' when label has 'Flying Castle (Extended Mix)'", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Flying Castle (Extended Mix)";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+
+      it("should flag 'Flying Castle (Different Remix)' when label has 'Flying Castle (Extended Mix)'", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "lapix";
+        beatmap.beatmapset.title = "Flying Castle (Different Remix)";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+
+      it("should NOT flag 'Flying Castle' from different artist", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Different Artist";
+        beatmap.beatmapset.title = "Flying Castle";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should NOT flag 'Beachy Saturday' when label has 'Beachy Saturday Afternoon'", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Some Artist";
+        beatmap.beatmapset.title = "Beachy Saturday";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.OK,
+        });
+      });
+
+      it("should flag when both beatmap and label track have parenthetical content but base matches", () => {
+        const beatmap = createTestBeatmap();
+        beatmap.beatmapset.artist = "Blacklolita";
+        beatmap.beatmapset.title = "FlashWarehouse(o_o)";
+        beatmap.beatmapset.track_id = null;
+        const results = validator.validate([beatmap]);
+        expect(results).toHaveLength(1);
+        expect(results[0]).toMatchObject({
+          beatmapset_id: 1,
+          complianceStatus: ComplianceStatus.DISALLOWED,
+          complianceFailureReason:
+            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+        });
+      });
+    });
   });
 
   describe("Helper functions", () => {

@@ -308,7 +308,14 @@ function isLabelViolation(beatmapset: any): boolean {
       if (labelArtist.toLowerCase() === artist) {
         // Check if title matches any tracks
         for (const track of data.tracks) {
-          if (title.includes(track.toLowerCase())) {
+          const trackLower = track.toLowerCase();
+
+          // Extract base title without parenthetical content for both beatmap and track
+          const beatmapBaseTitle = title.replace(/\s*\([^)]*\)\s*/g, '').trim();
+          const trackBaseTitle = trackLower.replace(/\s*\([^)]*\)\s*/g, '').trim();
+
+          // Check if base titles match (ignoring parenthetical content)
+          if (beatmapBaseTitle === trackBaseTitle) {
             return true;
           }
         }
