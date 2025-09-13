@@ -57,4 +57,5 @@ jobs:
             docker run -d --restart always \
               --name ${{ secrets.DOCKER_IMAGE_NAME }} \
               --env-file ${{ secrets.SSH_TARGET_DIR }}/.env \
+              --network host \
               ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
