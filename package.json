@@ -8,7 +8,7 @@
     "test:ui": "vitest --ui",
     "build": "tsc -p tsconfig.json",
     "start": "node index.ts",
-    "lint": "prettier . --write"
+    "format": "prettier . --write"
   },
   "keywords": [],
   "author": "",

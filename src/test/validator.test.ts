@@ -1124,7 +1124,7 @@ describe("Validator", () => {
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.DISALLOWED_ARTIST
+          ComplianceFailureReason.DISALLOWED_ARTIST,
         );
       });
 
@@ -1136,7 +1136,7 @@ describe("Validator", () => {
         } as any;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(
-          ComplianceStatus.POTENTIALLY_DISALLOWED
+          ComplianceStatus.POTENTIALLY_DISALLOWED,
         );
         expect(result?.notes).toContain("Contact before uploading");
       });
@@ -1150,7 +1150,7 @@ describe("Validator", () => {
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.FA_TRACKS_ONLY
+          ComplianceFailureReason.FA_TRACKS_ONLY,
         );
       });
     });

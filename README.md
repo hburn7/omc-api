@@ -30,4 +30,3 @@ Install the latest LTS version of [node](https://nodejs.org/en) if you don't hav
 - `npm i` - Install packages
 - `npm run start` - Run the server (listens on `localhost:8080`)
 - `vitest` - Run the tests (updates as you code)
-
