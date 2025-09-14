@@ -1,7 +1,7 @@
 import fastify from "fastify";
 import { fetchBeatmaps } from "./src/lib/client.ts";
 import * as validator from "./src/lib/validator.ts";
-import type { ValidationResult } from "./src/lib/dataTypes.ts";
+import { type ValidationResult } from "./src/lib/dataTypes.ts";
 
 const server = fastify();
 
@@ -33,6 +33,7 @@ server.post("/validate", validateOpts, async (request, reply) => {
   const providedSecret = request.headers["x-api-key"];
 
   if (secret !== providedSecret) {
+    console.log('[401] Unauthorized request received')
     reply.code(401).send({ message: "Unauthorized" });
   }
 
@@ -45,6 +46,13 @@ server.post("/validate", validateOpts, async (request, reply) => {
     const results = validator.validate(fetchResult.beatmaps);
     allResults.push(...results);
   }
+
+  const resultStatuses = allResults.reduce((acc, result) => {
+    acc[result.complianceStatusString] = (acc[result.complianceStatusString] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  console.log(`[200] Authorized request received [ ${JSON.stringify(resultStatuses)} | ${allFailures.size} failure(s)]`)
 
   return {
     results: allResults,

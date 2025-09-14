@@ -34,7 +34,7 @@ export interface ValidationResult {
   beatmapIds: number[];
   beatmapsetId: number;
   complianceStatus: ComplianceStatus;
-  complianceStatusString?: string | undefined;
+  complianceStatusString: string;
   complianceFailureReason?: ComplianceFailureReason | undefined;
   complianceFailureReasonString?: string | undefined;
   notes?: string | undefined;
