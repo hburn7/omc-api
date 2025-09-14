@@ -1,19 +1,11 @@
 [
   {
-    "meta": {
-      "title": {
-        "equalsIgnoreCase": "Tits or get the fuck out!!"
-      }
-    },
+    "title": "Tits or get the fuck out!!",
     "artist": "Morimori Atsushi",
     "resultOverride": "ok"
   },
   {
-    "meta": {
-      "title": {
-        "contains": "execution_program"
-      }
-    },
+    "title": "execution_program",
     "artist": "Lusumi",
     "resultOverride": "disallowed",
     "failureReasonOverride": "disallowedByRightsholder"

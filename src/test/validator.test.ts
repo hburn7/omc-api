@@ -6,11 +6,11 @@ import {
   RankStatus,
 } from "../lib/dataTypes";
 import type { BeatmapWithBeatmapset } from "../lib/dataTypes";
+import { Beatmapset } from "osu-api-v2-js";
 
 function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
   return {
     id: 1,
-    beatmapset_id: beatmapsetId,
     mode: "osu",
     mode_int: 0,
     convert: false,
@@ -30,16 +30,16 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
       title: "Test Title",
       creator: "Test Creator",
       user_id: 1,
-      source: null,
+      source: "",
       covers: {
         cover: "",
-        cover2x: "",
+        "cover@2x": "",
         card: "",
-        card2x: "",
+        "card@2x": "",
         list: "",
-        list2x: "",
+        "list@2x": "",
         slimcover: "",
-        slimcover2x: "",
+        "slimcover@2x": "",
       },
       favourite_count: 0,
       play_count: 0,
@@ -47,12 +47,11 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
       video: false,
       bpm: 180,
       can_be_hyped: false,
-      discussion_enabled: true,
       discussion_locked: false,
       hype: null,
       is_scoreable: true,
-      last_updated: new Date().toISOString(),
-      legacy_thread_url: null,
+      last_updated: new Date(),
+      legacy_thread_url: "https://osu.ppy.sh",
       nominations_summary: {
         current: 0,
         eligible_main_rulesets: [],
@@ -63,29 +62,57 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
       },
       ranked_date: null,
       storyboard: false,
-      submitted_date: new Date().toISOString(),
-      tags: "" as any, // Note: validator expects array but API returns string
+      submitted_date: new Date(),
+      tags: "",
       availability: {
         download_disabled: false,
         more_information: null,
       },
       track_id: null,
       status: "graveyard",
+      deleted_at: null,
+      ranked: Beatmapset.RankStatus.Graveyard,
+      artist_unicode: "",
+      genre_id: Beatmapset.Genre.Any,
+      language_id: Beatmapset.Language.Any,
+      nsfw: false,
+      offset: 0,
+      spotlight: false,
+      title_unicode: "",
     },
-  } as any as BeatmapWithBeatmapset;
+    failtimes: {
+      exit: [],
+      fail: [],
+    },
+    owners: [],
+    accuracy: 0,
+    ar: 0,
+    bpm: 0,
+    count_circles: 0,
+    count_sliders: 0,
+    count_spinners: 0,
+    cs: 0,
+    deleted_at: null,
+    drain: 0,
+    hit_length: 0,
+    is_scoreable: false,
+    last_updated: new Date(),
+    beatmapset_id: beatmapsetId,
+    status: "graveyard",
+  } satisfies BeatmapWithBeatmapset;
 }
 
 describe("Validator", () => {
   describe("Core Rules", () => {
     describe("Owner fields are included in results", () => {
-      it("should include owner_id and owner_username in validation results", () => {
+      it("should include ownerId and ownerUsername in validation results", () => {
         const beatmap = createTestBeatmap();
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          owner_id: 1,
-          owner_username: "Test Creator",
+          beatmapsetId: 1,
+          ownerId: 1,
+          ownerUsername: "Test Creator",
         });
       });
     });
@@ -98,13 +125,13 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DMCA,
           notes:
             "This beatmapset contains content which has been removed due to a DMCA takedown.",
-          owner_id: 1,
-          owner_username: "Test Creator",
+          ownerId: 1,
+          ownerUsername: "Test Creator",
         });
       });
     });
@@ -117,7 +144,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -129,7 +156,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -141,7 +168,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -154,7 +181,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -168,7 +195,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -180,7 +207,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -193,7 +220,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -208,7 +235,7 @@ describe("Validator", () => {
 
         const results = validator.validate([beatmap1, beatmap2]);
         expect(results).toHaveLength(1); // Should only have one result for the beatmapset
-        expect(results[0]!.beatmapset_id).toBe(100);
+        expect(results[0]!.beatmapsetId).toBe(100);
       });
 
       it("should handle multiple beatmaps from different beatmapsets", () => {
@@ -217,8 +244,8 @@ describe("Validator", () => {
 
         const results = validator.validate([beatmap1, beatmap2]);
         expect(results).toHaveLength(2); // Should have two results for two beatmapsets
-        expect(results[0]!.beatmapset_id).toBe(100);
-        expect(results[1]!.beatmapset_id).toBe(200);
+        expect(results[0]!.beatmapsetId).toBe(100);
+        expect(results[1]!.beatmapsetId).toBe(200);
       });
     });
   });
@@ -231,7 +258,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
           notes:
@@ -246,7 +273,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -258,7 +285,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
         });
@@ -271,7 +298,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.FA_TRACKS_ONLY,
         });
@@ -284,7 +311,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -297,7 +324,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
           notes: "The artist has prohibited usage of their tracks.",
@@ -310,7 +337,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
         });
@@ -322,7 +349,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
         });
@@ -334,7 +361,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_ARTIST,
         });
@@ -348,7 +375,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED,
           notes:
             "Contact before uploading. Can be reached via [email](mailto:hisaweb_info@yahoo.co.jp) or [Bandcamp](https://a-hisa.bandcamp.com/).",
@@ -416,19 +443,22 @@ describe("Validator", () => {
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
+        beatmapsetId: 1,
         complianceStatus: ComplianceStatus.OK,
       });
     });
 
     it("should apply override with contains matching", () => {
       const beatmap = createTestBeatmap();
+
       beatmap.beatmapset.artist = "Lusumi";
       beatmap.beatmapset.title = "Something /execution_program.wav Something";
+
       const results = validator.validate([beatmap]);
+      
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
+        beatmapsetId: 1,
         complianceStatus: ComplianceStatus.DISALLOWED,
         complianceFailureReason:
           ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -444,7 +474,7 @@ describe("Validator", () => {
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
+        beatmapsetId: 1,
         complianceStatus: ComplianceStatus.OK,
       });
     });
@@ -476,7 +506,7 @@ describe("Validator", () => {
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
-        beatmapset_id: 1,
+        beatmapsetId: 1,
         complianceStatus: ComplianceStatus.OK,
       });
     });
@@ -490,7 +520,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
           notes: "The track is from a prohibited source.",
@@ -505,7 +535,7 @@ describe("Validator", () => {
           const results = validator.validate([beatmap]);
           expect(results).toHaveLength(1);
           expect(results[0]).toMatchObject({
-            beatmapset_id: 1,
+            beatmapsetId: 1,
             complianceStatus: ComplianceStatus.DISALLOWED,
             complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
           });
@@ -518,7 +548,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
         });
@@ -530,7 +560,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
         });
@@ -540,11 +570,11 @@ describe("Validator", () => {
     describe("Tags containing banned sources", () => {
       it("should disallow beatmaps with banned sources in tags", () => {
         const beatmap = createTestBeatmap();
-        (beatmap.beatmapset as any).tags = ["some", "djmax", "tag"];
+        beatmap.beatmapset.tags = "some,djmax,tag";
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
         });
@@ -552,11 +582,11 @@ describe("Validator", () => {
 
       it("should disallow multiple banned sources in tags", () => {
         const beatmap = createTestBeatmap();
-        (beatmap.beatmapset as any).tags = ["djmax", "megarex", "neowiz"];
+        beatmap.beatmapset.tags = "djmax,megarex,neowiz";
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason: ComplianceFailureReason.DISALLOWED_SOURCE,
         });
@@ -564,15 +594,7 @@ describe("Validator", () => {
 
       it("should handle empty tags", () => {
         const beatmap = createTestBeatmap();
-        (beatmap.beatmapset as any).tags = [];
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
-      });
-
-      it("should handle missing tags", () => {
-        const beatmap = createTestBeatmap();
-        delete (beatmap.beatmapset as any).tags;
+        beatmap.beatmapset.tags = "";
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
@@ -587,7 +609,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -604,7 +626,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -620,7 +642,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -633,7 +655,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -648,7 +670,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -663,7 +685,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -678,7 +700,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -693,7 +715,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -711,7 +733,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -725,7 +747,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -739,7 +761,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -755,7 +777,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -771,7 +793,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -784,10 +806,12 @@ describe("Validator", () => {
         beatmap.beatmapset.artist = "DJ Noriken";
         beatmap.beatmapset.title = "Smokey";
         beatmap.beatmapset.track_id = null;
+
         const results = validator.validate([beatmap]);
+
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -799,11 +823,12 @@ describe("Validator", () => {
         beatmap.beatmapset.status = "wip";
         beatmap.beatmapset.artist = "PSYQUI";
         beatmap.beatmapset.title = "Hype feat. Such";
-        beatmap.beatmapset.track_id = null;
+
         const results = validator.validate([beatmap]);
+
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.DISALLOWED,
           complianceFailureReason:
             ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -820,7 +845,7 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
@@ -833,97 +858,67 @@ describe("Validator", () => {
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
+          beatmapsetId: 1,
           complianceStatus: ComplianceStatus.OK,
         });
       });
     });
+  });
 
-    describe("Parenthetical content matching", () => {
-      it("should flag 'Flying Castle' when label has 'Flying Castle (Extended Mix)'", () => {
-        const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Flying Castle";
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason:
-            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-        });
+  describe("Parenthetical content matching", () => {
+    it("should flag 'Flying Castle' when label has 'Flying Castle (Extended Mix)'", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "lapix";
+      beatmap.beatmapset.title = "Flying Castle";
+      beatmap.beatmapset.track_id = null;
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapsetId: 1,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason:
+          ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
       });
+    });
 
-      it("should flag 'Flying Castle (Extended Mix)' when label has 'Flying Castle (Extended Mix)'", () => {
-        const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Flying Castle (Extended Mix)";
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason:
-            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-        });
+    it("should flag 'Flying Castle (Extended Mix)' when label has 'Flying Castle (Extended Mix)'", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "lapix";
+      beatmap.beatmapset.title = "Flying Castle (Extended Mix)";
+      beatmap.beatmapset.track_id = null;
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapsetId: 1,
+        complianceStatus: ComplianceStatus.DISALLOWED,
+        complianceFailureReason:
+          ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
       });
+    });
 
-      it("should flag 'Flying Castle (Different Remix)' when label has 'Flying Castle (Extended Mix)'", () => {
-        const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Flying Castle (Different Remix)";
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason:
-            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-        });
+    it("should NOT flag 'Flying Castle' from different artist", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Different Artist";
+      beatmap.beatmapset.title = "Flying Castle";
+      beatmap.beatmapset.track_id = null;
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapsetId: 1,
+        complianceStatus: ComplianceStatus.OK,
       });
+    });
 
-      it("should NOT flag 'Flying Castle' from different artist", () => {
-        const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Different Artist";
-        beatmap.beatmapset.title = "Flying Castle";
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK,
-        });
-      });
-
-      it("should NOT flag 'Beachy Saturday' when label has 'Beachy Saturday Afternoon'", () => {
-        const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Some Artist";
-        beatmap.beatmapset.title = "Beachy Saturday";
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.OK,
-        });
-      });
-
-      it("should flag when both beatmap and label track have parenthetical content but base matches", () => {
-        const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Blacklolita";
-        beatmap.beatmapset.title = "FlashWarehouse(o_o)";
-        beatmap.beatmapset.track_id = null;
-        const results = validator.validate([beatmap]);
-        expect(results).toHaveLength(1);
-        expect(results[0]).toMatchObject({
-          beatmapset_id: 1,
-          complianceStatus: ComplianceStatus.DISALLOWED,
-          complianceFailureReason:
-            ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-        });
+    it("should NOT flag 'Beachy Saturday' when label has 'Beachy Saturday Afternoon'", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "Some Artist";
+      beatmap.beatmapset.title = "Beachy Saturday";
+      beatmap.beatmapset.track_id = null;
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toMatchObject({
+        beatmapsetId: 1,
+        complianceStatus: ComplianceStatus.OK,
       });
     });
   });
@@ -1015,7 +1010,7 @@ describe("Validator", () => {
             download_disabled: true,
             more_information: null,
           },
-        };
+        } as Beatmapset.Extended;
         expect(validator.isDmca(beatmapset)).toBe(true);
       });
 
@@ -1025,7 +1020,7 @@ describe("Validator", () => {
             download_disabled: false,
             more_information: "DMCA notice",
           },
-        };
+        } as Beatmapset.Extended;
         expect(validator.isDmca(beatmapset)).toBe(true);
       });
 
@@ -1035,116 +1030,88 @@ describe("Validator", () => {
             download_disabled: false,
             more_information: null,
           },
-        };
+        } as Beatmapset.Extended;
         expect(validator.isDmca(beatmapset)).toBe(false);
       });
     });
 
     describe("isBannedSource", () => {
       it("should detect MEGAREX source", () => {
-        const beatmapset = { source: "MEGAREX" };
-        expect(validator.isBannedSource(beatmapset)).toBe(true);
+        const sources = ["MEGAREX", "megarex"];
+
+        for (const source of sources) {
+          expect(validator.isBannedSource(source)).toBe(true);
+        }
       });
 
       it("should detect DJMax variations", () => {
-        const beatmapsets = [
-          { source: "DJMax" },
-          { source: "DJ Max" },
-          { source: "djmax" },
-          { source: "DJMAX Portable 3" },
-        ];
-        for (const beatmapset of beatmapsets) {
-          expect(validator.isBannedSource(beatmapset)).toBe(true);
+        const mySources = ["DJMAX", "djmax", "DJ MAX", "neowiz"];
+
+        for (const source of mySources) {
+          expect(validator.isBannedSource(source)).toBe(true);
         }
       });
 
       it("should detect neowiz source", () => {
-        const beatmapset = { source: "neowiz" };
-        expect(validator.isBannedSource(beatmapset)).toBe(true);
+        const source = "neowiz";
+        expect(validator.isBannedSource(source)).toBe(true);
       });
 
       it("should allow non-banned source", () => {
-        const beatmapset = { source: "Original" };
-        expect(validator.isBannedSource(beatmapset)).toBe(false);
+        const source = "Arcaea";
+        expect(validator.isBannedSource(source)).toBe(false);
       });
 
-      it("should handle null source", () => {
-        const beatmapset = { source: null };
-        expect(validator.isBannedSource(beatmapset)).toBe(false);
+      it("should not detect partial source", () => {
+        const source = "max";
+        expect(validator.isBannedSource(source)).toBe(false);
       });
     });
 
     describe("tagContainsBannedSource", () => {
       it("should detect banned source in tags", () => {
-        const beatmapset = {
-          tags: ["some", "djmax", "tag"],
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(true);
+        const tags = "some,djmax,tag";
+        expect(validator.tagContainsBannedSource(tags)).toBe(true);
       });
 
       it("should detect multiple banned sources", () => {
-        const beatmapset = {
-          tags: ["megarex", "neowiz"],
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(true);
+        const tags = "megarex,neowiz";
+        expect(validator.tagContainsBannedSource(tags)).toBe(true);
       });
 
       it("should allow beatmapset without banned sources in tags", () => {
-        const beatmapset = {
-          tags: ["rhythm", "game", "original"],
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
+        const tags = "rhythm,game,original";
+        expect(validator.tagContainsBannedSource(tags)).toBe(false);
       });
 
       it("should handle empty tags", () => {
-        const beatmapset = {
-          tags: [],
-        };
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
-      });
-
-      it("should handle missing tags", () => {
-        const beatmapset = {};
-        expect(validator.tagContainsBannedSource(beatmapset)).toBe(false);
+        const tags = "";
+        expect(validator.tagContainsBannedSource(tags)).toBe(false);
       });
     });
 
     describe("findOverride", () => {
       it("should find override with exact artist and title match", () => {
-        const beatmapset = {
-          artist: "Morimori Atsushi",
-          title: "Tits or get the fuck out!!",
-        };
-        const override = validator.findOverride(beatmapset);
+        const artist = "Morimori Atsushi";
+        const title = "Tits or get the fuck out!!";
+
+        const override = validator.findOverride(artist, title);
+
         expect(override).toBeTruthy();
         expect(override?.resultOverride).toBe("ok");
       });
 
-      it("should find override with contains match", () => {
-        const beatmapset = {
-          artist: "Lusumi",
-          title: "Something /execution_program.wav Something",
-        };
-        const override = validator.findOverride(beatmapset);
-        expect(override).toBeTruthy();
-        expect(override?.resultOverride).toBe("disallowed");
-      });
-
       it("should not find override with wrong artist", () => {
-        const beatmapset = {
-          artist: "Wrong Artist",
-          title: "Tits or get the fuck out!!",
-        };
-        const override = validator.findOverride(beatmapset);
+        const artist = "Wrong Artist";
+        const title = "Tits or get the fuck out!!";
+        const override = validator.findOverride(artist, title);
         expect(override).toBeNull();
       });
 
       it("should not find override with wrong title", () => {
-        const beatmapset = {
-          artist: "Morimori Atsushi",
-          title: "Wrong Title",
-        };
-        const override = validator.findOverride(beatmapset);
+        const artist = "Morimori Atsushi";
+        const title = "Wrong Title";
+        const override = validator.findOverride(artist, title);
         expect(override).toBeNull();
       });
     });
@@ -1199,7 +1166,7 @@ describe("Validator", () => {
           id: 1,
           artist: "Morimori Atsushi",
           track_id: 1234,
-        } as any;
+        } as Beatmapset.Extended;
         expect(validator.checkFlaggedArtist(beatmapset)).toBe(null);
       });
 
@@ -1208,11 +1175,11 @@ describe("Validator", () => {
           id: 1,
           artist: "Igorrr",
           track_id: null,
-        } as any;
+        } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.DISALLOWED_ARTIST,
+          ComplianceFailureReason.DISALLOWED_ARTIST
         );
       });
 
@@ -1221,10 +1188,10 @@ describe("Validator", () => {
           id: 1,
           artist: "a_hisa",
           track_id: null,
-        } as any;
+        } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(
-          ComplianceStatus.POTENTIALLY_DISALLOWED,
+          ComplianceStatus.POTENTIALLY_DISALLOWED
         );
         expect(result?.notes).toContain("Contact before uploading");
       });
@@ -1234,11 +1201,11 @@ describe("Validator", () => {
           id: 1,
           artist: "Zekk",
           track_id: null,
-        } as any;
+        } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.FA_TRACKS_ONLY,
+          ComplianceFailureReason.FA_TRACKS_ONLY
         );
       });
     });

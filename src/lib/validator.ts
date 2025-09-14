@@ -60,11 +60,16 @@ export function validate(
   const results: ValidationResult[] = [];
 
   // Validate each unique beatmapset
-  for (const [beatmapsetId, beatmapGroup] of beatmapsetMap) {
+  for (const [_, beatmapGroup] of beatmapsetMap) {
     // Use the first beatmap's beatmapset data (they all share the same beatmapset)
     const beatmapset = beatmapGroup[0]?.beatmapset;
-    if (!beatmapset) continue;
-    const result = validateBeatmapset(beatmapsetId, beatmapset);
+    if (!beatmapset) {
+      continue;
+    }
+
+    const result = validateBeatmapset(beatmapset);
+    result.beatmapIds = beatmapGroup.map(b => b.id);
+
     results.push(result);
   }
 
@@ -79,15 +84,16 @@ function buildValidationResult(
   notes?: string | null,
 ): ValidationResult {
   const result: ValidationResult = {
-    beatmapset_id: beatmapset.id,
+    beatmapIds: [],
+    beatmapsetId: beatmapset.id,
     complianceStatus: status,
     complianceStatusString: getComplianceStatusString(status),
     cover:
       beatmapset.covers?.cover || beatmapset.covers?.["cover@2x"] || undefined,
     artist: beatmapset.artist,
     title: beatmapset.title,
-    owner_id: beatmapset.user_id,
-    owner_username: beatmapset.creator,
+    ownerId: beatmapset.user_id,
+    ownerUsername: beatmapset.creator,
     status: beatmapset.status
   };
 
@@ -106,8 +112,7 @@ function buildValidationResult(
 
 // Validate a single beatmapset
 function validateBeatmapset(
-  beatmapsetId: number,
-  beatmapset: any,
+  beatmapset: Beatmapset.Extended,
 ): ValidationResult {
   // Check for DMCA
   if (isDmca(beatmapset)) {
@@ -120,7 +125,7 @@ function validateBeatmapset(
   }
 
   // Check for overrides first
-  const override = findOverride(beatmapset);
+  const override = findOverride(beatmapset.artist, beatmapset.title);
   if (override) {
     const status = parseOverrideStatus(override.resultOverride);
     if (status === ComplianceStatus.OK) {
@@ -149,7 +154,7 @@ function validateBeatmapset(
   }
 
   // Check for banned sources in tags
-  if (tagContainsBannedSource(beatmapset)) {
+  if (tagsContainBannedSource(beatmapset.tags)) {
     return buildValidationResult(
       beatmapset,
       ComplianceStatus.DISALLOWED,
@@ -159,7 +164,7 @@ function validateBeatmapset(
   }
 
   // Check for banned sources in source field
-  if (isBannedSource(beatmapset)) {
+  if (isBannedSource(beatmapset.source)) {
     return buildValidationResult(
       beatmapset,
       ComplianceStatus.DISALLOWED,
@@ -169,7 +174,7 @@ function validateBeatmapset(
   }
 
   // Check for label violations
-  if (isLabelViolation(beatmapset)) {
+  if (isLabelViolation(beatmapset.artist, beatmapset.title)) {
     return buildValidationResult(
       beatmapset,
       ComplianceStatus.DISALLOWED,
@@ -185,7 +190,7 @@ function validateBeatmapset(
   }
 
   // Check for flagged artists in title
-  const titleResult = checkFlaggedArtistInTitle(beatmapset, beatmapsetId);
+  const titleResult = checkFlaggedArtistInTitle(beatmapset);
   if (titleResult) {
     return titleResult;
   }
@@ -228,7 +233,7 @@ function getComplianceFailureReasonString(
   }
 }
 
-function isDmca(beatmapset: any): boolean {
+function isDmca(beatmapset: Beatmapset.Extended): boolean {
   return (
     beatmapset.availability.download_disabled ||
     beatmapset.availability.more_information !== null
@@ -268,13 +273,9 @@ function getRankStatus(status: string): RankStatus {
   }
 }
 
-function isBannedSource(beatmapset: any): boolean {
-  if (!beatmapset.source) {
-    return false;
-  }
-
-  for (const source of disallowedSources) {
-    if (beatmapset.source.toLowerCase().includes(source.toLowerCase())) {
+function isBannedSource(source: string): boolean {
+  for (const disallowedSource of disallowedSources) {
+    if (source.toLowerCase().includes(disallowedSource.toLowerCase())) {
       return true;
     }
   }
@@ -282,15 +283,11 @@ function isBannedSource(beatmapset: any): boolean {
   return false;
 }
 
-function tagContainsBannedSource(beatmapset: any): boolean {
-  if (!beatmapset.tags || !Array.isArray(beatmapset.tags)) {
-    return false;
-  }
-
-  const tagsString = beatmapset.tags.join(" ").toLowerCase();
+function tagsContainBannedSource(tags: string): boolean {
+  const tagArr = tags.split(',');
 
   for (const source of disallowedSources) {
-    if (tagsString.includes(source.toLowerCase())) {
+    if (tagArr.includes(source.toLowerCase())) {
       return true;
     }
   }
@@ -298,26 +295,33 @@ function tagContainsBannedSource(beatmapset: any): boolean {
   return false;
 }
 
-function isLabelViolation(beatmapset: any): boolean {
-  const artist = beatmapset.artist.toLowerCase();
-  const title = beatmapset.title.toLowerCase();
+function isLabelViolation(artist: string, title: string): boolean {
+  const labelData = labels[0];
 
-  for (const labelData of labels) {
-    for (const [labelArtist, data] of Object.entries(labelData)) {
-      // Check if artist matches
-      if (labelArtist.toLowerCase() === artist) {
-        // Check if title matches any tracks
-        for (const track of data.tracks) {
-          const trackLower = track.toLowerCase();
+  if (!labelData) {
+    throw Error('Label data error')
+  }
 
-          // Extract base title without parenthetical content for both beatmap and track
-          const beatmapBaseTitle = title.replace(/\s*\([^)]*\)\s*/g, '').trim();
-          const trackBaseTitle = trackLower.replace(/\s*\([^)]*\)\s*/g, '').trim();
+  const titleLower = title.toLowerCase();
 
-          // Check if base titles match (ignoring parenthetical content)
-          if (beatmapBaseTitle === trackBaseTitle) {
-            return true;
-          }
+  for (const [labelArtist, data] of Object.entries(labelData)) {
+    if (labelArtist.toLowerCase() === artist.toLowerCase()) {
+      for (const track of data.tracks) {
+
+        // Since the artists are equal,
+        // see whether the beatmap's title
+        // includes the full track name OR
+        // the content of the track name before the first
+        // '(' character.
+        const trackLower = track.toLowerCase();
+
+        if (titleLower.includes(trackLower)) {
+          return true;
+        }
+
+        const trackPreParentheses = trackLower.split('(')[0]?.trim();
+        if (trackPreParentheses && titleLower.includes(trackPreParentheses)) {
+          return true;
         }
       }
     }
@@ -326,36 +330,25 @@ function isLabelViolation(beatmapset: any): boolean {
   return false;
 }
 
-function findOverride(beatmapset: any): Override | null {
+function findOverride(artist: string, title: string): Override | null {
   for (const override of overrides) {
-    if (matchesOverride(beatmapset, override)) {
+    if (matchesOverride(artist, title, override)) {
       return override;
     }
   }
   return null;
 }
 
-function matchesOverride(beatmapset: any, override: Override): boolean {
+function matchesOverride(artist: string, title: string, override: Override): boolean {
   // Check artist match
-  if (override.artist !== beatmapset.artist) {
+  if (artist.toLowerCase() !== override.artist.toLowerCase()) {
     return false;
   }
 
-  // Check title conditions
-  if (override.meta.title.equalsIgnoreCase) {
-    return (
-      beatmapset.title.toLowerCase() ===
-      override.meta.title.equalsIgnoreCase.toLowerCase()
-    );
-  }
-
-  if (override.meta.title.contains) {
-    return beatmapset.title
-      .toLowerCase()
-      .includes(override.meta.title.contains.toLowerCase());
-  }
-
-  return false;
+  return (
+    title.toLowerCase() === override.title.toLowerCase() ||
+    title.toLowerCase().includes(override.title.toLowerCase())
+  );
 }
 
 function parseOverrideStatus(status: string): ComplianceStatus {
@@ -367,14 +360,16 @@ function parseOverrideStatus(status: string): ComplianceStatus {
     case "disallowed":
       return ComplianceStatus.DISALLOWED;
     default:
-      return ComplianceStatus.OK;
+      throw Error(`Failed to parse override status of ${status} [valid range is 'ok', 'potential', 'disallowed']`)
   }
 }
 
 function parseFailureReason(
   reason: string | undefined,
 ): ComplianceFailureReason | undefined {
-  if (!reason) return undefined;
+  if (!reason) {
+    return undefined;
+  }
 
   switch (reason) {
     case "disallowedByRightsholder":
@@ -428,8 +423,7 @@ function checkFlaggedArtist(beatmapset: Beatmapset): ValidationResult | null {
 }
 
 function checkFlaggedArtistInTitle(
-  beatmapset: any,
-  beatmapsetId: number,
+  beatmapset: Beatmapset.Extended,
 ): ValidationResult | null {
   const [titleArtist, titleStatus] = getFlaggedArtistInTitle(beatmapset.title);
 
@@ -563,7 +557,7 @@ export {
   isLicensed,
   isStatusApproved,
   isBannedSource,
-  tagContainsBannedSource,
+  tagsContainBannedSource as tagContainsBannedSource,
   isLabelViolation,
   findOverride,
   matchesOverride,

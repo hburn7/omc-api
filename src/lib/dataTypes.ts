@@ -31,7 +31,8 @@ export type ComplianceFailureReason =
 
 // Interfaces
 export interface ValidationResult {
-  beatmapset_id: number;
+  beatmapIds: number[];
+  beatmapsetId: number;
   complianceStatus: ComplianceStatus;
   complianceStatusString?: string | undefined;
   complianceFailureReason?: ComplianceFailureReason | undefined;
@@ -40,8 +41,8 @@ export interface ValidationResult {
   cover?: string | undefined;
   artist?: string | undefined;
   title?: string | undefined;
-  owner_id?: number | undefined;
-  owner_username?: string | undefined;
+  ownerId?: number | undefined;
+  ownerUsername?: string | undefined;
   status: string;
 }
 
@@ -61,16 +62,9 @@ export interface LabelData {
   };
 }
 
-export interface OverrideMeta {
-  title: {
-    equalsIgnoreCase?: string;
-    contains?: string;
-  };
-}
-
 export interface Override {
-  meta: OverrideMeta;
   artist: string;
+  title: string;
   resultOverride: "ok" | "potential" | "disallowed";
   failureReasonOverride?: string;
 }
