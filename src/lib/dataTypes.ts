@@ -52,7 +52,7 @@ export interface Availability {
 }
 
 export interface FlaggedArtistData {
-  status: "fa_only" | "potential" | "disallowed" | "partial";
+  status: "fa_only" | "potential" | "disallowed";
   notes?: string | null;
 }
 

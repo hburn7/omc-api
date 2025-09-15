@@ -424,7 +424,7 @@ describe("Validator", () => {
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
       });
 
-      it("should not flag partial matches in other words", () => {
+      it("should not flag potential matches in other words", () => {
         const beatmap = createTestBeatmap();
         beatmap.beatmapset.artist = "Binomaly"; // Contains "noma" but shouldn't flag
         const results = validator.validate([beatmap]);
@@ -677,7 +677,7 @@ describe("Validator", () => {
         });
       });
 
-      it("should handle partial title matches", () => {
+      it("should handle potential title matches", () => {
         const beatmap = createTestBeatmap();
         beatmap.beatmapset.artist = "lapix";
         beatmap.beatmapset.title = "NEO GRAVITY (Extended)";
@@ -945,7 +945,7 @@ describe("Validator", () => {
         expect(validator.flagKeyMatch(artist)).toBe("NOMA");
       });
 
-      it("should not match partial word", () => {
+      it("should not match potential word", () => {
         const artist = "NOMANOA";
         expect(validator.flagKeyMatch(artist)).toBe(null);
       });
@@ -1062,7 +1062,7 @@ describe("Validator", () => {
         expect(validator.isBannedSource(source)).toBe(false);
       });
 
-      it("should not detect partial source", () => {
+      it("should not detect potential source", () => {
         const source = "max";
         expect(validator.isBannedSource(source)).toBe(false);
       });
@@ -1152,7 +1152,7 @@ describe("Validator", () => {
         expect(status).toBeNull();
       });
 
-      it("should not detect partial word match", () => {
+      it("should not detect potential word match", () => {
         const title = "NOMANOA Remix";
         const [artist, status] = validator.getFlaggedArtistInTitle(title);
         expect(artist).toBeNull();
