@@ -1,64 +1,78 @@
 {
   "200Gavas": {
-    "tracks": ["minimal life", "\u963f\u4fee\u7f85\u306e\u7fbd"]
+    "tracks": ["minimal life", "阿修羅の羽"]
+  },
+  "ARM": {
+    "tracks": ["Bad Ass"]
+  },
+  "AXURA ft. PANXI": {
+    "tracks": ["Mr.Midnight"]
   },
   "Aethral": {
-    "tracks": ["All About The Rush", "All About The Rush"]
+    "tracks": ["All About The Rush"]
+  },
+  "Akiba": {
+    "tracks": ["Sayonara ByeBye (feat. Nicole Curry)"]
   },
   "Akira Complex": {
-    "tracks": ["Alien Bassline", "LVL.99", "Order of Freya", "STINGER MISSILE"]
+    "tracks": [
+      "Alien Bassline",
+      "LVL.99",
+      "Necromancer's Circle",
+      "Order of Freya",
+      "STINGER MISSILE",
+      "Trash Talk"
+    ]
   },
   "Akira Complex & Ira Colta": {
     "tracks": ["Trash Talk"]
   },
   "Alby Loud": {
-    "tracks": ["\u95a2\u897f", "\u95a2\u897f"]
-  },
-  "aran": {
-    "tracks": [
-      "Canvas (feat. Nicole Curry)",
-      "Don't Stop",
-      "Fractal Brain",
-      "Sunny After Rain (feat. Kanata.N)"
-    ]
+    "tracks": ["関西"]
   },
   "Asatsumei": {
     "tracks": ["II Okashi to Warui Okashi (feat. L4hee)"]
   },
-  "AXURA ft. PANXI": {
-    "tracks": ["Mr.Midnight"]
+  "Ashrount": {
+    "tracks": ["In Seventh Heaven"]
+  },
+  "Avans": {
+    "tracks": ["Goldsmith"]
+  },
+  "BlackY": {
+    "tracks": ["Primeval Attack", "Terrabreak"]
   },
   "Blacklolita": {
     "tracks": [
       "Blacklolita",
       "BrainBurst (o_o)",
       "Cougar",
-      "FlashWarehouse(^-^)",
+      "FOREVER(^_^)",
+      "FVERTEX",
+      "FlashWarehouse (^-^)",
       "FlashWarehouse(^-^)",
       "Floodgroove",
-      "FOREVER(^_^)",
       "Frustrate",
       "Fvertex",
-      "Halfway (>\u2200<)",
+      "Halfway (>∀<)",
       "INDAHOUSE(o-_-)",
       "LAMENTO (;_;)",
-      "QUEST ('\u2200')",
-      "QUEST(\u00b4\u2200` )",
-      "sequence feat. shully",
-      "SHIFT(\u30fb\u03c9\u30fb)",
-      "SHIFT(\u30fb\u03c9\u30fb)",
+      "QUEST ('∀')",
+      "QUEST(´∀` )",
+      "SHIFT (・ω・)",
+      "SHIFT(・ω・)",
+      "SxS (feat. Such)",
       "SxS feat. Such",
+      "sequence feat. shully",
       "truuuuust feat. shully"
     ]
   },
-  "BlackY": {
-    "tracks": ["Primeval Attack"]
-  },
-  "braven": {
-    "tracks": ["It's gonna be alright (feat. shully)", "start again"]
-  },
   "C-Show": {
-    "tracks": ["AImee (feat. \u85cd\u6708\u306a\u304f\u308b)", "Speedroid"]
+    "tracks": [
+      "AImee (feat. 藍月なくる)",
+      "AImee [feat. 藍月なくる] - Need6 Remix",
+      "Speedroid"
+    ]
   },
   "C-Show VS lapix": {
     "tracks": ["Hi-TECHOLIC"]
@@ -66,96 +80,149 @@
   "Camellia": {
     "tracks": [
       "EMARGENCY SIREN",
+      "Hi-technology Droppers",
       "Hitech pistol -Hitech Ninja wa 145-do Shinu-",
-      "kannabis klutivation",
+      "Hitech pistol -ハイテック忍者は145度死ぬ-",
+      "Night Fog (feat. Luschel)",
       "Night Fog feat. Luschel",
-      "What Is Hitech?"
+      "What Is Hitech?",
+      "kannabis klutivation",
+      "kannabis kultivation"
     ]
-  },
-  "colate": {
-    "tracks": ["DreaMilk tea (feat. Yukacco)"]
   },
   "Cranky vs HiTECH NINJA": {
     "tracks": ["HiT! HiT! HiT!"]
   },
-  "cYsmix": {
-    "tracks": ["Freya"]
+  "DJ Genki": {
+    "tracks": ["HIGHER (feat. SHIN)"]
   },
-  "Dirty Androids": {
-    "tracks": [
-      "Intergalactic (feat. Nicole Curry)",
-      "On The West Coastline feat. Punipuni Denki",
-      "Universe (feat. Nicole Curry)"
-    ]
+  "DJ Myosuke": {
+    "tracks": ["Mad Disco Ball"]
   },
   "DJ Noriken": {
-    "tracks": ["No One Is There", "Smokey", "Turn It Up (feat. Kanae Asaba)"]
+    "tracks": [
+      "No One Is There",
+      "No One is There",
+      "Smokey",
+      "Straight Six",
+      "Turn It Up (feat. Kanae Asaba)",
+      "Turn It Up [feat. Kanae Asaba] - Yooh Remix",
+      "Wastegate"
+    ]
   },
   "DJ Shimamura feat. Numb'n'dub & MC STONE": {
     "tracks": ["Raving Alright!!!"]
   },
   "DJPoyoshi": {
     "tracks": [
+      "Beyond core EVANGELIX 01 - DJ MIX",
+      "Dark Knite - lapix Remix",
+      "FUTURE EVANGELIX 01 - DJ MIX",
       "FUTURE EVANGELIX 01 -DJ MIX-",
+      "MAHOU [feat. DJ勝也] - tokiwa's Magical Arts Remix",
       "MAHOU feat DJKatsuya ( tokiwa's Magical Arts Remix)",
       "TECHCORE EVANGELIX 01 -DJ MIX-",
-      "\u30c0\u30fc\u30af\u30ca\u30a4\u30c8 (lapix Remix)",
-      "\u65b0\u4e16\u754c"
+      "ありがとう さようなら",
+      "ありがとう さようなら - Cranky & Pico Remix",
+      "ありがとう さようなら - DJ Shimamura's Festival Trapcore Remix",
+      "ありがとう さようなら - DJGENKI Remix",
+      "ありがとう さようなら - Nish Remix",
+      "ありがとう さようなら - PSYQUI Remix",
+      "ありがとう さようなら - Scott Brown & M-Project Remix",
+      "ありがとう さようなら - TOMOYU funkot remix",
+      "ありがとう さようなら - tokiwa Remix",
+      "ダークナイト (lapix Remix)",
+      "愛おぼえていますか - shiromaru+Cranky Remix",
+      "新世界"
     ]
   },
   "DJPoyoshi & lapix": {
     "tracks": [
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089 (Cranky & Pico Remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089 (Nish Remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089 (Scott Brown & M-Project Remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089 (TOMOYU funkot remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089(DJ Shimamura's Festival Trapcore Remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089(DJGENKI Remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089(PSYQUI feat.Such Remix)",
-      "\u3042\u308a\u304c\u3068\u3046 \u3055\u3088\u3046\u306a\u3089(tokiwa_REMIX)"
+      "ありがとう さようなら",
+      "ありがとう さようなら (Cranky & Pico Remix)",
+      "ありがとう さようなら (DJ Shimamura's Festival Trapcore Remix)",
+      "ありがとう さようなら (DJGENKI Remix)",
+      "ありがとう さようなら (Nish Remix)",
+      "ありがとう さようなら (PSYQUI feat.Such Remix)",
+      "ありがとう さようなら (Scott Brown & M-Project Remix)",
+      "ありがとう さようなら (TOMOYU funkot remix)",
+      "ありがとう さようなら (tokiwa_REMIX)"
     ]
   },
   "DJShimamura": {
     "tracks": ["BLATANT GENERATION", "Trust In The Rockets"]
   },
-  "DJ\u52dd\u4e5f": {
+  "DJ勝也": {
+    "tracks": ["愛おぼえていますか(shiromaru+Cranky Remix)"]
+  },
+  "Dirty Androids": {
     "tracks": [
-      "\u611b\u304a\u307c\u3048\u3066\u3044\u307e\u3059\u304b(shiromaru+Cranky Remix)"
+      "Intergalactic (feat. Nicole Curry)",
+      "On The West Coastline feat. Punipuni Denki",
+      "Universe (feat. Nicole Curry)",
+      "eyes (feat. RANASOL)"
     ]
   },
   "Drumatic Sequencer": {
     "tracks": ["Fenrir"]
   },
   "Dustvoxx": {
-    "tracks": ["Basscode"]
+    "tracks": ["Basscode", "Funk Off 3.0"]
   },
   "Endorfin.": {
-    "tracks": ["Diamond Glow"]
+    "tracks": ["Diamond Glow", "Fatalism"]
   },
-  "factal": {
-    "tracks": ["Forgotten feat. Renko"]
+  "Fellsius": {
+    "tracks": ["Mona Lisa", "Rubber"]
+  },
+  "Feryquitous": {
+    "tracks": ["Absolute Region", "Elasticity"]
+  },
+  "Foxsky": {
+    "tracks": ["9mm"]
+  },
+  "Frums": {
+    "tracks": ["isla"]
   },
   "Funeral Audio": {
-    "tracks": ["My Kicks Only Knows (DJ Shimamura Remix)"]
+    "tracks": [
+      "My Kicks Only Knows (DJ Shimamura Remix)",
+      "My Kicks Only Knows - DJ Shimamura Remix"
+    ]
   },
   "Getty": {
-    "tracks": ["Daylight feat. mami", "Tumbling (feat. Renko)"]
+    "tracks": [
+      "Daylight (feat. mami)",
+      "Daylight feat. mami",
+      "Tumbling (feat. Renko)",
+      "Tumbling [feat. Renko] - 3R2 Remix"
+    ]
   },
-  "hally": {
-    "tracks": ["ah-ha", "punisher(2013 edition)"]
+  "Harunaba": {
+    "tracks": ["Lantern Network"]
   },
   "HiTECH NINJA": {
     "tracks": [
+      "Divine",
       "Dolphika (Extended)",
       "Dolphika (Feryquitous Remix)",
-      "Memecore"
+      "HiT! HiT! HiT!",
+      "Intro",
+      "Memecore",
+      "NINJA IS ALIVE (BOMB BEATS)",
+      "Outro",
+      "PrayStation - HiTECH NINJA Remix",
+      "Venetian Zap",
+      "Who am I",
+      "interlude",
+      "完全攻略術",
+      "改"
     ]
   },
   "Hommarju": {
     "tracks": ["OMG", "Stab Launcher"]
   },
-  "hyleo": {
+  "Hyleo": {
     "tracks": ["Phantom Thief", "Trigger (feat. Such)"]
   },
   "Inverted Silence": {
@@ -164,367 +231,325 @@
   "JAKAZiD": {
     "tracks": ["Skyrocketing"]
   },
-  "kakeru": {
-    "tracks": ["B2B"]
-  },
-  "Kakeru": {
-    "tracks": [
-      "Do you love me? feat. Rntl",
-      "mirai feat. \u308a\u3093\u305f\u308b"
-    ]
-  },
-  "kamome sano": {
-    "tracks": [
-      "feel (feat. mami)",
-      "lovesick (feat. \u3077\u306b\u3077\u306b\u96fb\u6a5f)"
-    ]
-  },
   "KARUT": {
-    "tracks": ["NEO JulianA"]
-  },
-  "KaSa": {
-    "tracks": ["Division ONE"]
+    "tracks": ["NEO JulianA", "Rave CompleX"]
   },
   "KATOMORI": {
     "tracks": ["Sunrise (feat. shully)"]
   },
-  "kazeoff": {
-    "tracks": [
-      "Changing the Future",
-      "Raving With Fire",
-      "\u4eca\u6708\u306e\u304a\u3059\u3059\u3081\u30d7\u30ec\u30a4\u30ea\u30b9\u30c8\u3092\u691c\u7d22\u3057\u307e\u3059 feat. Yozumina"
-    ]
-  },
-  "Kijibato ft. Kanata.N": {
-    "tracks": ["Sensation-A"]
-  },
-  "kiraku": {
-    "tracks": ["dragon blood"]
-  },
   "KO3": {
     "tracks": [
+      "BLOODHOUND",
       "Can't you feel it (instrumental)",
       "Can't you feel it feat. mami",
+      "Dear. (feat. Yukacco)",
+      "Dear. [feat. Yukacco] - KOTONOHOUSE Remix",
+      "Need Bright",
       "Work It"
     ]
   },
   "KO3 & Relect": {
     "tracks": ["Dear. (feat. Yukacco)"]
   },
-  "KO3 \u00d7 RANASOL": {
+  "KO3 × RANASOL": {
     "tracks": ["Stroll"]
-  },
-  "Kobaryo": {
-    "tracks": ["Alpha Next ft. Nyankovsky"]
-  },
-  "kors k": {
-    "tracks": ["Grey", "Monkey Business (lapix Remix)"]
-  },
-  "kors k & Numb'n'dub": {
-    "tracks": ["Raver's high", "Raver's High (lapix Remix)"]
-  },
-  "kors k & Numb'n'dub feat. DJ\u52dd\u4e5f": {
-    "tracks": ["Raving Alright!!!"]
-  },
-  "kors k vs \u304a\u3082\u3057\u308d\u4e09\u56fd\u5fd7": {
-    "tracks": ["\u5b6b\u5b50\u5175\u6cd5"]
   },
   "KOTONOHOUSE": {
     "tracks": [
       "All Night Long (feat. EVO+)",
-      "Can u feel my heart (feat. \u3077\u306b\u3077\u306b\u96fb\u6a5f)",
-      "pray (feat. Such)"
+      "Believe In The Future (feat. ぷにぷに電機)",
+      "Can u feel my heart (feat. ぷにぷに電機)",
+      "Geisha",
+      "Stereo Mode (feat. EVO+)",
+      "pray (feat. Such)",
+      "プロトコル (feat. Shully)"
     ]
   },
-  "lapix": {
+  "KaSa": {
+    "tracks": ["Division ONE"]
+  },
+  "Kabocha": {
+    "tracks": ["SHINING GOLD LICENSE"]
+  },
+  "Kakeru": {
     "tracks": [
-      "And Drugs",
-      "Around The World ( Dirty Androids Remix)",
-      "Artifical Human",
-      "Backflow",
-      "Backstage (feat. suisoh)",
-      "Beyond The Limits (Massive New Krew Remix)",
-      "Bite the Bullet (feat. Kanata.N)",
-      "Bite the Bullet feat. Kanata.N",
-      "Blue Love ft. YUC'e",
-      "BRAND NEW DAY (feat. Numb'n'dub)",
-      "BRAND NEW DAY feat.Numb'n'dub (DJ Shimamura Remix)",
-      "Bunny House",
-      "Carry Me Away (Extended Mix)",
-      "Cave of Points",
-      "Celebrate (Snail's House Remix)",
-      "CLIMAX (Dustvoxx Remix)",
-      "CLITICAL MEGAREX (TechCore Remix)",
-      "Coloring",
-      "Concept of Reality ft. Renko",
-      "Core Signal ft. Kanata.N",
-      "Crossroad (PSYQUI Remix)",
-      "Day by Day (feat. Nicole Curry)",
-      "Day by day (PSYQUI Remix)",
-      "Debug Dance (Zekk Remix)",
-      "Discloze (Extended)",
-      "Discloze (Hommarju Remix)",
-      "DRASTIC GENERATE feat. mami",
-      "Duality Rave",
-      "Duality Rave (Zekk's 'FULL SPEC' Remix)",
-      "Duality Rave (Zekk's 'FULL SPEC' Remix) [2019 Remaster]",
-      "Feeling of Shape",
-      "Flamenco House",
-      "Flying Castle (Extended Mix)",
-      "Foolish Hero (P*Light Remix)",
-      "Free Theme",
-      "Future Raver feat.Numb'n'dub",
-      "Get Over The Culture",
-      "Go Crazy feat. Luschel & Kent Alexander",
-      "Go Crazy ft. Luschel & Kent Alexander (JAKAZiD Remix)",
-      "Good Time ft. Mayumi Morinaga",
-      "Hitech Never Die",
-      "HiTECH NINJA",
-      "Horizon Blue feat. Kanata.N",
-      "Inner Spirit (Maozon Remix)",
-      "Innovation",
-      "Irradiate feat. mami",
-      "JazzFunktion feat. mami (Blacklolita Remix)",
-      "Labyrinth",
-      "Live Nor Die ft. Kanae Asaba",
-      "Live Nor Die ft. Kanae Asaba (Nhato Remix)",
-      "Lunatic Crazy feat. PANXI",
-      "Morning Glow (feat. kradness)",
-      "NEO GRAVITY (BlackYooh vs. siromaru Remix)",
-      "NEO GRAVITY (Extended)",
-      "Neo Treason (Extended)",
-      "NEO TREASON (Extended)",
-      "Nothing but Theory (More JazzFunktion Mix)",
-      "Ocean Blue feat. Luschel (Extended Mix)",
-      "Odd Lovey feat. PANXI",
-      "Outer Space",
-      "QIXPIN",
-      "Rosa azuL (Extended Mix)",
-      "Shime (Extended Mix)",
-      "SORA feat.DJ\u52dd\u4e5f (Srav3R Remix)",
-      "Stop Motion",
-      "Survivor ft. Kent Alexnader (Srav3R Remix)",
-      "Synergy",
-      "Tech Alert",
-      "TechCore Evangelix :",
-      "Toumei Shin'en feat. nayuta",
-      "Tribal Frontier",
-      "Ultra Funktion Pt.2",
-      "Under Mebius feat. Aitsuki Nakuru (YUKIYANAGI Remix)",
-      "Vital",
-      "Voice of Galaxy",
-      "What about us",
-      "YOLO ft. Numb'n'dub"
+      "Do you love me? (feat. りんたる)",
+      "Do you love me? feat. Rntl",
+      "PANiC",
+      "mirai (feat. りんたる)",
+      "mirai feat. りんたる"
     ]
   },
-  "lapix & Camellia": {
-    "tracks": ["Dead Music"]
+  "Kijibato ft. Kanata.N": {
+    "tracks": ["Sensation-A"]
   },
-  "lapix & Mameyudoufu": {
-    "tracks": ["Bump-Mapping", "Texture"]
+  "Killrina": {
+    "tracks": ["Perspective"]
   },
-  "lapix feat. DJ\u52dd\u4e5f": {
-    "tracks": ["kokoro"]
+  "Kirara Magic": {
+    "tracks": ["Traverse (feat. Mino)"]
   },
-  "lapix feat. Nana Hiyori": {
-    "tracks": ["Siren"]
-  },
-  "lapix VS Blacklolita": {
-    "tracks": ["Zonestic"]
+  "Kobaryo": {
+    "tracks": ["Alpha Next (feat. Nyankovsky)", "Alpha Next ft. Nyankovsky"]
   },
   "Laur": {
-    "tracks": ["Extraordinary Magic"]
-  },
-  "litmus* ft. Risa Yuzuki": {
-    "tracks": ["Don't Hurt Me"]
+    "tracks": ["CHEMICAL REACTION", "Extraordinary Magic"]
   },
   "Luschel": {
     "tracks": ["Last Dialogue", "Stray cat"]
   },
+  "M-Project": {
+    "tracks": ["Atomic Rave"]
+  },
+  "MASEraaaN": {
+    "tracks": [
+      "Future Connect (feat. Such)",
+      "Future Connect feat. Such",
+      "Lolipop Mode (Extend VIP)",
+      "マーメイド (feat. Sennzai)"
+    ]
+  },
+  "MK": {
+    "tracks": ["axis"]
+  },
+  "MK × 紫崎 雪": {
+    "tracks": ["World Wave"]
+  },
+  "MMQX": {
+    "tracks": ["Haunted town"]
+  },
+  "MNK": {
+    "tracks": ["L.S.D", "Lose Control - lapix Remix"]
+  },
   "Mameyudoufu": {
     "tracks": [
-      "I STILL Don't Know What I'm Doing",
       "AAx",
       "All Alone",
       "Another Space Shooter!?",
       "Approximation",
+      "Axonometric",
+      "Bass Music Is Hard Yo",
       "But I Go Back",
+      "Call My Name (feat. Yukacco)",
+      "Call My Name - MonarX Remix",
       "Call My Name feat. Yukacco",
       "Can't Be More Generic",
       "Citadel",
       "Cloud Finding (feat. Kanata.N)",
+      "Cloud Finding - House Mix",
+      "Dot to Dot (feat. shully)",
+      "Dot to Dot - Rework",
+      "Esperanza",
+      "Eyes On The Stars",
+      "Fluffy - Yuigot Remix",
       "Generic House Thingy",
       "I Got Myself Trapped in the Toy Box",
+      "I HATE MY PUTER -ALL MY ENEMIES ARE INSIDE IT-",
+      "I STILL Don't Know What I'm Doing",
+      "Illuminated",
       "It Won't Turn On... Let's Fix It!",
+      "It's Not Much, But It's Mine.",
+      "Journey",
       "Midnight Glow (feat. mami)",
       "Midnight Glow feat. mami (Extended a bit)",
+      "Midnight grow (feat. mami)",
+      "Midnight grow - Blacklolita Remix",
+      "Moments (feat. クサカアキラ)",
+      "Moments [feat. クサカアキラ] - Club Edit",
+      "Moments [feat. クサカアキラ] - instrumental",
+      "Movin' On (feat. Such)",
       "Movin' On feat. Such",
+      "Multi-Thread",
+      "NECROMANCE",
+      "NRG",
       "Nihilsmus",
       "Pixel Perfect",
       "Point",
+      "Purple Skies - Extended Mix",
       "Quality Control",
       "Remember This One? It's Out Now",
       "Reverberation (feat. Yuki Shizaki)",
+      "SOBOK",
       "Segment feat. shully",
+      "Sentient",
+      "Shining (feat. 藍月なくる)",
       "Sky's The Limit",
       "Somewhere Else",
+      "Spectrum",
+      "Starting Up",
+      "The Future (feat. YusukeUdon)",
       "The Future feat.YusukeUdon",
       "The Heck",
+      "The New Era",
       "The New Era :",
       "Variables",
       "Voxel Jammer",
-      "Wave feat. \u85cd\u6708\u306a\u304f\u308b",
-      "\u3042\u308f",
-      "\u3084\u3063\u3071\u308a\u732b\u304c\u597d\u304d (Lo-Fi Mix)",
-      "\u624d\u80fd (instrumental)",
-      "\u624d\u80fd feat. ANNE"
+      "Wave (feat. 藍月なくる)",
+      "Wave - rejection remix",
+      "Wave feat. 藍月なくる",
+      "reminisce (feat. Such)",
+      "あわ",
+      "やっぱり猫が好き",
+      "やっぱり猫が好き (Lo-Fi Mix)",
+      "ハードウェアは夢を見る",
+      "リバーブレーション (feat. 紫崎 雪)",
+      "優しい嘘 (feat. ANNE)",
+      "才能 (instrumental)",
+      "才能 feat. ANNE"
     ]
   },
-  "mameyudoufu": {
-    "tracks": ["Eyes On The Stars"]
-  },
-  "Mameyudoufu \u00d7 \u85cd\u6708\u306a\u304f\u308b": {
-    "tracks": ["One Step Closer"]
-  },
   "Mameyudoufu ft. nayuta": {
-    "tracks": ["\u30df\u30ea\u30bb\u30b3\u30f3\u30ba"]
+    "tracks": ["ミリセコンズ"]
   },
   "Mameyudoufu x Zaza": {
     "tracks": ["epoqc"]
   },
-  "MASEraaaN": {
-    "tracks": ["Future Connect feat. Such"]
+  "Mameyudoufu × 藍月なくる": {
+    "tracks": ["One Step Closer"]
   },
   "Massive New Krew": {
     "tracks": [
       "Dive off the skyscraper",
       "L.S.D",
       "Lose Control (lapix Remix)",
-      "The Old Me"
+      "The Old Me",
+      "Voyager"
     ]
   },
   "Mitomoro": {
-    "tracks": ["Arcadia Bae"]
-  },
-  "MK": {
-    "tracks": ["axis"]
-  },
-  "MK \u00d7 \u7d2b\u5d0e \u96ea": {
-    "tracks": ["World Wave"]
+    "tracks": ["Arcadia Bae", "Dragon"]
   },
   "Mysteka": {
-    "tracks": [
-      "Overstep (instrumental)",
-      "Overstep feat. \u661f\u540d\u306f\u308bfrom\u30a2\u30a4\u30ed\u30dc"
-    ]
+    "tracks": ["Overstep (instrumental)", "Overstep feat. 星名はるfromアイロボ"]
   },
-  "Mysteka \u00d7 shully": {
-    "tracks": ["KOKORO HIGH"]
-  },
-  "Mysteka ft. \u30ab\u30df\u308b\u308c": {
+  "Mysteka ft. カミるれ": {
     "tracks": ["Focus"]
+  },
+  "Mysteka × shully": {
+    "tracks": ["KOKORO HIGH"]
   },
   "N2": {
     "tracks": ["PSYCHOLOGICAL DAMAGE"]
   },
-  "necchi": {
-    "tracks": ["Hegira (feat. Such)"]
+  "NANBA HiTECH FULLONs": {
+    "tracks": ["SANKANOU NANIWADAMASHII - M-Project Remix"]
   },
   "Nhato": {
-    "tracks": ["Amygdala", "Gotta Get Down"]
+    "tracks": [
+      "Amygdala",
+      "Break the Core",
+      "Glue Gun",
+      "Gotta Get Down",
+      "Imaginary Friends"
+    ]
+  },
+  "Nota": {
+    "tracks": ["WALL"]
   },
   "Numb'n'dub": {
-    "tracks": ["Back to my side", "Rave it up"]
-  },
-  "Numb\u2019n\u2019dub": {
     "tracks": [
-      "Rave it up (DJ Shimamura & MC STONE\u2019s WKD Ravers mix)",
+      "Back to my side",
+      "Rave it up",
+      "Rave it up (feat. 一鉄 a.k.a ILLUGUN)",
+      "Rave it up - DJ Shimamura & MC STONE’s WKD Ravers mix",
+      "Raving Alright!!!",
+      "RavingAlright!!! - lapix Remix"
+    ]
+  },
+  "Numb’n’dub": {
+    "tracks": [
+      "Rave it up (DJ Shimamura & MC STONE’s WKD Ravers mix)",
       "RavingAlright!!! (lapix Remix)"
     ]
   },
   "PENGO!": {
-    "tracks": ["Yes! (DJSHARPNEL REMIX)"]
-  },
-  "poplavor": {
-    "tracks": ["Starting Line (instrumental)", "Starting Line feat. RANASOL"]
-  },
-  "poplavor \u00d7 Kanata.N": {
-    "tracks": ["CutAll.sys"]
-  },
-  "poplavor x Kanata.N": {
-    "tracks": ["I AM"]
+    "tracks": ["Yes! (DJSHARPNEL REMIX)", "Yes! - DJ SHARPNEL REMIX"]
   },
   "PSYQUI": {
     "tracks": [
+      "Architect",
       "Are you kidding me (feat. mami)",
       "Be There",
       "Decay",
-      "Don't you want me (feat. Such)",
       "Don't you Want Me (Mameyudoufu Remix)",
+      "Don't you Want Me [feat. Such] - Mameyudoufu Remix",
+      "Don't you want me (feat. Such)",
       "Education",
+      "Endless (feat. Mameyudoufu)",
+      "Endless [feat. Mameyudoufu] - Mameyudoufu Remix",
       "Endless feat Mameyudoufu (Mameyudoufu Remix)",
       "Endless feat. Mameyudoufu",
+      "Fly to the moon (feat. 中村さんそ)",
+      "Funk Assembly",
       "Hikari no hou e feat. Such (Awakening)",
+      "Hype (feat. Such)",
       "Hype (sky_delta Remix)",
+      "Hype [feat. Such] - Massive New KrewRemix",
+      "Hype [feat. Such] - sky_delta Remix",
       "Hype feat. Such",
       "Hype feat. Such (lapix Remix)",
       "Hysteric Night Girl -Awakening-",
       "Innocent :",
       "Mend your ways (feat. Such)",
+      "Multitalents",
       "Raise Your Hands (feat. Such)",
       "Recalled Collapse (feat. Such)",
+      "Roson",
       "Secret Dance Hall (feat. Such)",
       "Sentimental Heart Boy (feat. Such)",
       "Start Up feat. Such",
       "Still In My Heart feat. Punipuni Denki",
+      "Still in my heart (feat. ぷにぷに電機)",
       "Super Dive",
+      "Take Me Back (feat. DJ勝也)",
       "Tears",
       "Visitor",
-      "Your voice so... (feat. such)",
+      "V＆K (feat. DJ勝也)",
+      "We are the Lights (feat. DJ勝也)",
+      "YES or NO (feat. DJ勝也)",
       "Your voice so... (Zekk's 'FULL SPEC' Remix)",
       "Your voice so... (Zekk's 'FULL SPEC' Remix) [2019 Remaster] [feat. Such]",
+      "Your voice so... (feat. such)",
+      "Your voice so... - DJ Shimamura Remix",
+      "Your voice so... - M-Project Remix",
+      "Your voice so... [feat. Such] - Zekk's 'FULL SPEC' Remix",
+      "Your voice so... [feat. Such] - Zekk's 'FULL SPEC' Remix - 2019 Remaster",
+      "Your voice so... [feat. Such] - android52 Remix",
       "Your voice so... feat.Such (DJShimamura Remix)",
       "Your voice so... feat.Such (M-Project Remix)",
-      "\u30d2\u30ab\u30ea\u306e\u65b9\u3078 (lapix & Cranky Remix)",
-      "\u30d2\u30b9\u30c6\u30ea\u30c3\u30af\u30ca\u30a4\u30c8\u30ac\u30fc\u30eb -Awakening- (feat. Such)"
+      "fascinated (feat. DJ勝也)",
+      "hype [feat. Such] - lapix Remix",
+      "ヒカリの方へ (lapix & Cranky Remix)",
+      "ヒカリの方へ [feat. Such] - lapix & Cranky Remix",
+      "ヒステリックナイトガール -Awakening- (feat. Such)"
     ]
   },
   "PSYQUI & Blacklolita": {
-    "tracks": ["fascinated feat.DJ\u52dd\u4e5f"]
+    "tracks": ["fascinated feat.DJ勝也"]
   },
   "Qutabire": {
     "tracks": ["Planet X"]
   },
   "Ras": {
-    "tracks": ["PrayStation (HiTECH NINJA Remix)"]
-  },
-  "rejection": {
-    "tracks": [
-      "a wound (instrumental)",
-      "a wound feat. mikanzil",
-      "Insomnia feat. mami",
-      "Invisible Scars feat. mami",
-      "Signal feat. Such",
-      "Zero Gravity"
-    ]
-  },
-  "rejection \u00d7 \u7d2b\u6708": {
-    "tracks": ["REAL INTENTION"]
-  },
-  "rejection ft. AZK": {
-    "tracks": ["fatalist"]
-  },
-  "rejection x PANXI": {
-    "tracks": ["PERSONA"]
+    "tracks": ["JAVELIN", "PrayStation (HiTECH NINJA Remix)"]
   },
   "Relect": {
-    "tracks": ["Bass Drop", "Energy"]
+    "tracks": ["Bass Drop", "Energy", "Into The Sky (feat. Kanae Asaba)"]
+  },
+  "Remo-Con": {
+    "tracks": ["UMMF"]
   },
   "Riku": {
-    "tracks": ["Acid Power", "Acid Power"]
+    "tracks": ["Acid Power", "Searching (feat. Renko)"]
+  },
+  "RiraN": {
+    "tracks": ["Fire Up"]
   },
   "RoughSketch": {
-    "tracks": ["Concrete Jungle"]
+    "tracks": ["Concrete Jungle", "This Is Funky Disco"]
+  },
+  "Ryunosuke Kudo": {
+    "tracks": ["Drop That"]
   },
   "S2i8": {
     "tracks": ["GO RAVE", "HARDCORE IS HYPER"]
@@ -532,137 +557,179 @@
   "S2i8 & Numb'n'dub": {
     "tracks": ["Welcome To New Day (Short)"]
   },
-  "Savage States": {
-    "tracks": ["Fade", "I Know Where God Is", "Liquid Moon"]
-  },
-  "Si28": {
-    "tracks": ["GO RAVE", "HARDCORE IS HYPER"]
-  },
-  "siqlo": {
-    "tracks": ["after squall"]
-  },
-  "siromaru + Cranky": {
-    "tracks": ["conflict(lapix Remix)", "conflict(Rave Taisen 2016 ver.)"]
-  },
-  "sky_delta": {
-    "tracks": [
-      "Crystal Clear and Nothing feat. Kanata.N",
-      "Moon Drive",
-      "Steal Hearts feat. mikanzil",
-      "YUMEUTSUTSU (feat. shully)"
-    ]
-  },
-  "sky_delta vs. lapix": {
-    "tracks": ["NEXT LEVEL"]
+  "SNOW SMILE": {
+    "tracks": ["GOURMET RACE"]
   },
   "SNOW SMILE & nyankobrq": {
     "tracks": ["GOURMET RACE"]
   },
-  "sober bear": {
-    "tracks": ["passion (instrumental)", "passion feat. shully"]
+  "Savage States": {
+    "tracks": [
+      "Banger",
+      "Fade",
+      "I Know Where God Is",
+      "Liquid Moon",
+      "Lose Control"
+    ]
+  },
+  "Si28": {
+    "tracks": ["GO RAVE", "HARDCORE IS HYPER"]
+  },
+  "Siromaru": {
+    "tracks": ["conflict - lapix Remix", "conflict - siromaru + cranky Remix"]
+  },
+  "So-Ma:p": {
+    "tracks": [
+      "Summer Drop (feat. クサカアキラ)",
+      "Summer Drop [feat. クサカアキラ] - Club Edit",
+      "Summer Drop [feat. クサカアキラ] - instrumental"
+    ]
   },
   "Sober Bear": {
-    "tracks": ["Pole Position"]
+    "tracks": [
+      "Pole Position",
+      "Who's the hand for (feat. Kanata.N)",
+      "friendfriend zone (feat. 紫崎雪)",
+      "modify"
+    ]
   },
   "Sokudo! x YUKIYANAGI": {
     "tracks": ["Wait For You"]
   },
   "Srav3R": {
-    "tracks": ["Hereafter (feat. shully)", "Overflow", "Word Of Old"]
+    "tracks": [
+      "Hereafter (feat. shully)",
+      "Hereafter [feat. shully] - Myosuke Remix",
+      "MUSiC",
+      "NiTE CRUiSiNG (feat. Numb'n'dub)",
+      "NiTE CRUiSiNG [feat. Numb’n'dub] - Sober Bear Remix",
+      "Overflow",
+      "Word Of Old"
+    ]
   },
   "Srav3r": {
     "tracks": ["NiTE CRUiSiNG feat. Numb'n'dub"]
   },
+  "Srezcat": {
+    "tracks": ["Confront"]
+  },
   "Srezcat & Kobaryo": {
     "tracks": ["Confront"]
   },
-  "Synthion": {
-    "tracks": ["Travel+"]
+  "Street": {
+    "tracks": ["Replicated Temple"]
   },
-  "t+pazolite": {
-    "tracks": ["PSYCHED AGOSTO"]
+  "Stripe.P": {
+    "tracks": ["On Down (feat. Renko)"]
   },
-  "takatin": {
-    "tracks": ["Amber Color"]
-  },
-  "Tatsunoshin": {
-    "tracks": ["Mirai (feat.DJ\u52dd\u4e5f)"]
-  },
-  "Tatsunoshin x PIKASONIC x SARUKANI": {
-    "tracks": ["NANYAKORE"]
-  },
-  "Tatttttttt feat. Numb'n'dub": {
-    "tracks": ["Having a Good Time (SxUxM Remix)"]
-  },
-  "tn-shi": {
-    "tracks": ["Hitech Intuition", "Revival"]
-  },
-  "tokiwa": {
+  "Such": {
     "tracks": [
-      "Cortado",
-      "Light (feat. Luschel)",
-      "Lunarscape",
-      "Memoirs feat. Aitsuki Nakuru"
+      "Hegira",
+      "Innocent",
+      "Mend your ways (feat. PSYQUI)",
+      "Secret Dance Hall (feat. PSYQUI)",
+      "pray",
+      "センチメンタルハートボーイ (feat. PSYQUI)"
     ]
+  },
+  "Synthion": {
+    "tracks": ["Connect (feat. 紫崎雪)", "Travel+"]
+  },
+  "T4TSUYA": {
+    "tracks": ["Illegal Trip"]
+  },
+  "TANUKI": {
+    "tracks": ["Aozora (feat. 紫崎雪)"]
+  },
+  "TEMPLIME": {
+    "tracks": ["Square One (feat. Such)"]
   },
   "TOMOYU": {
     "tracks": ["Flappy Flyer"]
   },
   "TORIENA": {
-    "tracks": ["Panic sale"]
-  },
-  "Tsubusare BOZZ": {
-    "tracks": [
-      "panorama (feat. madoka*)",
-      "\u3089\u3076\u307f\u308b\u3075\u3043\uff5e\u3086 (instrumental)",
-      "\u3089\u3076\u307f\u308b\u3075\u3043\uff5e\u3086 feat. \u4e2d\u6751\u3055\u3093\u305d"
-    ]
-  },
-  "Tsubusare BOZZ ft. \u5922\u4e43\u3086\u304d": {
-    "tracks": ["\u30b9\u30bf\u30fc\u30e9\u30a4\u30c8\u30b9\u30a4\u30df\u30fc"]
+    "tracks": ["DOPING LIFE", "Iron Maiden", "Panic sale"]
   },
   "TTSUYA": {
     "tracks": ["Illegal Trip"]
   },
+  "Tanchiky": {
+    "tracks": ["TECH LABORATORY"]
+  },
+  "Tatsunoshin": {
+    "tracks": ["Mirai (feat. DJ勝也)", "Mirai (feat.DJ勝也)"]
+  },
+  "Tatsunoshin x PIKASONIC x SARUKANI": {
+    "tracks": ["NANYAKORE"]
+  },
+  "Tatttttttt": {
+    "tracks": ["Having a Good Time - SxUxM Remix"]
+  },
+  "Tatttttttt feat. Numb'n'dub": {
+    "tracks": ["Having a Good Time (SxUxM Remix)"]
+  },
+  "Titancube": {
+    "tracks": ["Flatout"]
+  },
+  "Tsubusare BOZZ": {
+    "tracks": [
+      "I want stand in your way (feat. DJ勝也)",
+      "Time Machine (feat. madoka*)",
+      "panorama (feat. madoka*)",
+      "らぶみるふぃ～ゆ (instrumental)",
+      "らぶみるふぃ～ゆ feat. 中村さんそ"
+    ]
+  },
+  "Tsubusare BOZZ ft. 夢乃ゆき": {
+    "tracks": ["スターライトスイミー"]
+  },
   "USAO": {
     "tracks": ["Psychedelic Machine", "Super Badass"]
+  },
+  "WAiKURO": {
+    "tracks": ["BURST STREAM"]
   },
   "Wooden": {
     "tracks": ["JETLAGG!"]
   },
-  "xi": {
-    "tracks": ["Ancient Relics"]
-  },
   "Y&Co.": {
-    "tracks": ["KA\u30fbTSU\u30fbYA (feat. DJ\u52dd\u4e5f)"]
-  },
-  "Yooh": {
-    "tracks": ["Overhaul"]
+    "tracks": [
+      "KA・TSU・YA (feat. DJ勝也)",
+      "KA・TSU・YA [feat. DJ勝也] - lapix Remix"
+    ]
   },
   "YUC'e": {
     "tracks": ["PUMP"]
   },
-  "yuigot": {
-    "tracks": ["Backwards (feat. Renko)"]
-  },
   "YUKIYANAGI": {
     "tracks": [
       "ALERT",
+      "Beyondcore EVANGELIX",
       "Edge",
-      "I\u2019m Here",
-      "I\u2019m Here",
+      "Extinxion",
       "ID (feat. Numb'n'dub & LINDA)",
+      "I’m Here",
+      "Keep Warning (feat. Numb’n’dub)",
+      "Massa9re",
       "My Ritual",
+      "Save The World",
       "Skipping Rope",
+      "Snow Fragment (feat. 藍月なくる)",
+      "Snow Fragment [feat. 藍月なくる] - SprightS Remix",
+      "Spector",
       "The Limit",
-      "The Limit",
-      "want to change",
       "Where Are You Now (Sokudo! Remix)",
-      "Where Are You Now (Sokudo! Remix)"
+      "want to change"
     ]
   },
   "YUKIYANAGI & Tatakin": {
-    "tracks": ["Snow Fragment feat. \u85cd\u6708\u306a\u304f\u308b"]
+    "tracks": ["Snow Fragment feat. 藍月なくる"]
+  },
+  "Yooh": {
+    "tracks": ["Overhaul"]
+  },
+  "Youth": {
+    "tracks": ["Hercules"]
   },
   "Yuta Imai": {
     "tracks": ["Bizarre Tradition"]
@@ -672,22 +739,36 @@
   },
   "Zekk": {
     "tracks": [
+      "Astronomical Optical Interferometry [feat. poplavor] - 2019 Remaster",
       "Count",
       "Count (2019 Remaster)",
+      "Count - 2019 Remaster",
       "D4NCE",
+      "D4NCE - 2019 Remaster",
       "DNCE (2019 Remaster)",
       "Falling Down (2019 Remaster) [feat. Renko & TRIANGLE]",
       "Falling Down (feat. Renko & TRIANGLE)",
+      "Falling Down [feat. Renko & TRIANGLE] - 2019 Remaster",
       "Foresight",
       "Foresight (2019 Remaster)",
+      "Foresight - 2019 Remaster",
+      "Gloomy Flash (feat. mami)",
       "Haetae (2019 Remaster)",
+      "Haetae - 2019 Remaster",
+      "Honest Heart",
+      "Let Me Hear",
       "Let Me Hear (2019 Remaster)",
+      "Let Me Hear - 2019 Remaster",
       "Reference",
-      "Summer",
+      "SUMMER",
       "SUMMER (2019 Remaster)",
+      "SUMMER - 2019 Remaster",
+      "Summer",
       "Swampgator",
       "Swampgator (2019 Remaster)",
-      "Trinity Force"
+      "Swampgator - 2019 Remaster",
+      "Trinity Force",
+      "raindance (feat. KanataN)"
     ]
   },
   "Zekk & poplavor": {
@@ -701,47 +782,417 @@
     "tracks": ["Honest Heart"]
   },
   "Zoe Engine": {
-    "tracks": ["Ultraverse", "Ultraverse"]
+    "tracks": ["Ultraverse"]
   },
-  "ZoeEngine \u00d7 PANXI": {
-    "tracks": ["\u30b2\u30ce\u30e2\u30f3\u30b9\u30bf\u30fc"]
+  "ZoeEngine × PANXI": {
+    "tracks": ["ゲノモンスター"]
   },
-  "\u304a\u3082\u3057\u308d\u4e09\u56fd\u5fd7": {
+  "aran": {
     "tracks": [
-      "GREAT KING BOKUROKU",
-      "Yellow Warriors -360000 hardrave-",
-      "\u8463\u5353\u8a0e\u3064\u3079\u3057 (Cranky Remix)",
-      "\u8463\u5353\u8a0e\u3064\u3079\u3057 (Cranky Remix)"
+      "Canvas (feat. Nicole Curry)",
+      "Don't Stop",
+      "Fractal Brain",
+      "Sunny After Rain (feat. Kanata.N)"
     ]
   },
-  "\u304a\u3082\u3057\u308d\u4e09\u56fd\u5fd7 feat.DJ\u52dd\u4e5f": {
+  "awfuless": {
+    "tracks": ["Hold Me Tight (feat. Nicole Curry)", "Redemption"]
+  },
+  "braven": {
     "tracks": [
-      "DJ\u52dd\u4e5f\u3068\u5965\u65b9\u69d8",
-      "\u30f4\u30a3\u5468\u90ce"
+      "It's gonna be alright (feat. shully)",
+      "NEOLOGISM",
+      "Nyctophobia",
+      "adolecence (feat. Sennzai)",
+      "start again"
     ]
   },
-  "\u304b\u307c\u3061\u3083": {
-    "tracks": ["SHINING GOLD LICENSE"]
+  "cYsmix": {
+    "tracks": ["Freya", "Remains of Melody", "Youkai Woods"]
   },
-  "\u524a\u9664": {
-    "tracks": ["FAFNIR"]
+  "colate": {
+    "tracks": ["DreaMilk tea (feat. Yukacco)"]
   },
-  "\u767d\u3044\u67d0": {
+  "eleline": {
+    "tracks": ["Future Rewind (feat. shully)"]
+  },
+  "erai": {
+    "tracks": ["encore (feat. 藍月なくる)"]
+  },
+  "factal": {
+    "tracks": ["Forgotten (feat. Renko)", "Forgotten feat. Renko"]
+  },
+  "hally": {
+    "tracks": ["ah-ha", "punisher - 2013 edition", "punisher(2013 edition)"]
+  },
+  "hyleo": {
+    "tracks": ["Phantom Thief", "Trigger (feat. Such)"]
+  },
+  "kakeru": {
+    "tracks": ["B2B"]
+  },
+  "kamome sano": {
+    "tracks": ["feel (feat. mami)", "lovesick (feat. ぷにぷに電機)"]
+  },
+  "kazeoff": {
     "tracks": [
-      "DO___KE'S  MOVE(Cranky & Pico Remix)",
-      "LIFE RESE(T_T)ER",
-      "\u307c\u3063\u3061\u3093\u3050Tonight\uff5e\u5b64\u72ec\u306e\u30b9\u30b9\u30e1\uff5e",
-      "\u4e0d\u6255\u9589\u5168 \uff5e\u7d76\u305f\u308c\u305f\u30e9\u30a4\u30d5\u30e9\u30a4\u30f3\uff5e",
-      "\u6ce5\u9154\u5168\u88f8\u30ba\u30d6\u30ed\u30c3\u30ab(\u3068\u3082\u3086funkot remix)"
+      "Changing the Future",
+      "Raving With Fire",
+      "今月のおすすめプレイリストを検索します (feat. Yozumina)",
+      "今月のおすすめプレイリストを検索します feat. Yozumina"
     ]
   },
-  "\u767d\u3044\u67d0 plays Numb'n'dub": {
+  "kiraku": {
+    "tracks": ["dragon blood"]
+  },
+  "kors k": {
+    "tracks": [
+      "Grey",
+      "Monkey Business (lapix Remix)",
+      "Raver's High - lapix Remix",
+      "Raver's high",
+      "Raving Alright!!! (feat. DJ勝也)",
+      "孫子兵法"
+    ]
+  },
+  "kors k & Numb'n'dub": {
+    "tracks": ["Raver's High (lapix Remix)", "Raver's high"]
+  },
+  "kors k & Numb'n'dub feat. DJ勝也": {
     "tracks": ["Raving Alright!!!"]
   },
-  "\u88f8\u7e6a\u672d": {
+  "kors k vs おもしろ三国志": {
+    "tracks": ["孫子兵法"]
+  },
+  "lapix": {
+    "tracks": [
+      "All I See (feat. Nicole Curry & TRIΔNGLE)",
+      "And Drugs",
+      "Around The World",
+      "Around The World ( Dirty Androids Remix)",
+      "Around The World - Dirty Androids Remix",
+      "Artifical Human",
+      "BRAND NEW DAY (feat. Numb'n'dub)",
+      "BRAND NEW DAY [feat. Numb'n'dub] - DJShimamura Remix",
+      "BRAND NEW DAY [feat. Numb'n'dub] - つぶされBOZZ Remix",
+      "BRAND NEW DAY feat.Numb'n'dub (DJ Shimamura Remix)",
+      "Back to Substance",
+      "Backflow",
+      "Backstage (feat. suisoh)",
+      "Beyond The Limits (Massive New Krew Remix)",
+      "Beyond The Limits (feat. Luschel)",
+      "Beyond The Limits - Massive New Krew Remix",
+      "Beyond The Limits [feat. Luschel] - kors k Remix",
+      "Bite The Bullet - Zohka Remix",
+      "Bite the Bullet (feat. Kanata.N)",
+      "Bite the Bullet feat. Kanata.N",
+      "Blue Love (feat. YUC'e)",
+      "Blue Love ft. YUC'e",
+      "Born 2 Lose",
+      "Bunny House",
+      "CLIMAX",
+      "CLIMAX (Dustvoxx Remix)",
+      "CLIMAX - Dustvoxx Remix",
+      "CLITICAL MEGAREX (TechCore Remix)",
+      "CLITICAL MEGAREX - TechCore Remix",
+      "CRITICAL MEGAREX",
+      "Carry Me Away (Extended Mix)",
+      "Cave of Points",
+      "Celebrate (Snail's House Remix)",
+      "Celebrate [feat. shully] - Snail's House Remix",
+      "Coloring",
+      "Combat Signal - aran Remix",
+      "Concept of Reality (feat. Renko)",
+      "Concept of Reality [feat. Renko] - KO3 Remix",
+      "Concept of Reality ft. Renko",
+      "Core Signal (feat. Kanata.N)",
+      "Core Signal [feat. Kanata.N] - Aire Remix",
+      "Core Signal ft. Kanata.N",
+      "Crossroad (PSYQUI Remix)",
+      "Crossroad (feat. Luschel)",
+      "Crossroad - Akira Complex Remix",
+      "Crossroad [feat. Luschel] - PSYQUI Remix",
+      "DRASTIC GENERATE feat. mami",
+      "Day by Day (feat. Nicole Curry)",
+      "Day by day (PSYQUI Remix)",
+      "Day by day - PSYQUI Remix",
+      "Dead Music",
+      "Debug Dance (Zekk Remix)",
+      "Discloze (Extended)",
+      "Discloze (Hommarju Remix)",
+      "Don't Hold Back",
+      "Don't stop me now (feat. Yukacco)",
+      "Doping",
+      "Drone - HiTECH NINJA Remix",
+      "Duality Rave",
+      "Duality Rave (Zekk's 'FULL SPEC' Remix)",
+      "Duality Rave (Zekk's 'FULL SPEC' Remix) [2019 Remaster]",
+      "Duality Rave - Zekk's 'FULL SPEC' Remix",
+      "Duality Rave - Zekk's 'FULL SPEC' Remix - 2019 Remaster",
+      "Feeling of Shape",
+      "Flamenco House",
+      "Flying Castle (Extended Mix)",
+      "Foolish Hero (P*Light Remix)",
+      "Free Theme",
+      "Future Bass Katsuya [feat. DJ勝也] - Zekk & Titancube Remix",
+      "Future Raver (feat. Numb'n'dub)",
+      "Future Raver feat.Numb'n'dub",
+      "Get Over The Culture",
+      "Go Crazy (feat. Luschel & Kent Alexander)",
+      "Go Crazy [feat. Luschel & Kent Alexander] - JAKAZiD Remix",
+      "Go Crazy [feat. Lushel & Kent Alexander] - DJ Shimamura Party Blaster Remix",
+      "Go Crazy feat. Luschel & Kent Alexander",
+      "Go Crazy ft. Luschel & Kent Alexander (JAKAZiD Remix)",
+      "Good Time (feat. Mayumi Morinaga)",
+      "Good Time [feat. Mayumi Morinaga] - PINKPONG Remix",
+      "Good Time ft. Mayumi Morinaga",
+      "Greatest Highs",
+      "HeadShot",
+      "Hi-TECHOLIC (C-Show VS lapix)",
+      "HiTECH NINJA",
+      "HiTECH NINJA - MNK Remix",
+      "Hitech Awards",
+      "Hitech Never Die",
+      "Horizon Blue feat. Kanata.N",
+      "How About U - HyperJuice Remix",
+      "Inner Spirit (Maozon Remix)",
+      "Innovation",
+      "Irradiate (feat. mami)",
+      "Irradiate feat. mami",
+      "JazzFunktion (feat. mami)",
+      "JazzFunktion feat. mami (Blacklolita Remix)",
+      "Just One",
+      "KALAKACLA - Nhato Remix",
+      "KARAMERU NINJA (feat. HiTECH NINJA & KARAMERU)",
+      "Labyrinth",
+      "Leave me alone (feat. Such)",
+      "Leave me alone - TEMPLIME Remix",
+      "Live Nor Die (feat. Kanae Asaba)",
+      "Live Nor Die [feat. Kanae Asaba] - Nhato Remix",
+      "Live Nor Die ft. Kanae Asaba",
+      "Live Nor Die ft. Kanae Asaba (Nhato Remix)",
+      "Living Dead",
+      "Lunatic Crazy feat. PANXI",
+      "Midnight Doll",
+      "Midnight Doll - Masayoshi Iimori Remix",
+      "Morning Glow (feat. kradness)",
+      "NEO GRAVITY (BlackYooh vs. siromaru Remix)",
+      "NEO GRAVITY (Extended)",
+      "NEO TREASON (Extended)",
+      "NEXT LEVEL (sky_delta VS lapix)",
+      "Neo Treason (Extended)",
+      "No Problem",
+      "Nothing but Theory (More JazzFunktion Mix)",
+      "Ocean Blue feat. Luschel (Extended Mix)",
+      "OceanView [feat. Renko] - Srav3R Remix",
+      "Odd Lovey feat. PANXI",
+      "Of The Behind",
+      "Outer Space",
+      "Perfect Comes (feat. shully)",
+      "Psychedelic Tokyo Underground",
+      "QIXPIN",
+      "Raving Day Break",
+      "Rosa azuL (Extended Mix)",
+      "SORA [feat. DJ勝也] - Srav3R Remix",
+      "SORA feat.DJ勝也 (Srav3R Remix)",
+      "Shime (Extended Mix)",
+      "Silvia",
+      "Stop Motion",
+      "Subconscious",
+      "Survivor (feat. Kent Alexander)",
+      "Survivor [feat. Kent Alexander] - Mameyudoufu Remix",
+      "Survivor [feat. Kent Alexander] - Srav3R Remix",
+      "Survivor ft. Kent Alexnader (Srav3R Remix)",
+      "Synergy",
+      "Tech Alert",
+      "TechCore Evangelix",
+      "TechCore Evangelix :",
+      "Title",
+      "Touch the Sky (feat. Renko)",
+      "Toumei Shin'en feat. nayuta",
+      "Tribal Frontier",
+      "Ubud",
+      "Ultra Funktion",
+      "Ultra Funktion - Ryu vs 青龍 Remix",
+      "Ultra Funktion Pt.2",
+      "Ultra Funktion Pt2",
+      "Under Mebius (feat. 藍月なくる)",
+      "Under Mebius feat. Aitsuki Nakuru (YUKIYANAGI Remix)",
+      "Vital",
+      "Voice of Galaxy",
+      "What about us",
+      "YOLO (feat. Numb'n'dub)",
+      "YOLO ft. Numb'n'dub",
+      "Youthful",
+      "Zonestic",
+      "kokoro (feat. DJ勝也)",
+      "ドラスティックジェネレイト (feat. mami)"
+    ]
+  },
+  "lapix & Camellia": {
+    "tracks": ["Dead Music"]
+  },
+  "lapix & Mameyudoufu": {
+    "tracks": ["Bump-Mapping", "Texture"]
+  },
+  "lapix VS Blacklolita": {
+    "tracks": ["Zonestic"]
+  },
+  "lapix feat. DJ勝也": {
+    "tracks": ["kokoro"]
+  },
+  "lapix feat. Nana Hiyori": {
+    "tracks": ["Siren"]
+  },
+  "litmus* ft. Risa Yuzuki": {
+    "tracks": ["Don't Hurt Me"]
+  },
+  "mameyudoufu": {
+    "tracks": ["Eyes On The Stars"]
+  },
+  "necchi": {
+    "tracks": ["Hegira (feat. Such)"]
+  },
+  "poplavor": {
+    "tracks": [
+      "Astronomical Optical Interferometry",
+      "Starting Line (instrumental)",
+      "Starting Line feat. RANASOL"
+    ]
+  },
+  "poplavor x Kanata.N": {
+    "tracks": ["I AM"]
+  },
+  "poplavor × Kanata.N": {
+    "tracks": ["CutAll.sys"]
+  },
+  "rejection": {
+    "tracks": [
+      "Insomnia feat. mami",
+      "Invisible Scars feat. mami",
+      "Moony eyes (feat. Such)",
+      "Signal (feat. Such)",
+      "Signal [feat. Such] - Mameyudoufu Remix",
+      "Signal feat. Such",
+      "Sky Seeker (feat. 千花)",
+      "The Way of Adventure (feat. クサカアキラ)",
+      "The Way of Adventure [feat. クサカアキラ] - Club Edit",
+      "The Way of Adventure [feat. クサカアキラ] - instrumental",
+      "Wingless (feat. RANASOL)",
+      "Zero Gravity",
+      "a wound (instrumental)",
+      "a wound feat. mikanzil",
+      "もう一回をエンドレス (feat. 中村さんそ)"
+    ]
+  },
+  "rejection ft. AZK": {
+    "tracks": ["fatalist"]
+  },
+  "rejection x PANXI": {
+    "tracks": ["PERSONA"]
+  },
+  "rejection × 紫月": {
+    "tracks": ["REAL INTENTION"]
+  },
+  "shimaL": {
+    "tracks": ["Avatar", "Get Over You (feat. Kanata.N)"]
+  },
+  "siqlo": {
+    "tracks": [
+      "Bonny Lanky Skinny",
+      "Purple Hyacinth (feat. Norico)",
+      "after squall"
+    ]
+  },
+  "siromaru + Cranky": {
+    "tracks": ["conflict(Rave Taisen 2016 ver.)", "conflict(lapix Remix)"]
+  },
+  "sky_delta": {
+    "tracks": [
+      "Aevum",
+      "Alexithymia",
+      "Crystal Clear and Nothing (feat. Kanata.N)",
+      "Crystal Clear and Nothing [feat. Kanata.N] - Avans Remix",
+      "Crystal Clear and Nothing feat. Kanata.N",
+      "Moon Drive",
+      "Sirent Diver (feat. mami)",
+      "Steal Hearts (feat. mikanzil)",
+      "Steal Hearts feat. mikanzil",
+      "YUMEUTSUTSU (feat. shully)"
+    ]
+  },
+  "sky_delta vs. lapix": {
+    "tracks": ["NEXT LEVEL"]
+  },
+  "sober bear": {
+    "tracks": ["passion (instrumental)", "passion feat. shully"]
+  },
+  "t+pazolite": {
+    "tracks": ["PSYCHED AGOSTO"]
+  },
+  "takatin": {
+    "tracks": ["Amber Color", "Crystal", "See You Smile (feat. Renko)"]
+  },
+  "tn-shi": {
+    "tracks": ["Hitech Intuition", "Revival"]
+  },
+  "tokiwa": {
+    "tracks": [
+      "Cortado",
+      "Light (feat. Luschel)",
+      "Lunarscape",
+      "Memoirs (feat. 藍月なくる)",
+      "Memoirs feat. Aitsuki Nakuru",
+      "Skyrider",
+      "Sticky Love (feat. shully)",
+      "Take you away (feat. Such)"
+    ]
+  },
+  "xi": {
+    "tracks": ["Ancient Relics"]
+  },
+  "yuigot": {
+    "tracks": ["Backwards (feat. Renko)"]
+  },
+  "おもしろ三国志": {
+    "tracks": [
+      "DJ勝也と奥方様 (feat. DJ勝也)",
+      "GREAT KING BOKUROKU",
+      "Yellow Warriors - 360000 hardrave ver.",
+      "Yellow Warriors -360000 hardrave-",
+      "董卓討つべし (Cranky Remix)",
+      "董卓討つべし - Cranky Remix"
+    ]
+  },
+  "おもしろ三国志 feat.DJ勝也": {
+    "tracks": ["DJ勝也と奥方様", "ヴィ周郎"]
+  },
+  "かぼちゃ": {
+    "tracks": ["SHINING GOLD LICENSE"]
+  },
+  "削除": {
+    "tracks": ["FAFNIR"]
+  },
+  "白い某": {
+    "tracks": [
+      "DO___KE'S  MOVE(Cranky & Pico Remix)",
+      "DO___KE'S 57 MOVE - Cranky & Pico Remix",
+      "LIFE RESE (T_T) ER",
+      "LIFE RESE(T_T)ER",
+      "Raving Alright!!! - 白い某 plays Numb'n'dub Remix",
+      "ぼっちんぐTonight～孤独のススメ～",
+      "不払閉全 ～絶たれたライフライン～",
+      "泥酔全裸ズブロッカ - ともゆfunkot remix",
+      "泥酔全裸ズブロッカ(ともゆfunkot remix)"
+    ]
+  },
+  "白い某 plays Numb'n'dub": {
+    "tracks": ["Raving Alright!!!"]
+  },
+  "裸繪札": {
     "tracks": ["Please Push MonkeyButton (DJPoyoshi Bootleg)"]
   },
-  "\u9ed2\u9b54": {
+  "黒魔": {
     "tracks": ["lost found melody"]
   }
 }
