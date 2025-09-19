@@ -1,39 +1,45 @@
 import * as osu from "osu-api-v2-js";
-
 import dotenv from "dotenv";
+
 dotenv.config();
 
-class ApiWrapper {
-  private static instance: osu.API | null = null;
-  private static initPromise: Promise<osu.API> | null = null;
+const resolveCredentials = () => {
+  const rawClientId = process.env.OSU_CLIENT_ID;
+  const clientSecret = process.env.OSU_CLIENT_SECRET;
 
-  private static async initialize(): Promise<osu.API> {
-    if (this.instance) {
-      return this.instance;
-    }
-
-    if (this.initPromise) {
-      return this.initPromise;
-    }
-
-    this.initPromise = (async () => {
-      const clientId = Number(process.env.OSU_CLIENT_ID);
-      const clientSecret = process.env.OSU_CLIENT_SECRET;
-
-      if (!clientSecret) {
-        throw new Error("OSU_CLIENT_SECRET not configured");
-      }
-
-      this.instance = await osu.API.createAsync(clientId, clientSecret);
-      return this.instance;
-    })();
-
-    return this.initPromise;
+  if (!rawClientId) {
+    throw new Error("OSU_CLIENT_ID not configured");
+  }
+  if (!clientSecret) {
+    throw new Error("OSU_CLIENT_SECRET not configured");
   }
 
-  static async getApi(): Promise<osu.API> {
-    return this.initialize();
+  const clientId = Number.parseInt(rawClientId, 10);
+
+  if (Number.isNaN(clientId)) {
+    throw new Error("OSU_CLIENT_ID must be a valid number");
+  }
+
+  return { clientId, clientSecret };
+};
+
+const createApiInstance = async (): Promise<osu.API> => {
+  const { clientId, clientSecret } = resolveCredentials();
+  return osu.API.createAsync(clientId, clientSecret);
+};
+
+class OsuApi {
+  private static instance: Promise<osu.API> | null = null;
+
+  static getInstance(): Promise<osu.API> {
+    if (!OsuApi.instance) {
+      OsuApi.instance = createApiInstance();
+    }
+
+    return OsuApi.instance;
   }
 }
 
-export const api = await ApiWrapper.getApi();
+export const getApi = (): Promise<osu.API> => OsuApi.getInstance();
+
+export const api: osu.API = await OsuApi.getInstance();
