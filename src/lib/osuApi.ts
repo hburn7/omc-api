@@ -3,11 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __omc_osu_api_instance: Promise<osu.API> | undefined;
-}
-
 const resolveCredentials = () => {
   const rawClientId = process.env.OSU_CLIENT_ID;
   const clientSecret = process.env.OSU_CLIENT_SECRET;
@@ -33,10 +28,18 @@ const createApiInstance = async (): Promise<osu.API> => {
   return osu.API.createAsync(clientId, clientSecret);
 };
 
-const apiPromise: Promise<osu.API> = globalThis.__omc_osu_api_instance ?? (
-  globalThis.__omc_osu_api_instance = createApiInstance()
-);
+class OsuApi {
+  private static instance: Promise<osu.API> | null = null;
 
-export const getApi = (): Promise<osu.API> => apiPromise;
+  static getInstance(): Promise<osu.API> {
+    if (!OsuApi.instance) {
+      OsuApi.instance = createApiInstance();
+    }
 
-export const api: osu.API = await apiPromise;
+    return OsuApi.instance;
+  }
+}
+
+export const getApi = (): Promise<osu.API> => OsuApi.getInstance();
+
+export const api: osu.API = await OsuApi.getInstance();
