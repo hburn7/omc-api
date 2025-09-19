@@ -2,6 +2,7 @@ import fastify from "fastify";
 import { fetchBeatmaps } from "./src/lib/client.ts";
 import * as validator from "./src/lib/validator.ts";
 import { type ValidationResult } from "./src/lib/dataTypes.ts";
+import { logger } from "./src/lib/logger.ts";
 
 const server = fastify();
 
@@ -32,14 +33,33 @@ server.post("/validate", validateOpts, async (request, reply) => {
   const secret = process.env.API_KEY_SECRET!;
   const providedSecret = request.headers["x-api-key"];
 
-  if (secret !== providedSecret) {
-    console.log('[401] Unauthorized request received')
-    reply.code(401).send({ message: "Unauthorized" });
+  if (!secret) {
+    logger.error("API key secret missing from environment configuration");
+    reply.code(500).send({ message: "Server misconfigured" });
+    return;
   }
+
+  if (secret !== providedSecret) {
+    logger.warn("Unauthorized request received", {
+      ip: request.ip,
+    });
+    reply.code(401).send({ message: "Unauthorized" });
+    return;
+  }
+
+  logger.debug("Processing validation request", {
+    beatmapCount: beatmapIds.length,
+  });
 
   for (let i = 0; i < beatmapIds.length; i += chunkSize) {
     const chunk = beatmapIds.slice(i, i + chunkSize);
+    logger.debug("Fetching beatmap chunk", { startIndex: i, chunkSize: chunk.length });
     const fetchResult = await fetchBeatmaps(chunk);
+    logger.debug("Fetched beatmap chunk", {
+      startIndex: i,
+      fetchedCount: fetchResult.beatmaps.length,
+      failures: fetchResult.failures,
+    });
     allFailures = allFailures.union(new Set(fetchResult.failures));
 
     // Validate beatmaps and get results per beatmapset
@@ -52,7 +72,10 @@ server.post("/validate", validateOpts, async (request, reply) => {
     return acc;
   }, {} as Record<string, number>);
 
-  console.log(`[200] Authorized request received [ ${JSON.stringify(resultStatuses)} | ${allFailures.size} failure(s)]`)
+  logger.info("Completed validation request", {
+    statusCounts: resultStatuses,
+    failureCount: allFailures.size,
+  });
 
   return {
     results: allResults,
@@ -62,8 +85,8 @@ server.post("/validate", validateOpts, async (request, reply) => {
 
 server.listen({ port: 8080 }, (err, address) => {
   if (err) {
-    console.error(err);
+    logger.error("Failed to start server", { error: err });
     process.exit(1);
   }
-  console.log(`Server listening at ${address}`);
+  logger.info("Server listening", { address });
 });

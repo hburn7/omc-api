@@ -1,6 +1,8 @@
 import * as osu from "osu-api-v2-js";
 
 import dotenv from "dotenv";
+import { logger } from "./logger.ts";
+
 dotenv.config();
 
 class ApiWrapper {
@@ -21,10 +23,14 @@ class ApiWrapper {
       const clientSecret = process.env.OSU_CLIENT_SECRET;
 
       if (!clientSecret) {
-        throw new Error("OSU_CLIENT_SECRET not configured");
+        const message = "OSU_CLIENT_SECRET not configured";
+        logger.error(message);
+        throw new Error(message);
       }
 
+      logger.debug("Creating osu! API client", { clientId });
       this.instance = await osu.API.createAsync(clientId, clientSecret);
+      logger.info("osu! API client ready");
       return this.instance;
     })();
 
