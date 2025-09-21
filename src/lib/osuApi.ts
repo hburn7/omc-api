@@ -1,5 +1,6 @@
 import * as osu from "osu-api-v2-js";
 import dotenv from "dotenv";
+import { logger } from "./logger.ts";
 
 dotenv.config();
 
@@ -23,20 +24,33 @@ const resolveCredentials = () => {
   return { clientId, clientSecret };
 };
 
-const createApiInstance = async (): Promise<osu.API> => {
-  const { clientId, clientSecret } = resolveCredentials();
-  return osu.API.createAsync(clientId, clientSecret);
-};
-
 class OsuApi {
-  private static instance: Promise<osu.API> | null = null;
+  private static instance: osu.API | null = null;
+  private static initPromise: Promise<osu.API> | null = null;
 
-  static getInstance(): Promise<osu.API> {
-    if (!OsuApi.instance) {
-      OsuApi.instance = createApiInstance();
+  private static async initialize(): Promise<osu.API> {
+    if (this.instance) {
+      return this.instance;
     }
 
-    return OsuApi.instance;
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = (async () => {
+      const { clientId, clientSecret } = resolveCredentials();
+
+      logger.debug("Creating osu! API client", { clientId });
+      this.instance = await osu.API.createAsync(clientId, clientSecret);
+      logger.info("osu! API client ready");
+      return this.instance;
+    })();
+
+    return this.initPromise;
+  }
+
+  static getInstance(): Promise<osu.API> {
+    return this.initialize();
   }
 }
 

@@ -47,3 +47,7 @@ Install the latest LTS version of [node](https://nodejs.org/en) if you don't hav
 - `bun i` - Installs packages
 - `bun run start` - Runs the server (listens on `localhost:8080`)
 - `bun run test` - Starts tests using `vitest`
+
+## Logging
+
+Structured JSON logs are emitted at `DEBUG`, `INFO`, `WARN`, and `ERROR` levels. Configure the minimum level with the `LOG_LEVEL` environment variable in your `.env` file (defaults to `DEBUG`).
