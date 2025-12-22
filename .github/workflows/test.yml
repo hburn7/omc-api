@@ -25,7 +25,7 @@ jobs:
       run: echo "${{ secrets.ENV }}" > .env
 
     - name: Run unit tests
-      run: bun test --run --reporter=verbose
+      run: bun run test --run
 
     - name: Run type checking
       run: bun run build
