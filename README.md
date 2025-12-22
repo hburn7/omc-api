@@ -39,12 +39,9 @@ The `/validate` endpoint accepts an array of osu! beatmap IDs as input and retur
 
 Copy the `.env.example` file and replace the `OSU_CLIENT_ID` and `OSU_CLIENT_SECRET` values with your [osu! api v2](https://osu.ppy.sh/docs/index.html) client. You can create a client under your osu! account's [settings page](https://osu.ppy.sh/home/account/edit).
 
-Install the latest LTS version of [node](https://nodejs.org/en) if you don't have it. Then, install [bun](https://bun.com/get).
+Install [bun](https://bun.sh/docs/installation).
 
-> [!NOTE]
-> `npm` and `pnpm` will work as a replacement for bun.
-
-- `bun i` - Installs packages
+- `bun install` - Installs packages
 - `bun run start` - Runs the server (listens on `localhost:8080`)
 - `bun run test` - Starts tests using `vitest`
 
