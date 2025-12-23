@@ -15,7 +15,7 @@
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
-    // and npm install -D @types/node
+    // and bun add -D @types/node
 
     // Other Outputs
     "noEmit": true,

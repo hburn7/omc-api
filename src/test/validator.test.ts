@@ -79,6 +79,8 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
       offset: 0,
       spotlight: false,
       title_unicode: "",
+      rating: 0,
+      anime_cover: false
     },
     failtimes: {
       exit: [],
