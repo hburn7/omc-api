@@ -9,5 +9,11 @@
     "artist": "Lusumi",
     "resultOverride": "disallowed",
     "failureReasonOverride": "disallowedByRightsholder"
+  },
+  {
+    "title": "Seishun no Archive",
+    "artist": "Abydos High School Foreclosure Task Force",
+    "resultOverride": "disallowed",
+    "failureReasonOverride": "disallowedByRightsholder"
   }
 ]
