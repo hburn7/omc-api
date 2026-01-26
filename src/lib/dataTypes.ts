@@ -69,6 +69,25 @@ export interface Override {
   failureReasonOverride?: string;
 }
 
+export interface RawMetadataInput {
+  artist: string;
+  title: string;
+  isFeaturedArtist?: boolean;
+  status?: string;
+  source?: string;
+  tags?: string;
+}
+
+export interface RawValidationResult {
+  complianceStatus: ComplianceStatus;
+  complianceStatusString: string;
+  complianceFailureReason?: ComplianceFailureReason;
+  complianceFailureReasonString?: string;
+  notes?: string;
+  artist: string;
+  title: string;
+}
+
 // Re-export Beatmap types for convenience
 export type { Beatmap };
 export type BeatmapWithBeatmapset =

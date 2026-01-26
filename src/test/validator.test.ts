@@ -1212,4 +1212,135 @@ describe("Validator", () => {
       });
     });
   });
+
+  describe("validateRawMetadata", () => {
+    it("should return OK for clean artist and title", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Some Artist",
+        title: "Some Title",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+      expect(result.artist).toBe("Some Artist");
+      expect(result.title).toBe("Some Title");
+    });
+
+    it("should return OK when isFeaturedArtist is true", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Igorrr",
+        title: "Disallowed Track",
+        isFeaturedArtist: true,
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return OK for ranked status", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Igorrr",
+        title: "Some Track",
+        status: "ranked",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return OK for loved status", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Igorrr",
+        title: "Some Track",
+        status: "loved",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return DISALLOWED for disallowed artist", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Igorrr",
+        title: "Some Track",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+    });
+
+    it("should return DISALLOWED for banned source", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Some Artist",
+        title: "Some Title",
+        source: "MEGAREX",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+    });
+
+    it("should return DISALLOWED for banned source in tags", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Some Artist",
+        title: "Some Title",
+        tags: "some,djmax,tag",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+    });
+
+    it("should return DISALLOWED for label violation", () => {
+      const result = validator.validateRawMetadata({
+        artist: "lapix",
+        title: "Cave of Points",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER);
+    });
+
+    it("should return DISALLOWED for FA-only artist without FA", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Morimori Atsushi",
+        title: "Some Track",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.FA_TRACKS_ONLY);
+    });
+
+    it("should return OK for FA-only artist with isFeaturedArtist", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Morimori Atsushi",
+        title: "Some Track",
+        isFeaturedArtist: true,
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return POTENTIALLY_DISALLOWED for potential artist", () => {
+      const result = validator.validateRawMetadata({
+        artist: "a_hisa",
+        title: "Some Track",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.POTENTIALLY_DISALLOWED);
+      expect(result.notes).toContain("Contact before uploading");
+    });
+
+    it("should apply override rules", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Morimori Atsushi",
+        title: "Tits or get the fuck out!!",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should detect flagged artist in title", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Some Artist",
+        title: "Song (Igorrr Remix)",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+    });
+
+    it("should handle missing optional fields", () => {
+      const result = validator.validateRawMetadata({
+        artist: "Clean Artist",
+        title: "Clean Title",
+      });
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+      expect(result.complianceFailureReason).toBeUndefined();
+      expect(result.notes).toBeUndefined();
+    });
+  });
 });

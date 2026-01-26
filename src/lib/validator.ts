@@ -9,6 +9,8 @@ import {
   type LabelData,
   type Override,
   type ValidationResult,
+  type RawMetadataInput,
+  type RawValidationResult,
 } from "./dataTypes.ts";
 import type { Beatmapset } from "osu-api-v2-js";
 
@@ -110,11 +112,20 @@ function buildValidationResult(
   return result;
 }
 
-// Validate a single beatmapset
+function beatmapsetToRawMetadataInput(beatmapset: Beatmapset.Extended): RawMetadataInput {
+  return {
+    artist: beatmapset.artist,
+    title: beatmapset.title,
+    isFeaturedArtist: beatmapset.track_id !== null && beatmapset.track_id !== undefined && beatmapset.track_id > 0,
+    status: beatmapset.status,
+    source: beatmapset.source,
+    tags: beatmapset.tags,
+  };
+}
+
 function validateBeatmapset(
   beatmapset: Beatmapset.Extended,
 ): ValidationResult {
-  // Check for DMCA
   if (isDmca(beatmapset)) {
     return buildValidationResult(
       beatmapset,
@@ -124,79 +135,15 @@ function validateBeatmapset(
     );
   }
 
-  // Check for overrides first
-  const override = findOverride(beatmapset.artist, beatmapset.title);
-  if (override) {
-    const status = parseOverrideStatus(override.resultOverride);
-    if (status === ComplianceStatus.OK) {
-      return buildValidationResult(
-        beatmapset,
-        ComplianceStatus.OK,
-      );
-    }
+  const rawInput = beatmapsetToRawMetadataInput(beatmapset);
+  const rawResult = validateRawMetadata(rawInput);
 
-    const failureReason = parseFailureReason(override.failureReasonOverride);
-    const notes = getNotesForReason(failureReason);
-    return buildValidationResult(
-      beatmapset,
-      status,
-      failureReason,
-      notes,
-    );
-  }
-
-  // Check if licensed or approved
-  if (
-    isLicensed(beatmapset.track_id) ||
-    isStatusApproved(getRankStatus(beatmapset.status))
-  ) {
-    return buildValidationResult(beatmapset, ComplianceStatus.OK);
-  }
-
-  // Check for banned sources in tags
-  if (tagsContainBannedSource(beatmapset.tags)) {
-    return buildValidationResult(
-      beatmapset,
-      ComplianceStatus.DISALLOWED,
-      ComplianceFailureReason.DISALLOWED_SOURCE,
-      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE),
-    );
-  }
-
-  // Check for banned sources in source field
-  if (isBannedSource(beatmapset.source)) {
-    return buildValidationResult(
-      beatmapset,
-      ComplianceStatus.DISALLOWED,
-      ComplianceFailureReason.DISALLOWED_SOURCE,
-      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE),
-    );
-  }
-
-  // Check for label violations
-  if (isLabelViolation(beatmapset.artist, beatmapset.title)) {
-    return buildValidationResult(
-      beatmapset,
-      ComplianceStatus.DISALLOWED,
-      ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
-      getNotesForReason(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER),
-    );
-  }
-
-  // Check for flagged artists
-  const artistResult = checkFlaggedArtist(beatmapset);
-  if (artistResult) {
-    return artistResult;
-  }
-
-  // Check for flagged artists in title
-  const titleResult = checkFlaggedArtistInTitle(beatmapset);
-  if (titleResult) {
-    return titleResult;
-  }
-
-  // Default to OK
-  return buildValidationResult(beatmapset, ComplianceStatus.OK);
+  return buildValidationResult(
+    beatmapset,
+    rawResult.complianceStatus,
+    rawResult.complianceFailureReason,
+    rawResult.notes,
+  );
 }
 
 // Helper functions
@@ -549,6 +496,140 @@ function getNotesForReason(
 // Helper function to escape regex special characters
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export function validateRawMetadata(input: RawMetadataInput): RawValidationResult {
+  const { artist, title, isFeaturedArtist, status, source, tags } = input;
+  const trackId = isFeaturedArtist ? 1 : null;
+
+  const buildResult = (
+    complianceStatus: ComplianceStatus,
+    failureReason?: ComplianceFailureReason,
+    notes?: string | null,
+  ): RawValidationResult => {
+    const result: RawValidationResult = {
+      complianceStatus,
+      complianceStatusString: getComplianceStatusString(complianceStatus),
+      artist,
+      title,
+    };
+
+    if (failureReason !== undefined) {
+      result.complianceFailureReason = failureReason;
+      result.complianceFailureReasonString = getComplianceFailureReasonString(failureReason);
+    }
+
+    if (notes !== undefined && notes !== null) {
+      result.notes = notes;
+    }
+
+    return result;
+  };
+
+  const override = findOverride(artist, title);
+  if (override) {
+    const overrideStatus = parseOverrideStatus(override.resultOverride);
+    if (overrideStatus === ComplianceStatus.OK) {
+      return buildResult(ComplianceStatus.OK);
+    }
+
+    const failureReason = parseFailureReason(override.failureReasonOverride);
+    const notes = getNotesForReason(failureReason);
+    return buildResult(overrideStatus, failureReason, notes);
+  }
+
+  if (isLicensed(trackId)) {
+    return buildResult(ComplianceStatus.OK);
+  }
+
+  if (status && isStatusApproved(getRankStatus(status))) {
+    return buildResult(ComplianceStatus.OK);
+  }
+
+  if (tags && tagsContainBannedSource(tags)) {
+    return buildResult(
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_SOURCE,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE),
+    );
+  }
+
+  if (source && isBannedSource(source)) {
+    return buildResult(
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_SOURCE,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE),
+    );
+  }
+
+  if (isLabelViolation(artist, title)) {
+    return buildResult(
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER),
+    );
+  }
+
+  const artistKey = flagKeyMatch(artist);
+  if (artistKey && artistKey in flaggedArtists) {
+    const flaggedArtist = flaggedArtists[artistKey];
+    if (flaggedArtist) {
+      switch (flaggedArtist.status) {
+        case FA_ONLY_STATUS:
+          if (!isLicensed(trackId)) {
+            return buildResult(
+              ComplianceStatus.DISALLOWED,
+              ComplianceFailureReason.FA_TRACKS_ONLY,
+              flaggedArtist.notes || getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY),
+            );
+          }
+          break;
+        case POTENTIAL_STATUS:
+          return buildResult(
+            ComplianceStatus.POTENTIALLY_DISALLOWED,
+            undefined,
+            flaggedArtist.notes,
+          );
+        case DISALLOWED_STATUS:
+          return buildResult(
+            ComplianceStatus.DISALLOWED,
+            ComplianceFailureReason.DISALLOWED_ARTIST,
+            flaggedArtist.notes || getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST),
+          );
+      }
+    }
+  }
+
+  const [titleArtist, titleStatus] = getFlaggedArtistInTitle(title);
+  if (titleArtist && titleStatus) {
+    const flaggedArtist = flaggedArtists[titleArtist];
+
+    switch (titleStatus) {
+      case FA_ONLY_STATUS:
+        if (!isLicensed(trackId)) {
+          return buildResult(
+            ComplianceStatus.DISALLOWED,
+            ComplianceFailureReason.FA_TRACKS_ONLY,
+            flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY),
+          );
+        }
+        break;
+      case POTENTIAL_STATUS:
+        return buildResult(
+          ComplianceStatus.POTENTIALLY_DISALLOWED,
+          undefined,
+          flaggedArtist?.notes,
+        );
+      case DISALLOWED_STATUS:
+        return buildResult(
+          ComplianceStatus.DISALLOWED,
+          ComplianceFailureReason.DISALLOWED_ARTIST,
+          flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST),
+        );
+    }
+  }
+
+  return buildResult(ComplianceStatus.OK);
 }
 
 // Export functions for testing
