@@ -16,7 +16,7 @@ The tool relies on hardcoded and file-based rules to function. Rules are checked
 
 ## Spec
 
-**Root URL:** `https://api.omc.stagec.xyz`
+**Root URL:** `https://api.omc.stagec.net`
 
 ### Endpoints
 
