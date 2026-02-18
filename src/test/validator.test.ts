@@ -373,14 +373,14 @@ describe("Validator", () => {
     describe("potential status", () => {
       it("should mark potentially disallowed artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "a_hisa";
+        beatmap.beatmapset.artist = "Yuyoyuppe";
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
           beatmapsetId: 1,
           complianceStatus: ComplianceStatus.POTENTIALLY_DISALLOWED,
           notes:
-            "Contact before uploading. Can be reached via [email](mailto:hisaweb_info@yahoo.co.jp) or [Bandcamp](https://a-hisa.bandcamp.com/).",
+            "Tracks from or themed around Touhou should not be uploaded or used.",
         });
       });
     });
@@ -1188,14 +1188,14 @@ describe("Validator", () => {
       it("should return potentially disallowed for potential artists", () => {
         const beatmapset = {
           id: 1,
-          artist: "a_hisa",
+          artist: "Yuyoyuppe",
           track_id: null,
         } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(
           ComplianceStatus.POTENTIALLY_DISALLOWED
         );
-        expect(result?.notes).toContain("Contact before uploading");
+        expect(result?.notes).toContain("Touhou");
       });
 
       it("should return disallowed for FA-only artists without FA", () => {
