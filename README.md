@@ -16,11 +16,11 @@ The tool relies on hardcoded and file-based rules to function. Rules are checked
 
 ## Spec
 
-**Root URL:** `https://api.omc.stagec.xyz`
+**Root URL:** `https://api.omc.stagec.net`
 
 ### Endpoints
 
-`/validate`
+`/validate` (POST)
 
 The `/validate` endpoint accepts an array of osu! beatmap IDs as input and returns an object as follows, where `failures` is a list of osu! beatmap IDs that failed processing (likely due to deletion):
 
@@ -28,6 +28,42 @@ The `/validate` endpoint accepts an array of osu! beatmap IDs as input and retur
 {
     "results": ValidationResult[],
     "failures": number[]
+}
+```
+
+#### Example
+
+Request:
+
+```
+curl --location 'http://localhost:8080/validate' \
+--header 'X-Api-Key: wow' \
+--header 'Content-Type: application/json' \
+--data '[2895987]'
+```
+
+Response:
+
+```
+{
+    "results": [
+        {
+            "beatmapIds": [
+                2895987
+            ],
+            "beatmapsetId": 1404115,
+            "complianceStatus": 1,
+            "complianceStatusString": "POTENTIALLY_DISALLOWED",
+            "cover": "https://assets.ppy.sh/beatmaps/1404115/covers/cover.jpg?1622561423",
+            "artist": "Frums",
+            "title": "memoryfactory.lzh",
+            "ownerId": 4903197,
+            "ownerUsername": "Bekko",
+            "status": "graveyard",
+            "notes": "Refer to Frums' [non-commercial use requirements](https://docs.google.com/spreadsheets/d/1_M0BqHSrbE1HOF0uhKX5ebVCvWnqlx0qz_wIEZzSFG0/edit?gid=0#gid=0) for songs not included in their Featured Artist listing."
+        }
+    ],
+    "failures": []
 }
 ```
 
@@ -41,7 +77,7 @@ Copy the `.env.example` file and replace the `OSU_CLIENT_ID` and `OSU_CLIENT_SEC
 
 Install [bun](https://bun.sh/docs/installation).
 
-- `bun install` - Installs packages
+- `bun install --frozen-lockfile` - Installs packages
 - `bun run start` - Runs the server (listens on `localhost:8080`)
 - `bun run test` - Starts tests using `vitest`
 
