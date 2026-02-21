@@ -14,6 +14,8 @@ import {
 } from "./dataTypes.ts";
 import type { Beatmapset } from "osu-api-v2-js";
 
+function nfkc(s: string): string { return s.normalize("NFKC"); }
+
 // Constants
 const DISALLOWED_STATUS = "disallowed";
 const FA_ONLY_STATUS = "fa_only";
@@ -21,15 +23,17 @@ const POTENTIAL_STATUS = "potential";
 
 // Load data files
 const dataPath = join(process.cwd(), "data");
-const flaggedArtists: Record<string, FlaggedArtistData> = JSON.parse(
-  readFileSync(join(dataPath, "artists", "restricted.json"), "utf-8"),
+const flaggedArtists: Record<string, FlaggedArtistData> = Object.fromEntries(
+  Object.entries(
+    JSON.parse(readFileSync(join(dataPath, "artists", "restricted.json"), "utf-8")) as Record<string, FlaggedArtistData>,
+  ).map(([k, v]) => [nfkc(k), v]),
 );
-const overrides: Override[] = JSON.parse(
-  readFileSync(join(dataPath, "overrides", "edge-cases.json"), "utf-8"),
-);
-const disallowedSources: string[] = JSON.parse(
-  readFileSync(join(dataPath, "sources", "banned.json"), "utf-8"),
-);
+const overrides: Override[] = (
+  JSON.parse(readFileSync(join(dataPath, "overrides", "edge-cases.json"), "utf-8")) as Override[]
+).map((o) => ({ ...o, artist: nfkc(o.artist), title: nfkc(o.title) }));
+const disallowedSources: string[] = (
+  JSON.parse(readFileSync(join(dataPath, "sources", "banned.json"), "utf-8")) as string[]
+).map(nfkc);
 
 // Load all label files
 const labelsPath = join(dataPath, "labels");
@@ -41,7 +45,13 @@ const labels: LabelData[] = labelFiles.map((file) => {
   if (!content || content.trim() === "") {
     return {};
   }
-  return JSON.parse(content);
+  const raw = JSON.parse(content) as LabelData;
+  return Object.fromEntries(
+    Object.entries(raw).map(([artist, data]) => [
+      nfkc(artist),
+      { tracks: data.tracks.map(nfkc) },
+    ]),
+  );
 });
 
 // Main validation function - accepts array of beatmaps and returns one result per unique beatmapset
@@ -92,8 +102,8 @@ function buildValidationResult(
     complianceStatusString: getComplianceStatusString(status),
     cover:
       beatmapset.covers?.cover || beatmapset.covers?.["cover@2x"] || undefined,
-    artist: beatmapset.artist,
-    title: beatmapset.title,
+    artist: nfkc(beatmapset.artist),
+    title: nfkc(beatmapset.title),
     ownerId: beatmapset.user_id,
     ownerUsername: beatmapset.creator,
     status: beatmapset.status
@@ -114,8 +124,8 @@ function buildValidationResult(
 
 function beatmapsetToRawMetadataInput(beatmapset: Beatmapset.Extended): RawMetadataInput {
   return {
-    artist: beatmapset.artist,
-    title: beatmapset.title,
+    artist: nfkc(beatmapset.artist),
+    title: nfkc(beatmapset.title),
     isFeaturedArtist: beatmapset.track_id !== null && beatmapset.track_id !== undefined && beatmapset.track_id > 0,
     status: beatmapset.status,
     source: beatmapset.source,
@@ -499,7 +509,9 @@ function escapeRegex(str: string): string {
 }
 
 export function validateRawMetadata(input: RawMetadataInput): RawValidationResult {
-  const { artist, title, isFeaturedArtist, status, source, tags } = input;
+  const { artist: rawArtist, title: rawTitle, isFeaturedArtist, status, source, tags } = input;
+  const artist = nfkc(rawArtist);
+  const title = nfkc(rawTitle);
   const trackId = isFeaturedArtist ? 1 : null;
 
   const buildResult = (
