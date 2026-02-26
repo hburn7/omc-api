@@ -67,9 +67,46 @@ Response:
 }
 ```
 
+`/validate-metadata` (POST)
+
+The `/validate-metadata` endpoint accepts an array of raw metadata objects and returns compliance results without requiring osu! beatmap IDs. This is useful for validating artist/title combinations directly.
+
+Each object requires `artist` and `title` fields. Optional fields: `isFeaturedArtist` (boolean), `status` (string), `source` (string), `tags` (string). Maximum 1000 items per request.
+
+```ts
+RawValidationResult[]
+```
+
+#### Example
+
+Request:
+
+```
+curl --location 'http://localhost:8080/validate-metadata' \
+--header 'X-Api-Key: wow' \
+--header 'Content-Type: application/json' \
+--data '[{"artist": "Frums", "title": "memoryfactory.lzh"}]'
+```
+
+Response:
+
+```
+[
+    {
+        "complianceStatus": 1,
+        "complianceStatusString": "POTENTIALLY_DISALLOWED",
+        "artist": "Frums",
+        "title": "memoryfactory.lzh",
+        "notes": "Refer to Frums' [non-commercial use requirements](https://docs.google.com/spreadsheets/d/1_M0BqHSrbE1HOF0uhKX5ebVCvWnqlx0qz_wIEZzSFG0/edit?gid=0#gid=0) for songs not included in their Featured Artist listing."
+    }
+]
+```
+
 ### Types
 
 [`ValidationResult`](https://github.com/hburn7/omc-api/blob/86b189e3a9d476e954b15f2e8495a1fe74243a85/src/lib/dataTypes.ts#L33): Information about the beatmapset which was processed, including all osu! beatmap IDs from the `POST` body which belong to the set.
+
+[`RawValidationResult`](https://github.com/hburn7/omc-api/blob/master/src/lib/dataTypes.ts#L81): Compliance result for a raw artist/title input, without beatmapset-specific fields.
 
 ## Usage
 
