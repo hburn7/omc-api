@@ -3,9 +3,9 @@ import { logger } from "./logger.ts";
 import type { Beatmap } from "osu-api-v2-js";
 
 interface FetchBeatmapsResult {
-  beatmaps: Beatmap.Extended.WithFailtimesOwnersMaxcomboBeatmapset[],
+  beatmaps: Beatmap.Extended.WithFailtimesOwnersMaxcomboBeatmapset[];
   /** IDs of the beatmaps that failed to fetch */
-  failures: number[]
+  failures: number[];
 }
 
 const chunk = (arr: any[], size: number) =>
@@ -28,8 +28,8 @@ export async function fetchBeatmaps(
   }
 
   const flatBeatmaps = beatmaps.flat();
-  const fetchedIds = new Set(flatBeatmaps.map(b => b.id));
-  const failureIds = beatmapIds.filter(id => !fetchedIds.has(id));
+  const fetchedIds = new Set(flatBeatmaps.map((b) => b.id));
+  const failureIds = beatmapIds.filter((id) => !fetchedIds.has(id));
 
   logger.debug("Computed beatmap fetch results", {
     requestedIds: beatmapIds.length,
@@ -39,6 +39,6 @@ export async function fetchBeatmaps(
 
   return {
     beatmaps: flatBeatmaps,
-    failures: failureIds
-  }
+    failures: failureIds,
+  };
 }

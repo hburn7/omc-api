@@ -13,6 +13,7 @@ The tool relies on hardcoded and file-based rules to function. Rules are checked
 1. The beatmapset's tags are checked against the [banned sources list](https://github.com/hburn7/omc-api/blob/master/data/sources/banned.json).
 1. The beatmapset's content is checked against [a list](https://github.com/hburn7/omc-api/tree/master/data/labels) of tracks which are prohibited by the rightsholder. Matching prior to parentheses is also checked in case the uploader does not use the exact title (i.e. uploaded under `Flying Castle` instead of the tracked `Flying Castle (Extended Mix)` track).
 1. The beatmapset's content is checked against the [list of artists](https://github.com/hburn7/omc-api/blob/master/data/artists/restricted.json) who have restricted use of their content.
+1. (**[Strict mode](#strict-mode) only**) The beatmapset's artist and title are checked against [these additional files](https://github.com/hburn7/omc-api/tree/master/data/strict). Matches are flagged as `DISALLOWED_SOURCE`.
 
 ## Spec
 
@@ -22,7 +23,9 @@ The tool relies on hardcoded and file-based rules to function. Rules are checked
 
 `/validate` (POST)
 
-The `/validate` endpoint accepts an array of osu! beatmap IDs as input and returns an object as follows, where `failures` is a list of osu! beatmap IDs that failed processing (likely due to deletion):
+The `/validate` endpoint accepts an array of osu! beatmap IDs as input and returns an object as follows, where `failures` is a list of osu! beatmap IDs that failed processing (likely due to deletion).
+
+Supports [`?strict=true`](#strict-mode).
 
 ```ts
 {
@@ -57,6 +60,8 @@ Response:
             "cover": "https://assets.ppy.sh/beatmaps/1404115/covers/cover.jpg?1622561423",
             "artist": "Frums",
             "title": "memoryfactory.lzh",
+            "artist_unicode": "Frums",
+            "title_unicode": "memoryfactory.lzh",
             "ownerId": 4903197,
             "ownerUsername": "Bekko",
             "status": "graveyard",
@@ -67,9 +72,54 @@ Response:
 }
 ```
 
+`/validate-metadata` (POST)
+
+The `/validate-metadata` endpoint accepts an array of raw metadata objects and returns compliance results without requiring osu! beatmap IDs. This is useful for validating artist/title combinations directly.
+
+Each object requires `artist` and `title` fields. Optional fields: `isFeaturedArtist` (boolean), `status` (string), `source` (string), `tags` (string). Maximum 1000 items per request.
+
+Supports [`?strict=true`](#strict-mode).
+
+```ts
+RawValidationResult[]
+```
+
+#### Example
+
+Request:
+
+```
+curl --location 'http://localhost:8080/validate-metadata' \
+--header 'X-Api-Key: wow' \
+--header 'Content-Type: application/json' \
+--data '[{"artist": "Frums", "title": "memoryfactory.lzh", "artist_unicode": "Frums", "title_unicode": "memoryfactory.lzh"}]'
+```
+
+Response:
+
+```
+[
+    {
+        "complianceStatus": 1,
+        "complianceStatusString": "POTENTIALLY_DISALLOWED",
+        "artist": "Frums",
+        "title": "memoryfactory.lzh",
+        "artist_unicode": "Frums",
+        "title_unicode": "memoryfactory.lzh",
+        "notes": "Refer to Frums' [non-commercial use requirements](https://docs.google.com/spreadsheets/d/1_M0BqHSrbE1HOF0uhKX5ebVCvWnqlx0qz_wIEZzSFG0/edit?gid=0#gid=0) for songs not included in their Featured Artist listing."
+    }
+]
+```
+
 ### Types
 
 [`ValidationResult`](https://github.com/hburn7/omc-api/blob/86b189e3a9d476e954b15f2e8495a1fe74243a85/src/lib/dataTypes.ts#L33): Information about the beatmapset which was processed, including all osu! beatmap IDs from the `POST` body which belong to the set.
+
+[`RawValidationResult`](https://github.com/hburn7/omc-api/blob/master/src/lib/dataTypes.ts#L81): Compliance result for a raw artist/title input, without beatmapset-specific fields.
+
+### Strict mode
+
+Both endpoints accept an optional `?strict=true` query parameter. Strict mode is useful for world cups or other situations where compliance beyond the [content usage permissions list](https://osu.ppy.sh/wiki/en/Rules/Content_usage_permissions) is required. When enabled, the beatmapset's artist and title are additionally checked against [these track databases](https://github.com/hburn7/omc-api/tree/master/data/strict). Matches are flagged as `DISALLOWED_SOURCE`. Disabled by default.
 
 ## Usage
 
@@ -80,6 +130,30 @@ Install [bun](https://bun.sh/docs/installation).
 - `bun install --frozen-lockfile` - Installs packages
 - `bun run start` - Runs the server (listens on `localhost:8080`)
 - `bun run test` - Starts tests using `vitest`
+
+## Data Format Conversion
+
+`data/convert.py` converts between the project's JSON data formats, applying [NFKC](https://unicode.org/reports/tr15/) normalization during conversion.
+
+### Formats
+
+| ID  | Name                      | Structure                       |
+| --- | ------------------------- | ------------------------------- |
+| 0   | Artist/title groups       | `[{"artist": "", "title": ""}]` |
+| 1   | Artist track list (keyed) | `{"Artist": {"tracks": [""]}}`  |
+| 2   | Artist track list         | `{"Artist": [""]}`              |
+
+### Usage
+
+```
+python3 data/convert.py -i <input> -o <output> -if <format_id> -of <format_id>
+```
+
+Example — convert from artist track list (2) to artist/title groups (0):
+
+```
+python3 data/convert.py -i data/labels/banned.json -o out.json -if 2 -of 0
+```
 
 ## Logging
 

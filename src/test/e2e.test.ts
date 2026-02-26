@@ -54,8 +54,12 @@ describe("End-to-end tests", () => {
       const validationResults = validator.validate(fetchResult.beatmaps);
 
       expect(validationResults).toHaveLength(1);
-      expect(validationResults[0]?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(validationResults[0]?.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER);
+      expect(validationResults[0]?.complianceStatus).toBe(
+        ComplianceStatus.DISALLOWED,
+      );
+      expect(validationResults[0]?.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      );
 
       logTitleArtist(beatmapset!.title, beatmapset!.artist);
     });
@@ -74,8 +78,12 @@ describe("End-to-end tests", () => {
       const validationResults = validator.validate(fetchResult.beatmaps);
 
       expect(validationResults).toHaveLength(1);
-      expect(validationResults[0]?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(validationResults[0]?.complianceFailureReason).toBe(ComplianceFailureReason.DMCA);
+      expect(validationResults[0]?.complianceStatus).toBe(
+        ComplianceStatus.DISALLOWED,
+      );
+      expect(validationResults[0]?.complianceFailureReason).toBe(
+        ComplianceFailureReason.DMCA,
+      );
 
       logTitleArtist(beatmapset!.title, beatmapset!.artist);
     });
@@ -83,5 +91,5 @@ describe("End-to-end tests", () => {
 });
 
 function logTitleArtist(title: string, artist: string) {
-  console.log(`[${artist} - ${title}]`)
+  console.log(`[${artist} - ${title}]`);
 }

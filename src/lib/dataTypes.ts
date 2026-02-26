@@ -41,6 +41,8 @@ export interface ValidationResult {
   cover?: string | undefined;
   artist?: string | undefined;
   title?: string | undefined;
+  artist_unicode?: string | undefined;
+  title_unicode?: string | undefined;
   ownerId?: number | undefined;
   ownerUsername?: string | undefined;
   status: string;
@@ -57,9 +59,7 @@ export interface FlaggedArtistData {
 }
 
 export interface LabelData {
-  [artist: string]: {
-    tracks: string[];
-  };
+  [artist: string]: string[];
 }
 
 export interface Override {
@@ -67,6 +67,29 @@ export interface Override {
   title: string;
   resultOverride: "ok" | "potential" | "disallowed";
   failureReasonOverride?: string;
+}
+
+export interface RawMetadataInput {
+  artist: string;
+  title: string;
+  artist_unicode: string;
+  title_unicode: string;
+  isFeaturedArtist?: boolean;
+  status?: string;
+  source?: string;
+  tags?: string;
+}
+
+export interface RawValidationResult {
+  complianceStatus: ComplianceStatus;
+  complianceStatusString: string;
+  complianceFailureReason?: ComplianceFailureReason;
+  complianceFailureReasonString?: string;
+  notes?: string;
+  artist: string;
+  title: string;
+  artist_unicode: string;
+  title_unicode: string;
 }
 
 // Re-export Beatmap types for convenience

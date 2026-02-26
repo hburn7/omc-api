@@ -5,7 +5,7 @@ import {
   ComplianceStatus,
   RankStatus,
 } from "../lib/dataTypes";
-import type { BeatmapWithBeatmapset } from "../lib/dataTypes";
+import type { BeatmapWithBeatmapset, RawMetadataInput } from "../lib/dataTypes";
 import { Beatmapset } from "osu-api-v2-js";
 
 function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
@@ -72,15 +72,15 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
       status: "graveyard",
       deleted_at: null,
       ranked: Beatmapset.RankStatus.Graveyard,
-      artist_unicode: "",
+      artist_unicode: "Test Artist",
       genre_id: Beatmapset.Genre.Any,
       language_id: Beatmapset.Language.Any,
       nsfw: false,
       offset: 0,
       spotlight: false,
-      title_unicode: "",
+      title_unicode: "Test Title",
       rating: 0,
-      anime_cover: false
+      anime_cover: false,
     },
     failtimes: {
       exit: [],
@@ -104,6 +104,52 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
   } satisfies BeatmapWithBeatmapset;
 }
 
+/** Sets both romanized and unicode artist fields on a beatmapset */
+function setArtist(beatmap: BeatmapWithBeatmapset, artist: string) {
+  beatmap.beatmapset.artist = artist;
+  beatmap.beatmapset.artist_unicode = artist;
+}
+
+/** Sets both romanized and unicode title fields on a beatmapset */
+function setTitle(beatmap: BeatmapWithBeatmapset, title: string) {
+  beatmap.beatmapset.title = title;
+  beatmap.beatmapset.title_unicode = title;
+}
+
+/** Sets the beatmapset status */
+function setStatus(
+  beatmap: BeatmapWithBeatmapset,
+  status: BeatmapWithBeatmapset["beatmapset"]["status"],
+) {
+  beatmap.beatmapset.status = status;
+}
+
+/** Sets the beatmapset source */
+function setSource(beatmap: BeatmapWithBeatmapset, source: string) {
+  beatmap.beatmapset.source = source;
+}
+
+/** Sets the beatmapset track_id (FA licensing) */
+function setTrackId(beatmap: BeatmapWithBeatmapset, trackId: number | null) {
+  beatmap.beatmapset.track_id = trackId;
+}
+
+/** Sets the beatmapset tags */
+function setTags(beatmap: BeatmapWithBeatmapset, tags: string) {
+  beatmap.beatmapset.tags = tags;
+}
+
+/** Creates a RawMetadataInput with unicode fields matching romanized by default */
+function rawInput(
+  overrides: Partial<RawMetadataInput> & { artist: string; title: string },
+): RawMetadataInput {
+  return {
+    artist_unicode: overrides.artist,
+    title_unicode: overrides.title,
+    ...overrides,
+  };
+}
+
 describe("Validator", () => {
   describe("Core Rules", () => {
     describe("Owner fields are included in results", () => {
@@ -122,7 +168,7 @@ describe("Validator", () => {
     describe("DMCA takes precedence over everything", () => {
       it("should disallow even ranked beatmaps with DMCA", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "ranked";
+        setStatus(beatmap, "ranked");
         beatmap.beatmapset.availability.download_disabled = true;
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
@@ -141,8 +187,8 @@ describe("Validator", () => {
     describe("Ranked/Approved/Loved tracks are always allowed", () => {
       it("should allow ranked tracks even with flagged artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "ranked";
-        beatmap.beatmapset.artist = "Igorrr"; // Disallowed artist
+        setStatus(beatmap, "ranked");
+        setArtist(beatmap, "Igorrr");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -153,8 +199,8 @@ describe("Validator", () => {
 
       it("should allow approved tracks even with banned sources", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "approved";
-        beatmap.beatmapset.source = "MEGAREX"; // Banned source
+        setStatus(beatmap, "approved");
+        setSource(beatmap, "MEGAREX");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -165,8 +211,8 @@ describe("Validator", () => {
 
       it("should allow loved tracks even with FA-only artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "loved";
-        beatmap.beatmapset.artist = "Morimori Atsushi"; // FA-only artist
+        setStatus(beatmap, "loved");
+        setArtist(beatmap, "Morimori Atsushi");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -177,9 +223,9 @@ describe("Validator", () => {
 
       it("should allow ranked MEGAREX artist tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "ranked";
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Cave of Points";
+        setStatus(beatmap, "ranked");
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "Cave of Points");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -192,8 +238,8 @@ describe("Validator", () => {
     describe("FA Licensed tracks are always allowed", () => {
       it("should allow FA tracks even with disallowed artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Igorrr"; // Disallowed artist
-        beatmap.beatmapset.track_id = 1234; // FA track
+        setArtist(beatmap, "Igorrr");
+        setTrackId(beatmap, 1234);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -204,8 +250,8 @@ describe("Validator", () => {
 
       it("should allow FA tracks even with banned sources", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.source = "MEGAREX"; // Banned source
-        beatmap.beatmapset.track_id = 1; // FA track
+        setSource(beatmap, "MEGAREX");
+        setTrackId(beatmap, 1);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -216,9 +262,9 @@ describe("Validator", () => {
 
       it("should allow FA tracks from MEGAREX artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Cave of Points";
-        beatmap.beatmapset.track_id = 1234; // FA track
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "Cave of Points");
+        setTrackId(beatmap, 1234);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -236,7 +282,7 @@ describe("Validator", () => {
         beatmap2.version = "Hard";
 
         const results = validator.validate([beatmap1, beatmap2]);
-        expect(results).toHaveLength(1); // Should only have one result for the beatmapset
+        expect(results).toHaveLength(1);
         expect(results[0]!.beatmapsetId).toBe(100);
       });
 
@@ -245,7 +291,7 @@ describe("Validator", () => {
         const beatmap2 = createTestBeatmap(200);
 
         const results = validator.validate([beatmap1, beatmap2]);
-        expect(results).toHaveLength(2); // Should have two results for two beatmapsets
+        expect(results).toHaveLength(2);
         expect(results[0]!.beatmapsetId).toBe(100);
         expect(results[1]!.beatmapsetId).toBe(200);
       });
@@ -256,7 +302,7 @@ describe("Validator", () => {
     describe("fa_only status", () => {
       it("should disallow non-FA tracks from FA-only artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Morimori Atsushi";
+        setArtist(beatmap, "Morimori Atsushi");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -270,8 +316,8 @@ describe("Validator", () => {
 
       it("should allow FA tracks from FA-only artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Zekk";
-        beatmap.beatmapset.track_id = 1234; // FA track
+        setArtist(beatmap, "Zekk");
+        setTrackId(beatmap, 1234);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -282,8 +328,8 @@ describe("Validator", () => {
 
       it("should detect FA-only artist in collabs", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "uma vs. Morimori Atsushi";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "uma vs. Morimori Atsushi");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -295,8 +341,8 @@ describe("Validator", () => {
 
       it("should detect FA-only artist in title (remix)", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.title = "Song Name (Akira Complex Remix)";
-        beatmap.beatmapset.track_id = null;
+        setTitle(beatmap, "Song Name (Akira Complex Remix)");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -308,8 +354,8 @@ describe("Validator", () => {
 
       it("should allow FA-only artist in title when FA licensed", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.title = "Song Name (Akira Complex Remix)";
-        beatmap.beatmapset.track_id = 1234; // FA track
+        setTitle(beatmap, "Song Name (Akira Complex Remix)");
+        setTrackId(beatmap, 1234);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -322,7 +368,7 @@ describe("Validator", () => {
     describe("disallowed status", () => {
       it("should disallow tracks from disallowed artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Igorrr";
+        setArtist(beatmap, "Igorrr");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -335,7 +381,7 @@ describe("Validator", () => {
 
       it("should detect disallowed artist case-insensitive", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "IgOrRr";
+        setArtist(beatmap, "IgOrRr");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -347,7 +393,7 @@ describe("Validator", () => {
 
       it("should detect disallowed artist with spaces in name", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Hatsuki Yura";
+        setArtist(beatmap, "Hatsuki Yura");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -359,7 +405,7 @@ describe("Validator", () => {
 
       it("should detect disallowed artist in title", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.title = "Amazing Track (feat. Igorrr)";
+        setTitle(beatmap, "Amazing Track (feat. Igorrr)");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -373,7 +419,7 @@ describe("Validator", () => {
     describe("potential status", () => {
       it("should mark potentially disallowed artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Yuyoyuppe";
+        setArtist(beatmap, "Yuyoyuppe");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -388,7 +434,7 @@ describe("Validator", () => {
     describe("Word boundary matching", () => {
       it("should detect NOMA as standalone word", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "NOMA feat. Someone";
+        setArtist(beatmap, "NOMA feat. Someone");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
@@ -396,7 +442,7 @@ describe("Validator", () => {
 
       it("should not flag NOMA in NOMANOA", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "nomanoa";
+        setArtist(beatmap, "nomanoa");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
@@ -404,7 +450,7 @@ describe("Validator", () => {
 
       it("should not flag NOMA in Tsunomaki Watame", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Tsunomaki Watame";
+        setArtist(beatmap, "Tsunomaki Watame");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
@@ -412,7 +458,7 @@ describe("Validator", () => {
 
       it("should flag NOMA vs. Someone", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "NOMA vs. Good Artist";
+        setArtist(beatmap, "NOMA vs. Good Artist");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
@@ -420,7 +466,7 @@ describe("Validator", () => {
 
       it("should flag NOMA in parentheses", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Track (NOMA Remix)";
+        setArtist(beatmap, "Track (NOMA Remix)");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
@@ -428,7 +474,7 @@ describe("Validator", () => {
 
       it("should not flag potential matches in other words", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Binomaly"; // Contains "noma" but shouldn't flag
+        setArtist(beatmap, "Binomaly");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
@@ -439,8 +485,8 @@ describe("Validator", () => {
   describe("data/overrides/edge-cases.json validation", () => {
     it("should apply override with equalsIgnoreCase matching", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Morimori Atsushi";
-      beatmap.beatmapset.title = "Tits or get the fuck out!!";
+      setArtist(beatmap, "Morimori Atsushi");
+      setTitle(beatmap, "Tits or get the fuck out!!");
 
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
@@ -452,12 +498,11 @@ describe("Validator", () => {
 
     it("should apply override with contains matching", () => {
       const beatmap = createTestBeatmap();
-
-      beatmap.beatmapset.artist = "Lusumi";
-      beatmap.beatmapset.title = "Something /execution_program.wav Something";
+      setArtist(beatmap, "Lusumi");
+      setTitle(beatmap, "Something /execution_program.wav Something");
 
       const results = validator.validate([beatmap]);
-      
+
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
         beatmapsetId: 1,
@@ -469,10 +514,9 @@ describe("Validator", () => {
     });
 
     it("should handle missing failureReasonOverride field", () => {
-      // The first override in edge-cases.json doesn't have failureReasonOverride
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Morimori Atsushi";
-      beatmap.beatmapset.title = "TITS OR GET THE FUCK OUT!!"; // Different case
+      setArtist(beatmap, "Morimori Atsushi");
+      setTitle(beatmap, "TITS OR GET THE FUCK OUT!!");
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
@@ -483,8 +527,8 @@ describe("Validator", () => {
 
     it("should not match override with wrong artist", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Different Artist";
-      beatmap.beatmapset.title = "Different Title";
+      setArtist(beatmap, "Different Artist");
+      setTitle(beatmap, "Different Title");
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
@@ -492,18 +536,17 @@ describe("Validator", () => {
 
     it("should not match override with wrong title", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Lusumi";
-      beatmap.beatmapset.title = "Different Title";
+      setArtist(beatmap, "Lusumi");
+      setTitle(beatmap, "Different Title");
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should take precedence over other validation rules", () => {
-      // Morimori Atsushi is FA-only, but the override should allow this specific track
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Morimori Atsushi";
-      beatmap.beatmapset.title = "Tits or get the fuck out!!";
+      setArtist(beatmap, "Morimori Atsushi");
+      setTitle(beatmap, "Tits or get the fuck out!!");
 
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
@@ -518,7 +561,7 @@ describe("Validator", () => {
     describe("Source field matching", () => {
       it("should disallow beatmaps with MEGAREX source", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.source = "MEGAREX";
+        setSource(beatmap, "MEGAREX");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -533,7 +576,7 @@ describe("Validator", () => {
         const sources = ["DJMax", "DJ Max", "djmax", "DJMAX Portable 3"];
         for (const source of sources) {
           const beatmap = createTestBeatmap();
-          beatmap.beatmapset.source = source;
+          setSource(beatmap, source);
           const results = validator.validate([beatmap]);
           expect(results).toHaveLength(1);
           expect(results[0]).toMatchObject({
@@ -546,7 +589,7 @@ describe("Validator", () => {
 
       it("should disallow beatmaps with neowiz source", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.source = "neowiz";
+        setSource(beatmap, "neowiz");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -558,7 +601,7 @@ describe("Validator", () => {
 
       it("should detect banned source case-insensitive", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.source = "megarex"; // lowercase
+        setSource(beatmap, "megarex");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -572,7 +615,7 @@ describe("Validator", () => {
     describe("Tags containing banned sources", () => {
       it("should disallow beatmaps with banned sources in tags", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.tags = "some,djmax,tag";
+        setTags(beatmap, "some,djmax,tag");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -584,7 +627,7 @@ describe("Validator", () => {
 
       it("should disallow multiple banned sources in tags", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.tags = "djmax,megarex,neowiz";
+        setTags(beatmap, "djmax,megarex,neowiz");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -596,7 +639,7 @@ describe("Validator", () => {
 
       it("should handle empty tags", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.tags = "";
+        setTags(beatmap, "");
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]!.complianceStatus).toBe(ComplianceStatus.OK);
@@ -606,8 +649,8 @@ describe("Validator", () => {
     describe("FA licensed overrides banned source", () => {
       it("should allow FA tracks even with banned source", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.source = "MEGAREX";
-        beatmap.beatmapset.track_id = 1234; // FA track
+        setSource(beatmap, "MEGAREX");
+        setTrackId(beatmap, 1234);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -622,8 +665,8 @@ describe("Validator", () => {
     describe("Artist and title matching", () => {
       it("should disallow non-FA MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Cave of Points";
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "Cave of Points");
 
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
@@ -638,9 +681,9 @@ describe("Validator", () => {
 
       it("should allow FA MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Cave of Points";
-        beatmap.beatmapset.track_id = 1234; // FA track
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "Cave of Points");
+        setTrackId(beatmap, 1234);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -651,9 +694,9 @@ describe("Validator", () => {
 
       it("should handle case-insensitive artist matching", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "LAPIX"; // Different case
-        beatmap.beatmapset.title = "Cave of Points";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "LAPIX");
+        setTitle(beatmap, "Cave of Points");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -666,9 +709,9 @@ describe("Validator", () => {
 
       it("should handle case-insensitive title matching", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "CAVE OF POINTS"; // Different case
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "CAVE OF POINTS");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -681,9 +724,9 @@ describe("Validator", () => {
 
       it("should handle potential title matches", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "NEO GRAVITY (Extended)";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "NEO GRAVITY (Extended)");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -696,9 +739,9 @@ describe("Validator", () => {
 
       it("should disallow multiple MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "Camellia";
-        beatmap.beatmapset.title = "What Is Hitech?";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "Camellia");
+        setTitle(beatmap, "What Is Hitech?");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -711,9 +754,9 @@ describe("Validator", () => {
 
       it("should disallow collab artists with MEGAREX members", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix & Camellia";
-        beatmap.beatmapset.title = "Dead Music";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "lapix & Camellia");
+        setTitle(beatmap, "Dead Music");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -728,10 +771,10 @@ describe("Validator", () => {
     describe("MEGAREX tracks with approved status", () => {
       it("should allow ranked MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "ranked";
-        beatmap.beatmapset.artist = "Camellia";
-        beatmap.beatmapset.title = "What Is Hitech?";
-        beatmap.beatmapset.track_id = null;
+        setStatus(beatmap, "ranked");
+        setArtist(beatmap, "Camellia");
+        setTitle(beatmap, "What Is Hitech?");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -742,10 +785,10 @@ describe("Validator", () => {
 
       it("should allow approved MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "approved";
-        beatmap.beatmapset.artist = "PSYQUI";
-        beatmap.beatmapset.title = "Hype feat. Such";
-        beatmap.beatmapset.track_id = null;
+        setStatus(beatmap, "approved");
+        setArtist(beatmap, "PSYQUI");
+        setTitle(beatmap, "Hype feat. Such");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -756,10 +799,10 @@ describe("Validator", () => {
 
       it("should allow loved MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "loved";
-        beatmap.beatmapset.artist = "Mameyudoufu";
-        beatmap.beatmapset.title = "Quality Control";
-        beatmap.beatmapset.track_id = null;
+        setStatus(beatmap, "loved");
+        setArtist(beatmap, "Mameyudoufu");
+        setTitle(beatmap, "Quality Control");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -772,10 +815,10 @@ describe("Validator", () => {
     describe("MEGAREX tracks with non-approved status", () => {
       it("should disallow graveyard MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "graveyard";
-        beatmap.beatmapset.artist = "Zekk";
-        beatmap.beatmapset.title = "Swampgator";
-        beatmap.beatmapset.track_id = null;
+        setStatus(beatmap, "graveyard");
+        setArtist(beatmap, "Zekk");
+        setTitle(beatmap, "Swampgator");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -788,10 +831,10 @@ describe("Validator", () => {
 
       it("should disallow pending MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "pending";
-        beatmap.beatmapset.artist = "Blacklolita";
-        beatmap.beatmapset.title = "FlashWarehouse(^-^)";
-        beatmap.beatmapset.track_id = null;
+        setStatus(beatmap, "pending");
+        setArtist(beatmap, "Blacklolita");
+        setTitle(beatmap, "FlashWarehouse(^-^)");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -804,10 +847,10 @@ describe("Validator", () => {
 
       it("should disallow qualified MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "qualified";
-        beatmap.beatmapset.artist = "DJ Noriken";
-        beatmap.beatmapset.title = "Smokey";
-        beatmap.beatmapset.track_id = null;
+        setStatus(beatmap, "qualified");
+        setArtist(beatmap, "DJ Noriken");
+        setTitle(beatmap, "Smokey");
+        setTrackId(beatmap, null);
 
         const results = validator.validate([beatmap]);
 
@@ -822,9 +865,9 @@ describe("Validator", () => {
 
       it("should disallow WIP MEGAREX tracks", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.status = "wip";
-        beatmap.beatmapset.artist = "PSYQUI";
-        beatmap.beatmapset.title = "Hype feat. Such";
+        setStatus(beatmap, "wip");
+        setArtist(beatmap, "PSYQUI");
+        setTitle(beatmap, "Hype feat. Such");
 
         const results = validator.validate([beatmap]);
 
@@ -841,9 +884,9 @@ describe("Validator", () => {
     describe("Non-MEGAREX tracks", () => {
       it("should allow non-MEGAREX artists", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "NotLapix";
-        beatmap.beatmapset.title = "Some Song";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "NotLapix");
+        setTitle(beatmap, "Some Song");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -854,9 +897,9 @@ describe("Validator", () => {
 
       it("should allow MEGAREX artist with non-MEGAREX track", () => {
         const beatmap = createTestBeatmap();
-        beatmap.beatmapset.artist = "lapix";
-        beatmap.beatmapset.title = "Not In The MEGAREX List";
-        beatmap.beatmapset.track_id = null;
+        setArtist(beatmap, "lapix");
+        setTitle(beatmap, "Not In The MEGAREX List");
+        setTrackId(beatmap, null);
         const results = validator.validate([beatmap]);
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
@@ -870,9 +913,9 @@ describe("Validator", () => {
   describe("Parenthetical content matching", () => {
     it("should flag 'Flying Castle' when label has 'Flying Castle (Extended Mix)'", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "lapix";
-      beatmap.beatmapset.title = "Flying Castle";
-      beatmap.beatmapset.track_id = null;
+      setArtist(beatmap, "lapix");
+      setTitle(beatmap, "Flying Castle");
+      setTrackId(beatmap, null);
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
@@ -885,9 +928,9 @@ describe("Validator", () => {
 
     it("should flag 'Flying Castle (Extended Mix)' when label has 'Flying Castle (Extended Mix)'", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "lapix";
-      beatmap.beatmapset.title = "Flying Castle (Extended Mix)";
-      beatmap.beatmapset.track_id = null;
+      setArtist(beatmap, "lapix");
+      setTitle(beatmap, "Flying Castle (Extended Mix)");
+      setTrackId(beatmap, null);
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
@@ -900,9 +943,9 @@ describe("Validator", () => {
 
     it("should NOT flag 'Flying Castle' from different artist", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Different Artist";
-      beatmap.beatmapset.title = "Flying Castle";
-      beatmap.beatmapset.track_id = null;
+      setArtist(beatmap, "Different Artist");
+      setTitle(beatmap, "Flying Castle");
+      setTrackId(beatmap, null);
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
@@ -913,9 +956,9 @@ describe("Validator", () => {
 
     it("should NOT flag 'Beachy Saturday' when label has 'Beachy Saturday Afternoon'", () => {
       const beatmap = createTestBeatmap();
-      beatmap.beatmapset.artist = "Some Artist";
-      beatmap.beatmapset.title = "Beachy Saturday";
-      beatmap.beatmapset.track_id = null;
+      setArtist(beatmap, "Some Artist");
+      setTitle(beatmap, "Beachy Saturday");
+      setTrackId(beatmap, null);
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
       expect(results[0]).toMatchObject({
@@ -1167,6 +1210,9 @@ describe("Validator", () => {
         const beatmapset = {
           id: 1,
           artist: "Morimori Atsushi",
+          artist_unicode: "Morimori Atsushi",
+          title: "Test",
+          title_unicode: "Test",
           track_id: 1234,
         } as Beatmapset.Extended;
         expect(validator.checkFlaggedArtist(beatmapset)).toBe(null);
@@ -1176,12 +1222,15 @@ describe("Validator", () => {
         const beatmapset = {
           id: 1,
           artist: "Igorrr",
+          artist_unicode: "Igorrr",
+          title: "Test",
+          title_unicode: "Test",
           track_id: null,
         } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.DISALLOWED_ARTIST
+          ComplianceFailureReason.DISALLOWED_ARTIST,
         );
       });
 
@@ -1189,11 +1238,14 @@ describe("Validator", () => {
         const beatmapset = {
           id: 1,
           artist: "Yuyoyuppe",
+          artist_unicode: "Yuyoyuppe",
+          title: "Test",
+          title_unicode: "Test",
           track_id: null,
         } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(
-          ComplianceStatus.POTENTIALLY_DISALLOWED
+          ComplianceStatus.POTENTIALLY_DISALLOWED,
         );
         expect(result?.notes).toContain("Touhou");
       });
@@ -1202,14 +1254,473 @@ describe("Validator", () => {
         const beatmapset = {
           id: 1,
           artist: "Zekk",
+          artist_unicode: "Zekk",
+          title: "Test",
+          title_unicode: "Test",
           track_id: null,
         } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.FA_TRACKS_ONLY
+          ComplianceFailureReason.FA_TRACKS_ONLY,
         );
       });
+    });
+
+    describe("isStrictSourceViolation", () => {
+      it("should detect a track in strict sources", () => {
+        expect(
+          validator.isStrictSourceViolation("cubesato", "My First Phone"),
+        ).toBe(true);
+      });
+
+      it("should be case-insensitive on artist", () => {
+        expect(
+          validator.isStrictSourceViolation("CUBESATO", "My First Phone"),
+        ).toBe(true);
+      });
+
+      it("should be case-insensitive on title", () => {
+        expect(
+          validator.isStrictSourceViolation("cubesato", "my first phone"),
+        ).toBe(true);
+      });
+
+      it("should return false for unknown artist", () => {
+        expect(
+          validator.isStrictSourceViolation("Unknown Artist", "Some Track"),
+        ).toBe(false);
+      });
+
+      it("should return false for known artist with non-matching title", () => {
+        expect(
+          validator.isStrictSourceViolation("cubesato", "Nonexistent Track"),
+        ).toBe(false);
+      });
+
+      it("should match pre-parenthesis portion of track name", () => {
+        // If strict data has "Track Name (Extended Mix)", "Track Name" should match
+        expect(
+          validator.isStrictSourceViolation(
+            "cubesato",
+            "My First Phone (Extended)",
+          ),
+        ).toBe(true);
+      });
+    });
+  });
+
+  describe("validateRawMetadata", () => {
+    it("should return OK for clean artist and title", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Some Title",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+      expect(result.artist).toBe("Some Artist");
+      expect(result.title).toBe("Some Title");
+    });
+
+    it("should return OK when isFeaturedArtist is true", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Disallowed Track",
+          isFeaturedArtist: true,
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return OK for ranked status", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          status: "ranked",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return OK for loved status", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          status: "loved",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return DISALLOWED for disallowed artist", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
+    });
+
+    it("should return DISALLOWED for banned source", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Some Title",
+          source: "MEGAREX",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
+    });
+
+    it("should return DISALLOWED for banned source in tags", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Some Title",
+          tags: "some,djmax,tag",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
+    });
+
+    it("should return DISALLOWED for label violation", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "lapix",
+          title: "Cave of Points",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      );
+    });
+
+    it("should return DISALLOWED for FA-only artist without FA", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Some Track",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.FA_TRACKS_ONLY,
+      );
+    });
+
+    it("should return OK for FA-only artist with isFeaturedArtist", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Some Track",
+          isFeaturedArtist: true,
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should return DISALLOWED for disallowed artist a_hisa", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "a_hisa",
+          title: "Some Track",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
+    });
+
+    it("should apply override rules", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Tits or get the fuck out!!",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should detect flagged artist in title", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Song (Igorrr Remix)",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
+    });
+
+    it("should handle missing optional fields", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Clean Artist",
+          title: "Clean Title",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+      expect(result.complianceFailureReason).toBeUndefined();
+      expect(result.notes).toBeUndefined();
+    });
+  });
+
+  describe("Unicode matching", () => {
+    it("should match CJK artist from unicode field", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "sakuzyo",
+          title: "Cyberozar",
+          artist_unicode: "\u524A\u9664",
+          title_unicode: "Cyberozar",
+        }),
+      );
+      // This should be OK since 削除 is not a flagged/restricted artist,
+      // but will be caught by strict mode
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should detect disallowed artist from romanized field as fallback", () => {
+      // romanized artist is a disallowed artist — should be caught even when unicode is clean
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          artist_unicode: "Clean Artist",
+          title_unicode: "Some Track",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+    });
+
+    it("should detect disallowed artist from unicode field even when romanized is clean", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Clean Artist",
+          title: "Some Track",
+          artist_unicode: "Igorrr",
+          title_unicode: "Some Track",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
+    });
+
+    it("should apply NFKC normalization to unicode fields", () => {
+      // owl＊tree (fullwidth ＊) should normalize to owl*tree
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "owl*tree",
+          title: "Teriqma",
+          artist_unicode: "owl\uFF0Atree",
+          title_unicode: "Teriqma",
+        }),
+      );
+      // Not a restricted artist, should be OK
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should use unicode fields for label matching", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "different",
+          title: "different",
+          artist_unicode: "lapix",
+          title_unicode: "Cave of Points",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      );
+    });
+
+    it("should use unicode fields for override matching", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "different",
+          title: "different",
+          artist_unicode: "Morimori Atsushi",
+          title_unicode: "Tits or get the fuck out!!",
+        }),
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should report romanized and unicode artist/title in result", () => {
+      const beatmap = createTestBeatmap();
+      beatmap.beatmapset.artist = "sakuzyo";
+      beatmap.beatmapset.artist_unicode = "\u524A\u9664";
+      beatmap.beatmapset.title = "Some Song";
+      beatmap.beatmapset.title_unicode = "\u660E\u308B\u3044\u672A\u6765";
+
+      const results = validator.validate([beatmap]);
+      expect(results).toHaveLength(1);
+      expect(results[0]!.artist).toBe("sakuzyo");
+      expect(results[0]!.title).toBe("Some Song");
+      expect(results[0]!.artist_unicode).toBe("\u524A\u9664");
+      expect(results[0]!.title_unicode).toBe("\u660E\u308B\u3044\u672A\u6765");
+    });
+  });
+
+  describe("Strict mode validation", () => {
+    it("should flag Chunithm track as DISALLOWED_SOURCE in strict mode", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
+      expect(result.notes).toBe("The track is from a prohibited source.");
+    });
+
+    it("should return OK for the same track without strict mode", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+        }),
+        false,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should match CJK artist in strict mode", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "sakuzyo",
+          title: "Cyberozar",
+          artist_unicode: "\u524A\u9664",
+          title_unicode: "Cyberozar",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
+    });
+
+    it("should apply NFKC normalization in strict matching", () => {
+      // owl＊tree (fullwidth ＊) should normalize to owl*tree and match strict data
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "owl*tree",
+          title: "Teriqma",
+          artist_unicode: "owl\uFF0Atree",
+          title_unicode: "Teriqma",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
+    });
+
+    it("should return OK when artist matches but title does not", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "Nonexistent Track",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should let overrides take precedence over strict mode", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Tits or get the fuck out!!",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should let FA licensing take precedence over strict mode", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+          isFeaturedArtist: true,
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should let ranked status take precedence over strict mode", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+          status: "ranked",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should thread strict through validate()", () => {
+      const beatmap = createTestBeatmap();
+      setArtist(beatmap, "cubesato");
+      setTitle(beatmap, "My First Phone");
+
+      const resultsNonStrict = validator.validate([beatmap], false);
+      expect(resultsNonStrict).toHaveLength(1);
+      expect(resultsNonStrict[0]!.complianceStatus).toBe(ComplianceStatus.OK);
+
+      const resultsStrict = validator.validate([beatmap], true);
+      expect(resultsStrict).toHaveLength(1);
+      expect(resultsStrict[0]!.complianceStatus).toBe(
+        ComplianceStatus.DISALLOWED,
+      );
+      expect(resultsStrict[0]!.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
+    });
+
+    it("should not flag strict when other rules already disallow", () => {
+      // Disallowed artist should still be DISALLOWED_ARTIST, not DISALLOWED_SOURCE
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+        }),
+        true,
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
     });
   });
 });
