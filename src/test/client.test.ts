@@ -1,21 +1,24 @@
-import { describe, expect, it, mock, beforeEach, afterEach } from "bun:test";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { fetchBeatmaps } from "../lib/client";
 
-const mockGetBeatmaps = mock();
+const mockGetBeatmaps = vi.fn();
 
-mock.module("../lib/osuApi", () => ({
+vi.mock("../lib/osuApi", () => ({
   api: {
-    getBeatmaps: mockGetBeatmaps,
+    getBeatmaps: (...args: any[]) => mockGetBeatmaps(...args),
+  },
+}));
+
+vi.mock("../lib/logger", () => ({
+  logger: {
+    debug: vi.fn(),
+    error: vi.fn(),
   },
 }));
 
 describe("fetchBeatmaps", () => {
   beforeEach(() => {
     mockGetBeatmaps.mockReset();
-  });
-
-  afterEach(() => {
-    mock.restore();
   });
 
   it("should successfully fetch beatmaps and return them", async () => {
