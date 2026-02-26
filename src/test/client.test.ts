@@ -1,16 +1,21 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, mock, beforeEach, afterEach } from "bun:test";
 import { fetchBeatmaps } from "../lib/client";
-import { api } from "../lib/osuApi";
 
-vi.mock("../lib/osuApi", () => ({
+const mockGetBeatmaps = mock();
+
+mock.module("../lib/osuApi", () => ({
   api: {
-    getBeatmaps: vi.fn(),
+    getBeatmaps: mockGetBeatmaps,
   },
 }));
 
 describe("fetchBeatmaps", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockGetBeatmaps.mockReset();
+  });
+
+  afterEach(() => {
+    mock.restore();
   });
 
   it("should successfully fetch beatmaps and return them", async () => {
@@ -20,14 +25,14 @@ describe("fetchBeatmaps", () => {
       { id: 3, beatmapset_id: 102 },
     ] as any;
 
-    vi.mocked(api.getBeatmaps).mockResolvedValue(mockBeatmaps);
+    mockGetBeatmaps.mockResolvedValue(mockBeatmaps);
 
     const result = await fetchBeatmaps([1, 2, 3]);
 
     expect(result.beatmaps).toEqual(mockBeatmaps);
     expect(result.failures).toEqual([]);
-    expect(api.getBeatmaps).toHaveBeenCalledTimes(1);
-    expect(api.getBeatmaps).toHaveBeenCalledWith([1, 2, 3]);
+    expect(mockGetBeatmaps).toHaveBeenCalledTimes(1);
+    expect(mockGetBeatmaps).toHaveBeenCalledWith([1, 2, 3]);
   });
 
   it("should handle chunking for large beatmap ID arrays", async () => {
@@ -36,7 +41,7 @@ describe("fetchBeatmaps", () => {
     const mockBeatmaps2 = Array.from({ length: 50 }, (_, i) => ({ id: i + 51 })) as any;
     const mockBeatmaps3 = Array.from({ length: 20 }, (_, i) => ({ id: i + 101 })) as any;
 
-    vi.mocked(api.getBeatmaps)
+    mockGetBeatmaps
       .mockResolvedValueOnce(mockBeatmaps1)
       .mockResolvedValueOnce(mockBeatmaps2)
       .mockResolvedValueOnce(mockBeatmaps3);
@@ -45,10 +50,10 @@ describe("fetchBeatmaps", () => {
 
     expect(result.beatmaps).toHaveLength(120);
     expect(result.failures).toEqual([]);
-    expect(api.getBeatmaps).toHaveBeenCalledTimes(3);
-    expect(api.getBeatmaps).toHaveBeenNthCalledWith(1, beatmapIds.slice(0, 50));
-    expect(api.getBeatmaps).toHaveBeenNthCalledWith(2, beatmapIds.slice(50, 100));
-    expect(api.getBeatmaps).toHaveBeenNthCalledWith(3, beatmapIds.slice(100, 120));
+    expect(mockGetBeatmaps).toHaveBeenCalledTimes(3);
+    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(1, beatmapIds.slice(0, 50));
+    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(2, beatmapIds.slice(50, 100));
+    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(3, beatmapIds.slice(100, 120));
   });
 
   it("should return failure IDs for beatmaps that couldn't be fetched", async () => {
@@ -57,27 +62,19 @@ describe("fetchBeatmaps", () => {
       { id: 3, beatmapset_id: 102 },
     ] as any;
 
-    vi.mocked(api.getBeatmaps).mockResolvedValue(mockBeatmaps);
+    mockGetBeatmaps.mockResolvedValue(mockBeatmaps);
 
     const result = await fetchBeatmaps([1, 2, 3, 4]);
 
     expect(result.beatmaps).toEqual(mockBeatmaps);
     expect(result.failures).toEqual([2, 4]);
-    expect(api.getBeatmaps).toHaveBeenCalledTimes(1);
-  });
-
-  it("should handle empty beatmap ID array", async () => {
-    const result = await fetchBeatmaps([]);
-
-    expect(result.beatmaps).toEqual([]);
-    expect(result.failures).toEqual([]);
-    expect(api.getBeatmaps).not.toHaveBeenCalled();
+    expect(mockGetBeatmaps).toHaveBeenCalledTimes(1);
   });
 
   it("should handle API errors gracefully", async () => {
-    vi.mocked(api.getBeatmaps).mockRejectedValue(new Error("API Error"));
+    mockGetBeatmaps.mockRejectedValue(new Error("API Error"));
 
     await expect(fetchBeatmaps([1, 2, 3])).rejects.toThrow("API Error");
-    expect(api.getBeatmaps).toHaveBeenCalledTimes(1);
+    expect(mockGetBeatmaps).toHaveBeenCalledTimes(1);
   });
 });

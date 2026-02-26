@@ -54,9 +54,26 @@ const labels: LabelData[] = labelFiles.map((file) => {
   );
 });
 
+// Load strict source data (game-sourced track databases)
+type StrictSourceData = Record<string, string[]>;
+const strictPath = join(dataPath, "strict");
+let strictSources: StrictSourceData = {};
+try {
+  const strictFiles = readdirSync(strictPath).filter(f => f.endsWith(".json"));
+  for (const file of strictFiles) {
+    const raw = JSON.parse(readFileSync(join(strictPath, file), "utf-8")) as Record<string, string[]>;
+    for (const [artist, tracks] of Object.entries(raw)) {
+      const key = nfkc(artist).toLowerCase();
+      const vals = tracks.map(t => nfkc(t).toLowerCase());
+      strictSources[key] = (strictSources[key] || []).concat(vals);
+    }
+  }
+} catch { strictSources = {}; }
+
 // Main validation function - accepts array of beatmaps and returns one result per unique beatmapset
 export function validate(
   beatmaps: BeatmapWithBeatmapset[],
+  strict: boolean = false,
 ): ValidationResult[] {
   const beatmapsetMap = new Map<number, BeatmapWithBeatmapset[]>();
 
@@ -79,7 +96,7 @@ export function validate(
       continue;
     }
 
-    const result = validateBeatmapset(beatmapset);
+    const result = validateBeatmapset(beatmapset, strict);
     result.beatmapIds = beatmapGroup.map(b => b.id);
 
     results.push(result);
@@ -102,8 +119,8 @@ function buildValidationResult(
     complianceStatusString: getComplianceStatusString(status),
     cover:
       beatmapset.covers?.cover || beatmapset.covers?.["cover@2x"] || undefined,
-    artist: nfkc(beatmapset.artist),
-    title: nfkc(beatmapset.title),
+    artist: nfkc(beatmapset.artist_unicode),
+    title: nfkc(beatmapset.title_unicode),
     ownerId: beatmapset.user_id,
     ownerUsername: beatmapset.creator,
     status: beatmapset.status
@@ -126,6 +143,8 @@ function beatmapsetToRawMetadataInput(beatmapset: Beatmapset.Extended): RawMetad
   return {
     artist: nfkc(beatmapset.artist),
     title: nfkc(beatmapset.title),
+    artist_unicode: nfkc(beatmapset.artist_unicode),
+    title_unicode: nfkc(beatmapset.title_unicode),
     isFeaturedArtist: beatmapset.track_id !== null && beatmapset.track_id !== undefined && beatmapset.track_id > 0,
     status: beatmapset.status,
     source: beatmapset.source,
@@ -135,6 +154,7 @@ function beatmapsetToRawMetadataInput(beatmapset: Beatmapset.Extended): RawMetad
 
 function validateBeatmapset(
   beatmapset: Beatmapset.Extended,
+  strict: boolean = false,
 ): ValidationResult {
   if (isDmca(beatmapset)) {
     return buildValidationResult(
@@ -146,7 +166,7 @@ function validateBeatmapset(
   }
 
   const rawInput = beatmapsetToRawMetadataInput(beatmapset);
-  const rawResult = validateRawMetadata(rawInput);
+  const rawResult = validateRawMetadata(rawInput, strict);
 
   return buildValidationResult(
     beatmapset,
@@ -508,10 +528,10 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function validateRawMetadata(input: RawMetadataInput): RawValidationResult {
-  const { artist: rawArtist, title: rawTitle, isFeaturedArtist, status, source, tags } = input;
-  const artist = nfkc(rawArtist);
-  const title = nfkc(rawTitle);
+export function validateRawMetadata(input: RawMetadataInput, strict: boolean = false): RawValidationResult {
+  const { artist_unicode, title_unicode, isFeaturedArtist, status, source, tags } = input;
+  const artist = nfkc(artist_unicode);
+  const title = nfkc(title_unicode);
   const trackId = isFeaturedArtist ? 1 : null;
 
   const buildResult = (
@@ -641,7 +661,27 @@ export function validateRawMetadata(input: RawMetadataInput): RawValidationResul
     }
   }
 
+  if (strict && isStrictSourceViolation(artist, title)) {
+    return buildResult(
+      ComplianceStatus.DISALLOWED,
+      ComplianceFailureReason.DISALLOWED_SOURCE,
+      getNotesForReason(ComplianceFailureReason.DISALLOWED_SOURCE),
+    );
+  }
+
   return buildResult(ComplianceStatus.OK);
+}
+
+function isStrictSourceViolation(artist: string, title: string): boolean {
+  const tracks = strictSources[artist.toLowerCase()];
+  if (!tracks) return false;
+  const titleLower = title.toLowerCase();
+  for (const track of tracks) {
+    if (titleLower.includes(track)) return true;
+    const pre = track.split("(")[0]?.trim();
+    if (pre && titleLower.includes(pre)) return true;
+  }
+  return false;
 }
 
 // Export functions for testing
@@ -658,4 +698,5 @@ export {
   getFlaggedArtistInTitle,
   checkFlaggedArtist,
   checkFlaggedArtistInTitle,
+  isStrictSourceViolation,
 };

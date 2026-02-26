@@ -72,6 +72,8 @@ export interface Override {
 export interface RawMetadataInput {
   artist: string;
   title: string;
+  artist_unicode: string;
+  title_unicode: string;
   isFeaturedArtist?: boolean;
   status?: string;
   source?: string;

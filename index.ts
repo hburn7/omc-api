@@ -47,8 +47,11 @@ server.post("/validate", validateOpts, async (request, reply) => {
     return;
   }
 
+  const strict = (request.query as { strict?: string })?.strict === "true";
+
   logger.debug("Processing validation request", {
     beatmapCount: beatmapIds.length,
+    strict,
   });
 
   for (let i = 0; i < beatmapIds.length; i += chunkSize) {
@@ -63,7 +66,7 @@ server.post("/validate", validateOpts, async (request, reply) => {
     allFailures = allFailures.union(new Set(fetchResult.failures));
 
     // Validate beatmaps and get results per beatmapset
-    const results = validator.validate(fetchResult.beatmaps);
+    const results = validator.validate(fetchResult.beatmaps, strict);
     allResults.push(...results);
   }
 
@@ -93,10 +96,12 @@ const validateMetadataOpts = {
             maxItems: 1000,
             items: {
               type: "object",
-              required: ["artist", "title"],
+              required: ["artist", "title", "artist_unicode", "title_unicode"],
               properties: {
                 artist: { type: "string" },
                 title: { type: "string" },
+                artist_unicode: { type: "string" },
+                title_unicode: { type: "string" },
                 isFeaturedArtist: { type: "boolean" },
                 status: { type: "string" },
                 source: { type: "string" },
@@ -129,12 +134,14 @@ server.post("/validate-metadata", validateMetadataOpts, async (request, reply) =
   }
 
   const inputs = request.body as RawMetadataInput[];
+  const strict = (request.query as { strict?: string })?.strict === "true";
 
   logger.debug("Processing metadata validation request", {
     count: inputs.length,
+    strict,
   });
 
-  const results = inputs.map((input) => validator.validateRawMetadata(input));
+  const results = inputs.map((input) => validator.validateRawMetadata(input, strict));
 
   const resultStatuses = results.reduce((acc, result) => {
     acc[result.complianceStatusString] = (acc[result.complianceStatusString] || 0) + 1;

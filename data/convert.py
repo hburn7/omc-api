@@ -81,13 +81,13 @@ _SERIALIZERS = {
 
 
 def convert(data_path: Path | str, save_path: Path | str, input_format: DataFormat, output_format: DataFormat):
-    with open(data_path, "r") as f:
+    with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     collection = _PARSERS[input_format](data)
     output = _SERIALIZERS[output_format](collection)
 
-    with open(save_path, "w") as f:
+    with open(save_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
