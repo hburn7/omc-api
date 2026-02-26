@@ -14,7 +14,9 @@ import {
 } from "./dataTypes.ts";
 import type { Beatmapset } from "osu-api-v2-js";
 
-function nfkc(s: string): string { return s.normalize("NFKC"); }
+function nfkc(s: string): string {
+  return s.normalize("NFKC");
+}
 
 // Constants
 const DISALLOWED_STATUS = "disallowed";
@@ -25,14 +27,20 @@ const POTENTIAL_STATUS = "potential";
 const dataPath = join(process.cwd(), "data");
 const flaggedArtists: Record<string, FlaggedArtistData> = Object.fromEntries(
   Object.entries(
-    JSON.parse(readFileSync(join(dataPath, "artists", "restricted.json"), "utf-8")) as Record<string, FlaggedArtistData>,
+    JSON.parse(
+      readFileSync(join(dataPath, "artists", "restricted.json"), "utf-8"),
+    ) as Record<string, FlaggedArtistData>,
   ).map(([k, v]) => [nfkc(k), v]),
 );
 const overrides: Override[] = (
-  JSON.parse(readFileSync(join(dataPath, "overrides", "edge-cases.json"), "utf-8")) as Override[]
+  JSON.parse(
+    readFileSync(join(dataPath, "overrides", "edge-cases.json"), "utf-8"),
+  ) as Override[]
 ).map((o) => ({ ...o, artist: nfkc(o.artist), title: nfkc(o.title) }));
 const disallowedSources: string[] = (
-  JSON.parse(readFileSync(join(dataPath, "sources", "banned.json"), "utf-8")) as string[]
+  JSON.parse(
+    readFileSync(join(dataPath, "sources", "banned.json"), "utf-8"),
+  ) as string[]
 ).map(nfkc);
 
 // Load all label files
@@ -59,16 +67,22 @@ type StrictSourceData = Record<string, string[]>;
 const strictPath = join(dataPath, "strict");
 let strictSources: StrictSourceData = {};
 try {
-  const strictFiles = readdirSync(strictPath).filter(f => f.endsWith(".json"));
+  const strictFiles = readdirSync(strictPath).filter((f) =>
+    f.endsWith(".json"),
+  );
   for (const file of strictFiles) {
-    const raw = JSON.parse(readFileSync(join(strictPath, file), "utf-8")) as Record<string, string[]>;
+    const raw = JSON.parse(
+      readFileSync(join(strictPath, file), "utf-8"),
+    ) as Record<string, string[]>;
     for (const [artist, tracks] of Object.entries(raw)) {
       const key = nfkc(artist).toLowerCase();
-      const vals = tracks.map(t => nfkc(t).toLowerCase());
+      const vals = tracks.map((t) => nfkc(t).toLowerCase());
       strictSources[key] = (strictSources[key] || []).concat(vals);
     }
   }
-} catch { strictSources = {}; }
+} catch {
+  strictSources = {};
+}
 
 // Main validation function - accepts array of beatmaps and returns one result per unique beatmapset
 export function validate(
@@ -97,7 +111,7 @@ export function validate(
     }
 
     const result = validateBeatmapset(beatmapset, strict);
-    result.beatmapIds = beatmapGroup.map(b => b.id);
+    result.beatmapIds = beatmapGroup.map((b) => b.id);
 
     results.push(result);
   }
@@ -125,7 +139,7 @@ function buildValidationResult(
     title_unicode: nfkc(beatmapset.title_unicode),
     ownerId: beatmapset.user_id,
     ownerUsername: beatmapset.creator,
-    status: beatmapset.status
+    status: beatmapset.status,
   };
 
   if (failureReason !== undefined) {
@@ -141,13 +155,18 @@ function buildValidationResult(
   return result;
 }
 
-function beatmapsetToRawMetadataInput(beatmapset: Beatmapset.Extended): RawMetadataInput {
+function beatmapsetToRawMetadataInput(
+  beatmapset: Beatmapset.Extended,
+): RawMetadataInput {
   return {
     artist: nfkc(beatmapset.artist),
     title: nfkc(beatmapset.title),
     artist_unicode: nfkc(beatmapset.artist_unicode),
     title_unicode: nfkc(beatmapset.title_unicode),
-    isFeaturedArtist: beatmapset.track_id !== null && beatmapset.track_id !== undefined && beatmapset.track_id > 0,
+    isFeaturedArtist:
+      beatmapset.track_id !== null &&
+      beatmapset.track_id !== undefined &&
+      beatmapset.track_id > 0,
     status: beatmapset.status,
     source: beatmapset.source,
     tags: beatmapset.tags,
@@ -263,7 +282,7 @@ function isBannedSource(source: string): boolean {
 }
 
 function tagsContainBannedSource(tags: string): boolean {
-  const tagArr = tags.split(',');
+  const tagArr = tags.split(",");
 
   for (const source of disallowedSources) {
     if (tagArr.includes(source.toLowerCase())) {
@@ -278,7 +297,7 @@ function isLabelViolation(artist: string, title: string): boolean {
   const labelData = labels[0];
 
   if (!labelData) {
-    throw Error('Label data error')
+    throw Error("Label data error");
   }
 
   const titleLower = title.toLowerCase();
@@ -286,7 +305,6 @@ function isLabelViolation(artist: string, title: string): boolean {
   for (const [labelArtist, tracks] of Object.entries(labelData)) {
     if (labelArtist.toLowerCase() === artist.toLowerCase()) {
       for (const track of tracks) {
-
         // Since the artists are equal,
         // see whether the beatmap's title
         // includes the full track name OR
@@ -298,7 +316,7 @@ function isLabelViolation(artist: string, title: string): boolean {
           return true;
         }
 
-        const trackPreParentheses = trackLower.split('(')[0]?.trim();
+        const trackPreParentheses = trackLower.split("(")[0]?.trim();
         if (trackPreParentheses && titleLower.includes(trackPreParentheses)) {
           return true;
         }
@@ -318,7 +336,11 @@ function findOverride(artist: string, title: string): Override | null {
   return null;
 }
 
-function matchesOverride(artist: string, title: string, override: Override): boolean {
+function matchesOverride(
+  artist: string,
+  title: string,
+  override: Override,
+): boolean {
   // Check artist match
   if (artist.toLowerCase() !== override.artist.toLowerCase()) {
     return false;
@@ -339,7 +361,9 @@ function parseOverrideStatus(status: string): ComplianceStatus {
     case "disallowed":
       return ComplianceStatus.DISALLOWED;
     default:
-      throw Error(`Failed to parse override status of ${status} [valid range is 'ok', 'potential', 'disallowed']`)
+      throw Error(
+        `Failed to parse override status of ${status} [valid range is 'ok', 'potential', 'disallowed']`,
+      );
   }
 }
 
@@ -530,8 +554,20 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function validateRawMetadata(input: RawMetadataInput, strict: boolean = false): RawValidationResult {
-  const { artist: artistInput, title: titleInput, artist_unicode, title_unicode, isFeaturedArtist, status, source, tags } = input;
+export function validateRawMetadata(
+  input: RawMetadataInput,
+  strict: boolean = false,
+): RawValidationResult {
+  const {
+    artist: artistInput,
+    title: titleInput,
+    artist_unicode,
+    title_unicode,
+    isFeaturedArtist,
+    status,
+    source,
+    tags,
+  } = input;
   const artistUnicode = nfkc(artist_unicode);
   const titleUnicode = nfkc(title_unicode);
   const artist = nfkc(artistInput);
@@ -554,7 +590,8 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
 
     if (failureReason !== undefined) {
       result.complianceFailureReason = failureReason;
-      result.complianceFailureReasonString = getComplianceFailureReasonString(failureReason);
+      result.complianceFailureReasonString =
+        getComplianceFailureReasonString(failureReason);
     }
 
     if (notes !== undefined && notes !== null) {
@@ -564,7 +601,8 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     return result;
   };
 
-  const override = findOverride(artistUnicode, titleUnicode) || findOverride(artist, title);
+  const override =
+    findOverride(artistUnicode, titleUnicode) || findOverride(artist, title);
   if (override) {
     const overrideStatus = parseOverrideStatus(override.resultOverride);
     if (overrideStatus === ComplianceStatus.OK) {
@@ -600,7 +638,10 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     );
   }
 
-  if (isLabelViolation(artistUnicode, titleUnicode) || isLabelViolation(artist, title)) {
+  if (
+    isLabelViolation(artistUnicode, titleUnicode) ||
+    isLabelViolation(artist, title)
+  ) {
     return buildResult(
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -618,7 +659,8 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
             return buildResult(
               ComplianceStatus.DISALLOWED,
               ComplianceFailureReason.FA_TRACKS_ONLY,
-              flaggedArtist.notes || getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY),
+              flaggedArtist.notes ||
+                getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY),
             );
           }
           break;
@@ -632,7 +674,8 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
           return buildResult(
             ComplianceStatus.DISALLOWED,
             ComplianceFailureReason.DISALLOWED_ARTIST,
-            flaggedArtist.notes || getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST),
+            flaggedArtist.notes ||
+              getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST),
           );
       }
     }
@@ -651,7 +694,8 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
           return buildResult(
             ComplianceStatus.DISALLOWED,
             ComplianceFailureReason.FA_TRACKS_ONLY,
-            flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY),
+            flaggedArtist?.notes ||
+              getNotesForReason(ComplianceFailureReason.FA_TRACKS_ONLY),
           );
         }
         break;
@@ -665,12 +709,17 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
         return buildResult(
           ComplianceStatus.DISALLOWED,
           ComplianceFailureReason.DISALLOWED_ARTIST,
-          flaggedArtist?.notes || getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST),
+          flaggedArtist?.notes ||
+            getNotesForReason(ComplianceFailureReason.DISALLOWED_ARTIST),
         );
     }
   }
 
-  if (strict && (isStrictSourceViolation(artistUnicode, titleUnicode) || isStrictSourceViolation(artist, title))) {
+  if (
+    strict &&
+    (isStrictSourceViolation(artistUnicode, titleUnicode) ||
+      isStrictSourceViolation(artist, title))
+  ) {
     return buildResult(
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_SOURCE,

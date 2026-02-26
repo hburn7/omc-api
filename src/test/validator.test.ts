@@ -80,7 +80,7 @@ function createTestBeatmap(beatmapsetId: number = 1): BeatmapWithBeatmapset {
       spotlight: false,
       title_unicode: "Test Title",
       rating: 0,
-      anime_cover: false
+      anime_cover: false,
     },
     failtimes: {
       exit: [],
@@ -117,7 +117,10 @@ function setTitle(beatmap: BeatmapWithBeatmapset, title: string) {
 }
 
 /** Sets the beatmapset status */
-function setStatus(beatmap: BeatmapWithBeatmapset, status: BeatmapWithBeatmapset["beatmapset"]["status"]) {
+function setStatus(
+  beatmap: BeatmapWithBeatmapset,
+  status: BeatmapWithBeatmapset["beatmapset"]["status"],
+) {
   beatmap.beatmapset.status = status;
 }
 
@@ -137,7 +140,9 @@ function setTags(beatmap: BeatmapWithBeatmapset, tags: string) {
 }
 
 /** Creates a RawMetadataInput with unicode fields matching romanized by default */
-function rawInput(overrides: Partial<RawMetadataInput> & { artist: string; title: string }): RawMetadataInput {
+function rawInput(
+  overrides: Partial<RawMetadataInput> & { artist: string; title: string },
+): RawMetadataInput {
   return {
     artist_unicode: overrides.artist,
     title_unicode: overrides.title,
@@ -1225,7 +1230,7 @@ describe("Validator", () => {
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.DISALLOWED_ARTIST
+          ComplianceFailureReason.DISALLOWED_ARTIST,
         );
       });
 
@@ -1240,7 +1245,7 @@ describe("Validator", () => {
         } as Beatmapset.Extended;
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(
-          ComplianceStatus.POTENTIALLY_DISALLOWED
+          ComplianceStatus.POTENTIALLY_DISALLOWED,
         );
         expect(result?.notes).toContain("Touhou");
       });
@@ -1257,164 +1262,221 @@ describe("Validator", () => {
         const result = validator.checkFlaggedArtist(beatmapset);
         expect(result?.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
         expect(result?.complianceFailureReason).toBe(
-          ComplianceFailureReason.FA_TRACKS_ONLY
+          ComplianceFailureReason.FA_TRACKS_ONLY,
         );
       });
     });
 
     describe("isStrictSourceViolation", () => {
       it("should detect a track in strict sources", () => {
-        expect(validator.isStrictSourceViolation("cubesato", "My First Phone")).toBe(true);
+        expect(
+          validator.isStrictSourceViolation("cubesato", "My First Phone"),
+        ).toBe(true);
       });
 
       it("should be case-insensitive on artist", () => {
-        expect(validator.isStrictSourceViolation("CUBESATO", "My First Phone")).toBe(true);
+        expect(
+          validator.isStrictSourceViolation("CUBESATO", "My First Phone"),
+        ).toBe(true);
       });
 
       it("should be case-insensitive on title", () => {
-        expect(validator.isStrictSourceViolation("cubesato", "my first phone")).toBe(true);
+        expect(
+          validator.isStrictSourceViolation("cubesato", "my first phone"),
+        ).toBe(true);
       });
 
       it("should return false for unknown artist", () => {
-        expect(validator.isStrictSourceViolation("Unknown Artist", "Some Track")).toBe(false);
+        expect(
+          validator.isStrictSourceViolation("Unknown Artist", "Some Track"),
+        ).toBe(false);
       });
 
       it("should return false for known artist with non-matching title", () => {
-        expect(validator.isStrictSourceViolation("cubesato", "Nonexistent Track")).toBe(false);
+        expect(
+          validator.isStrictSourceViolation("cubesato", "Nonexistent Track"),
+        ).toBe(false);
       });
 
       it("should match pre-parenthesis portion of track name", () => {
         // If strict data has "Track Name (Extended Mix)", "Track Name" should match
-        expect(validator.isStrictSourceViolation("cubesato", "My First Phone (Extended)")).toBe(true);
+        expect(
+          validator.isStrictSourceViolation(
+            "cubesato",
+            "My First Phone (Extended)",
+          ),
+        ).toBe(true);
       });
     });
   });
 
   describe("validateRawMetadata", () => {
     it("should return OK for clean artist and title", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Some Artist",
-        title: "Some Title",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Some Title",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
       expect(result.artist).toBe("Some Artist");
       expect(result.title).toBe("Some Title");
     });
 
     it("should return OK when isFeaturedArtist is true", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Igorrr",
-        title: "Disallowed Track",
-        isFeaturedArtist: true,
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Disallowed Track",
+          isFeaturedArtist: true,
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should return OK for ranked status", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Igorrr",
-        title: "Some Track",
-        status: "ranked",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          status: "ranked",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should return OK for loved status", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Igorrr",
-        title: "Some Track",
-        status: "loved",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          status: "loved",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should return DISALLOWED for disallowed artist", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Igorrr",
-        title: "Some Track",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
     });
 
     it("should return DISALLOWED for banned source", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Some Artist",
-        title: "Some Title",
-        source: "MEGAREX",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Some Title",
+          source: "MEGAREX",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
     });
 
     it("should return DISALLOWED for banned source in tags", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Some Artist",
-        title: "Some Title",
-        tags: "some,djmax,tag",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Some Title",
+          tags: "some,djmax,tag",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
     });
 
     it("should return DISALLOWED for label violation", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "lapix",
-        title: "Cave of Points",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "lapix",
+          title: "Cave of Points",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      );
     });
 
     it("should return DISALLOWED for FA-only artist without FA", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Morimori Atsushi",
-        title: "Some Track",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Some Track",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.FA_TRACKS_ONLY);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.FA_TRACKS_ONLY,
+      );
     });
 
     it("should return OK for FA-only artist with isFeaturedArtist", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Morimori Atsushi",
-        title: "Some Track",
-        isFeaturedArtist: true,
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Some Track",
+          isFeaturedArtist: true,
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should return DISALLOWED for disallowed artist a_hisa", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "a_hisa",
-        title: "Some Track",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "a_hisa",
+          title: "Some Track",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
     });
 
     it("should apply override rules", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Morimori Atsushi",
-        title: "Tits or get the fuck out!!",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Tits or get the fuck out!!",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should detect flagged artist in title", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Some Artist",
-        title: "Song (Igorrr Remix)",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Some Artist",
+          title: "Song (Igorrr Remix)",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
     });
 
     it("should handle missing optional fields", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Clean Artist",
-        title: "Clean Title",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Clean Artist",
+          title: "Clean Title",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
       expect(result.complianceFailureReason).toBeUndefined();
       expect(result.notes).toBeUndefined();
@@ -1423,12 +1485,14 @@ describe("Validator", () => {
 
   describe("Unicode matching", () => {
     it("should match CJK artist from unicode field", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "sakuzyo",
-        title: "Cyberozar",
-        artist_unicode: "\u524A\u9664",
-        title_unicode: "Cyberozar",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "sakuzyo",
+          title: "Cyberozar",
+          artist_unicode: "\u524A\u9664",
+          title_unicode: "Cyberozar",
+        }),
+      );
       // This should be OK since 削除 is not a flagged/restricted artist,
       // but will be caught by strict mode
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
@@ -1436,56 +1500,70 @@ describe("Validator", () => {
 
     it("should detect disallowed artist from romanized field as fallback", () => {
       // romanized artist is a disallowed artist — should be caught even when unicode is clean
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Igorrr",
-        title: "Some Track",
-        artist_unicode: "Clean Artist",
-        title_unicode: "Some Track",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          artist_unicode: "Clean Artist",
+          title_unicode: "Some Track",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
     });
 
     it("should detect disallowed artist from unicode field even when romanized is clean", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Clean Artist",
-        title: "Some Track",
-        artist_unicode: "Igorrr",
-        title_unicode: "Some Track",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Clean Artist",
+          title: "Some Track",
+          artist_unicode: "Igorrr",
+          title_unicode: "Some Track",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
     });
 
     it("should apply NFKC normalization to unicode fields", () => {
       // owl＊tree (fullwidth ＊) should normalize to owl*tree
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "owl*tree",
-        title: "Teriqma",
-        artist_unicode: "owl\uFF0Atree",
-        title_unicode: "Teriqma",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "owl*tree",
+          title: "Teriqma",
+          artist_unicode: "owl\uFF0Atree",
+          title_unicode: "Teriqma",
+        }),
+      );
       // Not a restricted artist, should be OK
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should use unicode fields for label matching", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "different",
-        title: "different",
-        artist_unicode: "lapix",
-        title_unicode: "Cave of Points",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "different",
+          title: "different",
+          artist_unicode: "lapix",
+          title_unicode: "Cave of Points",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
+      );
     });
 
     it("should use unicode fields for override matching", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "different",
-        title: "different",
-        artist_unicode: "Morimori Atsushi",
-        title_unicode: "Tits or get the fuck out!!",
-      }));
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "different",
+          title: "different",
+          artist_unicode: "Morimori Atsushi",
+          title_unicode: "Tits or get the fuck out!!",
+        }),
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
@@ -1507,77 +1585,107 @@ describe("Validator", () => {
 
   describe("Strict mode validation", () => {
     it("should flag Chunithm track as DISALLOWED_SOURCE in strict mode", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "cubesato",
-        title: "My First Phone",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
       expect(result.notes).toBe("The track is from a prohibited source.");
     });
 
     it("should return OK for the same track without strict mode", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "cubesato",
-        title: "My First Phone",
-      }), false);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+        }),
+        false,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should match CJK artist in strict mode", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "sakuzyo",
-        title: "Cyberozar",
-        artist_unicode: "\u524A\u9664",
-        title_unicode: "Cyberozar",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "sakuzyo",
+          title: "Cyberozar",
+          artist_unicode: "\u524A\u9664",
+          title_unicode: "Cyberozar",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
     });
 
     it("should apply NFKC normalization in strict matching", () => {
       // owl＊tree (fullwidth ＊) should normalize to owl*tree and match strict data
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "owl*tree",
-        title: "Teriqma",
-        artist_unicode: "owl\uFF0Atree",
-        title_unicode: "Teriqma",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "owl*tree",
+          title: "Teriqma",
+          artist_unicode: "owl\uFF0Atree",
+          title_unicode: "Teriqma",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
     });
 
     it("should return OK when artist matches but title does not", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "cubesato",
-        title: "Nonexistent Track",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "Nonexistent Track",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should let overrides take precedence over strict mode", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Morimori Atsushi",
-        title: "Tits or get the fuck out!!",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Morimori Atsushi",
+          title: "Tits or get the fuck out!!",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should let FA licensing take precedence over strict mode", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "cubesato",
-        title: "My First Phone",
-        isFeaturedArtist: true,
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+          isFeaturedArtist: true,
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
     it("should let ranked status take precedence over strict mode", () => {
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "cubesato",
-        title: "My First Phone",
-        status: "ranked",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+          status: "ranked",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
@@ -1592,18 +1700,27 @@ describe("Validator", () => {
 
       const resultsStrict = validator.validate([beatmap], true);
       expect(resultsStrict).toHaveLength(1);
-      expect(resultsStrict[0]!.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(resultsStrict[0]!.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_SOURCE);
+      expect(resultsStrict[0]!.complianceStatus).toBe(
+        ComplianceStatus.DISALLOWED,
+      );
+      expect(resultsStrict[0]!.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
     });
 
     it("should not flag strict when other rules already disallow", () => {
       // Disallowed artist should still be DISALLOWED_ARTIST, not DISALLOWED_SOURCE
-      const result = validator.validateRawMetadata(rawInput({
-        artist: "Igorrr",
-        title: "Some Track",
-      }), true);
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+        }),
+        true,
+      );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
-      expect(result.complianceFailureReason).toBe(ComplianceFailureReason.DISALLOWED_ARTIST);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
     });
   });
 });

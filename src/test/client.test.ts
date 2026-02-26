@@ -40,9 +40,15 @@ describe("fetchBeatmaps", () => {
 
   it("should handle chunking for large beatmap ID arrays", async () => {
     const beatmapIds = Array.from({ length: 120 }, (_, i) => i + 1);
-    const mockBeatmaps1 = Array.from({ length: 50 }, (_, i) => ({ id: i + 1 })) as any;
-    const mockBeatmaps2 = Array.from({ length: 50 }, (_, i) => ({ id: i + 51 })) as any;
-    const mockBeatmaps3 = Array.from({ length: 20 }, (_, i) => ({ id: i + 101 })) as any;
+    const mockBeatmaps1 = Array.from({ length: 50 }, (_, i) => ({
+      id: i + 1,
+    })) as any;
+    const mockBeatmaps2 = Array.from({ length: 50 }, (_, i) => ({
+      id: i + 51,
+    })) as any;
+    const mockBeatmaps3 = Array.from({ length: 20 }, (_, i) => ({
+      id: i + 101,
+    })) as any;
 
     mockGetBeatmaps
       .mockResolvedValueOnce(mockBeatmaps1)
@@ -55,8 +61,14 @@ describe("fetchBeatmaps", () => {
     expect(result.failures).toEqual([]);
     expect(mockGetBeatmaps).toHaveBeenCalledTimes(3);
     expect(mockGetBeatmaps).toHaveBeenNthCalledWith(1, beatmapIds.slice(0, 50));
-    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(2, beatmapIds.slice(50, 100));
-    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(3, beatmapIds.slice(100, 120));
+    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(
+      2,
+      beatmapIds.slice(50, 100),
+    );
+    expect(mockGetBeatmaps).toHaveBeenNthCalledWith(
+      3,
+      beatmapIds.slice(100, 120),
+    );
   });
 
   it("should return failure IDs for beatmaps that couldn't be fetched", async () => {

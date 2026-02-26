@@ -137,11 +137,11 @@ Install [bun](https://bun.sh/docs/installation).
 
 ### Formats
 
-| ID | Name | Structure |
-|----|------|-----------|
-| 0 | Artist/title groups | `[{"artist": "", "title": ""}]` |
-| 1 | Artist track list (keyed) | `{"Artist": {"tracks": [""]}}` |
-| 2 | Artist track list | `{"Artist": [""]}` |
+| ID  | Name                      | Structure                       |
+| --- | ------------------------- | ------------------------------- |
+| 0   | Artist/title groups       | `[{"artist": "", "title": ""}]` |
+| 1   | Artist track list (keyed) | `{"Artist": {"tracks": [""]}}`  |
+| 2   | Artist track list         | `{"Artist": [""]}`              |
 
 ### Usage
 

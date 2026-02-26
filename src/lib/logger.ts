@@ -63,7 +63,11 @@ function normalizeContext(context?: LogContext): LogContext | undefined {
   return Object.fromEntries(normalizedEntries);
 }
 
-function output(level: LogLevelName, message: string, context?: LogContext): void {
+function output(
+  level: LogLevelName,
+  message: string,
+  context?: LogContext,
+): void {
   if (!shouldLog(level)) {
     return;
   }

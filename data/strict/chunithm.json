@@ -1,8 +1,5 @@
 {
-  "cubesato": [
-    "My First Phone",
-    "ASH"
-  ],
+  "cubesato": ["My First Phone", "ASH"],
   "削除": [
     "Cyberozar",
     "Megameteor",
@@ -10,103 +7,53 @@
     "グラウンドスライダー協奏曲第一番「風唄」",
     "Ultimate Force"
   ],
-  "owl*tree": [
-    "Teriqma",
-    "Paqqin",
-    "jaQup"
-  ],
-  "れるりり feat.ろん": [
-    "Invitation",
-    "RevolutionGame"
-  ],
-  "Morrigan": [
-    "GOLDEN RULE"
-  ],
-  "六弦アリス": [
-    "名も無い鳥"
-  ],
-  "Godspeed": [
-    "Gate of Fate"
-  ],
+  "owl*tree": ["Teriqma", "Paqqin", "jaQup"],
+  "れるりり feat.ろん": ["Invitation", "RevolutionGame"],
+  "Morrigan": ["GOLDEN RULE"],
+  "六弦アリス": ["名も無い鳥"],
+  "Godspeed": ["Gate of Fate"],
   "あべにゅうぷろじぇくと feat.佐倉 紗織 produced by ave;new": [
     "今ぞ♡崇め奉れ☆オマエらよ!!~姫の秘メタル渇望~"
   ],
-  "ESTi": [
-    "Anemone"
-  ],
-  "豚乙女": [
-    "明るい未来"
-  ],
-  "halyosy": [
-    "昵懇レファレンス"
-  ],
+  "ESTi": ["Anemone"],
+  "豚乙女": ["明るい未来"],
+  "halyosy": ["昵懇レファレンス"],
   "solfa feat.茶太": [
     "乗り切れ受験ウォーズ",
     "ゲシュタルト!テスト期間!!",
     "サンシャインサマー☆夏期講習",
     "逃げろ!サテライトキャンパス!!"
   ],
-  "Sampling Masters MEGA": [
-    "The wheel to the right",
-    "Kattobi KEIKYU Rider"
-  ],
-  "SEXY-SYNTHESIZER": [
-    "STAR"
-  ],
+  "Sampling Masters MEGA": ["The wheel to the right", "Kattobi KEIKYU Rider"],
+  "SEXY-SYNTHESIZER": ["STAR"],
   "t+pazolite": [
     "Infantoon Fantasy",
     "Contrapasso -inferno-",
     "Glorious Crown (tpz over-Over-OVERCUTE REMIX)",
     "Forsaken Tale"
   ],
-  "Morrigan feat.Lily": [
-    "Genesis",
-    "We Gonna Party -Feline Groove Mix-"
-  ],
-  "A-One": [
-    "MUSIC PЯAYER"
-  ],
-  "TaNaBaTa": [
-    "リリーシア"
-  ],
-  "DECO*27 feat.echo": [
-    "Counselor"
-  ],
-  "WASi303": [
-    "luna blu"
-  ],
-  "ゼッケン屋": [
-    "ケモノガル"
-  ],
+  "Morrigan feat.Lily": ["Genesis", "We Gonna Party -Feline Groove Mix-"],
+  "A-One": ["MUSIC PЯAYER"],
+  "TaNaBaTa": ["リリーシア"],
+  "DECO*27 feat.echo": ["Counselor"],
+  "WASi303": ["luna blu"],
+  "ゼッケン屋": ["ケモノガル"],
   "片霧烈火オンザみんマンション": [
     "GO!GO!ラブリズム♥",
     "NYAN-NYA, More! ラブシャイン、Chu♥"
   ],
-  "古代 祐三": [
-    "Grab your sword"
-  ],
-  "Aiko Oi": [
-    "Memories of Sun and Moon",
-    "Breakthrough"
-  ],
-  "Osamu Kubota": [
-    "L'épisode"
-  ],
-  "海田 明里": [
-    "砂漠のハンティングガール♡"
-  ],
+  "古代 祐三": ["Grab your sword"],
+  "Aiko Oi": ["Memories of Sun and Moon", "Breakthrough"],
+  "Osamu Kubota": ["L'épisode"],
+  "海田 明里": ["砂漠のハンティングガール♡"],
   "霜月はるか": [
     "After the rain",
     "願い星",
     "Sentimental Snow",
     "恋のチャイム"
   ],
-  "Yoko Shimomura": [
-    "Tango Rouge"
-  ],
-  "COOL&CREATE": [
-    "Tuning Rangers"
-  ],
+  "Yoko Shimomura": ["Tango Rouge"],
+  "COOL&CREATE": ["Tuning Rangers"],
   "cosMo@暴走P": [
     "エンドマークに希望と涙を添えて",
     "ラストピースに祝福と栄光を"
@@ -117,1076 +64,382 @@
     "大天使ユリア★降臨!",
     "房総★ミラクル☆てんたくる!?"
   ],
-  "景山 将太": [
-    "overcome"
-  ],
-  "Cranky feat.おもしろ三国志": [
-    "宛城、炎上!!",
-    "赤壁、大炎上!!"
-  ],
-  "Queen P.A.L.": [
-    "We Gonna Journey"
-  ],
-  "浜渦 正志": [
-    "The ether"
-  ],
-  "MintJam": [
-    "Guilty"
-  ],
-  "sasakure.UK": [
-    "閃鋼のブリューナク"
-  ],
+  "景山 将太": ["overcome"],
+  "Cranky feat.おもしろ三国志": ["宛城、炎上!!", "赤壁、大炎上!!"],
+  "Queen P.A.L.": ["We Gonna Journey"],
+  "浜渦 正志": ["The ether"],
+  "MintJam": ["Guilty"],
+  "sasakure.UK": ["閃鋼のブリューナク"],
   "40mP feat.シャノ": [
     "夕暮れワンルーム",
     "時の冒険者",
     "朝焼けプラットホーム"
   ],
-  "ふわりP": [
-    "こころここから"
-  ],
-  "植松 伸夫": [
-    "Theme of SeelischTact"
-  ],
-  "光田 康典": [
-    "Alma"
-  ],
-  "伊藤 賢治": [
-    "Gustav Battle"
-  ],
-  "M.S.S Project": [
-    "幾四音-Ixion-"
-  ],
-  "marasy": [
-    "stella=steLLa"
-  ],
-  "光吉猛修": [
-    "怒槌"
-  ],
-  "Tatsh": [
-    "GEMINI -C-",
-    "Xevel"
-  ],
-  "Masayoshi Minoshima feat.Mei Ayakura": [
-    "SNIPE WHOLE"
-  ],
-  "tilt-six feat.バル": [
-    "サウンドプレイヤー",
-    "Be4Step"
-  ],
-  "きくお": [
-    "玩具狂奏曲 -終焉-"
-  ],
-  "-45": [
-    "紅華刑"
-  ],
-  "Maozon": [
-    "Hyperion"
-  ],
-  "INNOCENT NOIZE": [
-    "Devastating Blaster"
-  ],
+  "ふわりP": ["こころここから"],
+  "植松 伸夫": ["Theme of SeelischTact"],
+  "光田 康典": ["Alma"],
+  "伊藤 賢治": ["Gustav Battle"],
+  "M.S.S Project": ["幾四音-Ixion-"],
+  "marasy": ["stella=steLLa"],
+  "光吉猛修": ["怒槌"],
+  "Tatsh": ["GEMINI -C-", "Xevel"],
+  "Masayoshi Minoshima feat.Mei Ayakura": ["SNIPE WHOLE"],
+  "tilt-six feat.バル": ["サウンドプレイヤー", "Be4Step"],
+  "きくお": ["玩具狂奏曲 -終焉-"],
+  "-45": ["紅華刑"],
+  "Maozon": ["Hyperion"],
+  "INNOCENT NOIZE": ["Devastating Blaster"],
   "Katzeohr & Spiegel": [
     "Schrecklicher Aufstand",
     "《創造》 ~ Cries, beyond The End"
   ],
-  "並木晃一": [
-    "ドライヴ・オン・ザ・レインボー"
-  ],
-  "少女病": [
-    "Philosopher"
-  ],
-  "YATAGARASU": [
-    "Warcry"
-  ],
-  "n-buna feat.ヤギヌマカナ": [
-    "その群青が愛しかったようだった"
-  ],
-  "ひーちゃんとあーちゃんとたーちゃん": [
-    "札付きのワル ~マイケルのうた~"
-  ],
-  "じーざすP feat.kradness": [
-    "BOKUTO"
-  ],
-  "Team Grimoire": [
-    "TiamaT:F minor",
-    "Superbia"
-  ],
-  "Cranky": [
-    "Oshama Scramble! (Cranky Remix)",
-    "4月1日でございました"
-  ],
-  "さつき が てんこもり feat.YURiCa/花たん": [
-    "D.E.A.D.L.Y."
-  ],
-  "lumo": [
-    "ロボットプラネットユートピア"
-  ],
-  "D-Cee": [
-    "Tidal Wave"
-  ],
-  "Orangestar": [
-    "心象蜃気楼"
-  ],
-  "田口囁一/感傷ベクトル": [
-    "後夜祭"
-  ],
-  "折戸伸治 feat.北沢綾香": [
-    "First Twinkle"
-  ],
-  "ピノキオピー": [
-    "ウソラセラ"
-  ],
-  "志方あきこ": [
-    "響"
-  ],
-  "マチゲリータ": [
-    "覚醒楽奏メタフィクション"
-  ],
-  "Massive New Krew": [
-    "Supersonic Generation"
-  ],
-  "かたほとり feat.桃箱": [
-    "おまかせ!!トラブルメイ娘☆とれびちゃん"
-  ],
-  "ULTRA-PRISM": [
-    "オススメ☆♂♀☆でぃすとぴあ"
-  ],
+  "並木晃一": ["ドライヴ・オン・ザ・レインボー"],
+  "少女病": ["Philosopher"],
+  "YATAGARASU": ["Warcry"],
+  "n-buna feat.ヤギヌマカナ": ["その群青が愛しかったようだった"],
+  "ひーちゃんとあーちゃんとたーちゃん": ["札付きのワル ~マイケルのうた~"],
+  "じーざすP feat.kradness": ["BOKUTO"],
+  "Team Grimoire": ["TiamaT:F minor", "Superbia"],
+  "Cranky": ["Oshama Scramble! (Cranky Remix)", "4月1日でございました"],
+  "さつき が てんこもり feat.YURiCa/花たん": ["D.E.A.D.L.Y."],
+  "lumo": ["ロボットプラネットユートピア"],
+  "D-Cee": ["Tidal Wave"],
+  "Orangestar": ["心象蜃気楼"],
+  "田口囁一/感傷ベクトル": ["後夜祭"],
+  "折戸伸治 feat.北沢綾香": ["First Twinkle"],
+  "ピノキオピー": ["ウソラセラ"],
+  "志方あきこ": ["響"],
+  "マチゲリータ": ["覚醒楽奏メタフィクション"],
+  "Massive New Krew": ["Supersonic Generation"],
+  "かたほとり feat.桃箱": ["おまかせ!!トラブルメイ娘☆とれびちゃん"],
+  "ULTRA-PRISM": ["オススメ☆♂♀☆でぃすとぴあ"],
   "片霧烈火": [
     "最愛テトラグラマトン",
     "THE BRASS OF GOODSPEED!!",
     "STAR IN THE WORLD"
   ],
-  "穴山大輔": [
-    "混沌を越えし我らが神聖なる調律主を讃えよ"
-  ],
-  "ナユタン星人": [
-    "光線チューニング",
-    "コスモポップファンクラブ"
-  ],
-  "青島探偵事務所器楽捜査部B担": [
-    "立川浄穢捕物帳"
-  ],
-  "baker": [
-    "眠れぬ夜君を想フ"
-  ],
-  "鬱P feat.000": [
-    "JIGOKU STATION CENTRAL GATE"
-  ],
-  "owl*tree feat.awao*tree": [
-    "PinqPiq"
-  ],
-  "bermei.inazawa": [
-    "トリスメギストス",
-    "ウルガレオン"
-  ],
-  "魂音泉": [
-    "WE GOTTA SOUL"
-  ],
-  "幽閉サテライト": [
-    "哀しみ集め"
-  ],
-  "t+pazolite feat.ななひら": [
-    "キラメケ→Shoot it Now!"
-  ],
-  "Junk": [
-    "Wake up Dreamer"
-  ],
-  "void (Mournfinale)": [
-    "World Vanquisher",
-    "Everything Will Be One"
-  ],
-  "LeaF": [
-    "macrocosmos"
-  ],
-  "Powerless feat.kakichoco": [
-    "Iudicium"
-  ],
-  "q/stol": [
-    "Twice up Scenery"
-  ],
-  "OSTER project feat.ジェム": [
-    "La Baguette Magique"
-  ],
-  "HALFBY": [
-    "bubble attack"
-  ],
-  "うたたP": [
-    "The Darkness of Valhalla"
-  ],
-  "Crusher-P": [
-    "Rendezvous"
-  ],
-  "doriko feat.VALSHE": [
-    "EXECUTOR"
-  ],
-  "kanone": [
-    "BlazinG AIR"
-  ],
-  "xi": [
-    "Sparking Revolver"
-  ],
-  "Masahiro “Godspeed” Aoki": [
-    "Gate of Doom"
-  ],
-  "NAOKI underground": [
-    "otorii INNOVATED -[i]3-"
-  ],
-  "happy machine": [
-    "popcorn"
-  ],
-  "Tomggg": [
-    "Pastel Party"
-  ],
-  "Yunomi feat.nicamoq": [
-    "はちみつアドベンチャー"
-  ],
-  "YUC'e": [
-    "CHOCOLATE BOMB!!!!"
-  ],
-  "Pa's Lam System": [
-    "Twilight"
-  ],
-  "M2U": [
-    "Dual Fractal"
-  ],
-  "Taishi": [
-    "Drivessover"
-  ],
-  "cybermiso": [
-    "Surveiller et punir"
-  ],
-  "光吉猛修 VS 穴山大輔": [
-    "業 -善なる神とこの世の悪について-"
-  ],
-  "164 feat.ウォルピスカーター": [
-    "PAST"
-  ],
-  "Palme": [
-    "Blessed",
-    "Sunlight Starlight"
-  ],
-  "emon(Tes.) feat.松平なな": [
-    "FRIDAY FRIDAY"
-  ],
-  "笑う角を曲がる": [
-    "足立オウフwwww"
-  ],
-  "Snail's House": [
-    "Seagull"
-  ],
-  "カヒーナムジカ": [
-    "Blaster Heaven"
-  ],
-  "Omoi feat.+α/あるふぁきゅん。": [
-    "ハートアタック"
-  ],
-  "TORIENA": [
-    "Summer is over"
-  ],
-  "ぬゆり": [
-    "folern"
-  ],
-  "dawn-system": [
-    "2DVenture"
-  ],
-  "NirNo": [
-    "ぜったい!昇天★鎮魂歌♂"
-  ],
-  "technoplanet": [
-    "夕焼けのRed Parade"
-  ],
-  "Feryquitous": [
-    "StufeStern"
-  ],
-  "Acotto": [
-    "スピカの天秤",
-    "absolute rightness",
-    "deadeye"
-  ],
-  "キノシタ feat.YURiCa/花たん": [
-    "涙色メモリア"
-  ],
-  "niki feat.noire": [
-    "Magic"
-  ],
+  "穴山大輔": ["混沌を越えし我らが神聖なる調律主を讃えよ"],
+  "ナユタン星人": ["光線チューニング", "コスモポップファンクラブ"],
+  "青島探偵事務所器楽捜査部B担": ["立川浄穢捕物帳"],
+  "baker": ["眠れぬ夜君を想フ"],
+  "鬱P feat.000": ["JIGOKU STATION CENTRAL GATE"],
+  "owl*tree feat.awao*tree": ["PinqPiq"],
+  "bermei.inazawa": ["トリスメギストス", "ウルガレオン"],
+  "魂音泉": ["WE GOTTA SOUL"],
+  "幽閉サテライト": ["哀しみ集め"],
+  "t+pazolite feat.ななひら": ["キラメケ→Shoot it Now!"],
+  "Junk": ["Wake up Dreamer"],
+  "void (Mournfinale)": ["World Vanquisher", "Everything Will Be One"],
+  "LeaF": ["macrocosmos"],
+  "Powerless feat.kakichoco": ["Iudicium"],
+  "q/stol": ["Twice up Scenery"],
+  "OSTER project feat.ジェム": ["La Baguette Magique"],
+  "HALFBY": ["bubble attack"],
+  "うたたP": ["The Darkness of Valhalla"],
+  "Crusher-P": ["Rendezvous"],
+  "doriko feat.VALSHE": ["EXECUTOR"],
+  "kanone": ["BlazinG AIR"],
+  "xi": ["Sparking Revolver"],
+  "Masahiro “Godspeed” Aoki": ["Gate of Doom"],
+  "NAOKI underground": ["otorii INNOVATED -[i]3-"],
+  "happy machine": ["popcorn"],
+  "Tomggg": ["Pastel Party"],
+  "Yunomi feat.nicamoq": ["はちみつアドベンチャー"],
+  "YUC'e": ["CHOCOLATE BOMB!!!!"],
+  "Pa's Lam System": ["Twilight"],
+  "M2U": ["Dual Fractal"],
+  "Taishi": ["Drivessover"],
+  "cybermiso": ["Surveiller et punir"],
+  "光吉猛修 VS 穴山大輔": ["業 -善なる神とこの世の悪について-"],
+  "164 feat.ウォルピスカーター": ["PAST"],
+  "Palme": ["Blessed", "Sunlight Starlight"],
+  "emon(Tes.) feat.松平なな": ["FRIDAY FRIDAY"],
+  "笑う角を曲がる": ["足立オウフwwww"],
+  "Snail's House": ["Seagull"],
+  "カヒーナムジカ": ["Blaster Heaven"],
+  "Omoi feat.+α/あるふぁきゅん。": ["ハートアタック"],
+  "TORIENA": ["Summer is over"],
+  "ぬゆり": ["folern"],
+  "dawn-system": ["2DVenture"],
+  "NirNo": ["ぜったい!昇天★鎮魂歌♂"],
+  "technoplanet": ["夕焼けのRed Parade"],
+  "Feryquitous": ["StufeStern"],
+  "Acotto": ["スピカの天秤", "absolute rightness", "deadeye"],
+  "キノシタ feat.YURiCa/花たん": ["涙色メモリア"],
+  "niki feat.noire": ["Magic"],
   "SLAVE.V-V-R feat.Fantastic Youth": [
     "男装女形表裏一体発狂小娘の詐称疑惑と苦悩と情熱。"
   ],
-  "盛るP feat.鈴森あおい": [
-    "コモリの怪物"
-  ],
-  "カルロス袴田(サイゼP) feat.あやぽんず*": [
-    "中学2年生のアンドロイド"
-  ],
-  "Relect": [
-    "Life"
-  ],
-  "Rigel Theatre feat.ミーウェル": [
-    "Solstånd"
-  ],
-  "owl*tree feat.yaki*tree": [
-    "Sqlupp"
-  ],
-  "USAO": [
-    "Climax"
-  ],
-  "Endorfin.": [
-    "Innocent Truth"
-  ],
-  "中路もとめ feat.砂糖子": [
-    "エンジェデビ"
-  ],
-  "PandaBoY": [
-    "Servant of Love"
-  ],
-  "HiTECH NINJA": [
-    "電光石火"
-  ],
-  "zts": [
-    "strelitzia"
-  ],
-  "igel": [
-    "暗晦にハイライト"
-  ],
-  "Sampling Masters AYA": [
-    "8-EM"
-  ],
-  "DJ Myosuke": [
-    "Killing Rhythm"
-  ],
-  "RD-Sounds feat.中恵光城": [
-    "ユメキキョウ"
-  ],
-  "葉月ゆら": [
-    "Black Swan Lake"
-  ],
-  "黒沢ダイスケ": [
-    "GIGA DRIVE"
-  ],
-  "Kai": [
-    "Rebellion"
-  ],
-  "siqlo": [
-    "Vibrant Verve"
-  ],
-  "NAOKI MAEDA": [
-    "神威 (NAOKI × ZPP MIX)"
-  ],
+  "盛るP feat.鈴森あおい": ["コモリの怪物"],
+  "カルロス袴田(サイゼP) feat.あやぽんず*": ["中学2年生のアンドロイド"],
+  "Relect": ["Life"],
+  "Rigel Theatre feat.ミーウェル": ["Solstånd"],
+  "owl*tree feat.yaki*tree": ["Sqlupp"],
+  "USAO": ["Climax"],
+  "Endorfin.": ["Innocent Truth"],
+  "中路もとめ feat.砂糖子": ["エンジェデビ"],
+  "PandaBoY": ["Servant of Love"],
+  "HiTECH NINJA": ["電光石火"],
+  "zts": ["strelitzia"],
+  "igel": ["暗晦にハイライト"],
+  "Sampling Masters AYA": ["8-EM"],
+  "DJ Myosuke": ["Killing Rhythm"],
+  "RD-Sounds feat.中恵光城": ["ユメキキョウ"],
+  "葉月ゆら": ["Black Swan Lake"],
+  "黒沢ダイスケ": ["GIGA DRIVE"],
+  "Kai": ["Rebellion"],
+  "siqlo": ["Vibrant Verve"],
+  "NAOKI MAEDA": ["神威 (NAOKI × ZPP MIX)"],
   "じーざす(ワンダフル☆オポチュニティ!) ft.96猫": [
     "サヴァイバル・キリング・メーカー"
   ],
-  "ユリイ・カノン feat.nameless": [
-    "ツクヨミステップ"
-  ],
-  "溝口ゆうま axel. 大瀬良あい": [
-    "【冒険】イングリット葛西降臨!【実況】"
-  ],
-  "ゆゆうた": [
-    "ハジマリノピアノ"
-  ],
-  "かいりきベア feat.松下": [
-    "レーイレーイ"
-  ],
-  "石渡太輔/アークシステムワークス": [
-    "Surrogate Life"
-  ],
-  "yukitani": [
-    "Nijirate Fanatics"
-  ],
-  "立秋": [
-    "せかいせいふく!ゆりあちゃん!"
-  ],
-  "Noah": [
-    "Trackless wilderness"
-  ],
-  "Aoi Sumito": [
-    "Walzer für das Nichts"
-  ],
-  "litmus*": [
-    "Lover's Trick"
-  ],
-  "Yu-dachi": [
-    "まごころのカスクルゥト",
-    "旅星に渇く"
-  ],
-  "Norn": [
-    "《混乱》 ~ Muspell"
-  ],
-  "Shi Kuang Lee feat.A-Tz": [
-    "《理想》 ~ Cloudland"
-  ],
-  "Bo-Xun Lin 林柏勲": [
-    "《逃避》 ~ The Deserter"
-  ],
-  "James Landino feat.N i i": [
-    "《最愛》 ~ Curse"
-  ],
-  "3R2": [
-    "《運命》 ~ Ray of Hope",
-    "《偏愛》 ~ Shattered Memories"
-  ],
+  "ユリイ・カノン feat.nameless": ["ツクヨミステップ"],
+  "溝口ゆうま axel. 大瀬良あい": ["【冒険】イングリット葛西降臨!【実況】"],
+  "ゆゆうた": ["ハジマリノピアノ"],
+  "かいりきベア feat.松下": ["レーイレーイ"],
+  "石渡太輔/アークシステムワークス": ["Surrogate Life"],
+  "yukitani": ["Nijirate Fanatics"],
+  "立秋": ["せかいせいふく!ゆりあちゃん!"],
+  "Noah": ["Trackless wilderness"],
+  "Aoi Sumito": ["Walzer für das Nichts"],
+  "litmus*": ["Lover's Trick"],
+  "Yu-dachi": ["まごころのカスクルゥト", "旅星に渇く"],
+  "Norn": ["《混乱》 ~ Muspell"],
+  "Shi Kuang Lee feat.A-Tz": ["《理想》 ~ Cloudland"],
+  "Bo-Xun Lin 林柏勲": ["《逃避》 ~ The Deserter"],
+  "James Landino feat.N i i": ["《最愛》 ~ Curse"],
+  "3R2": ["《運命》 ~ Ray of Hope", "《偏愛》 ~ Shattered Memories"],
   "MOSAIC.WAV/t+pazolite feat.ななひら": [
     "とーきょー全域★アキハバラ? (ver.にこる)"
   ],
-  "麹町養蚕館": [
-    "ヴンダーカンマー"
-  ],
-  "Nhato": [
-    "Destination",
-    "Warp Speed"
-  ],
-  "nora2r": [
-    "Fidget Dancer"
-  ],
-  "s-don vs. 翡乃イスカ": [
-    "Trrricksters!!"
-  ],
-  "亜沙 feat.くろくも": [
-    "Ghost Dance"
-  ],
-  "カラフル・サウンズ・ポート": [
-    "モノクロトワイライト"
-  ],
-  "黒魔": [
-    "シャッキーーン!!"
-  ],
-  "Spiegel vs Ice": [
-    "《破滅》 ~ Rhapsody for The End"
-  ],
-  "はるまきごはん feat.めらみぽっぷ": [
-    "ロング・スロー・アライブ"
-  ],
-  "YM feat.かんせる": [
-    "迷える薔薇に終わらぬ夜を"
-  ],
-  "ポリスピカデリー feat.相宮零": [
-    "パームカルマ"
-  ],
-  "うどんゲルゲ": [
-    "Therapeutic Hoedown"
-  ],
-  "owl*tree feat.yu*tree": [
-    "Jörqer"
-  ],
-  "さつき が てんこもり feat.kana": [
-    "ちゅんちゅちゅチューン"
-  ],
-  "コバヤシユウヤ(IOSYS) feat.You-Re:": [
-    "ドルオタ忍道!楠子ノ巻"
-  ],
-  "Clean Tears feat.kukuri": [
-    "エキセントリックコンコン"
-  ],
-  "MK&Kanae Asaba": [
-    "U ARE"
-  ],
+  "麹町養蚕館": ["ヴンダーカンマー"],
+  "Nhato": ["Destination", "Warp Speed"],
+  "nora2r": ["Fidget Dancer"],
+  "s-don vs. 翡乃イスカ": ["Trrricksters!!"],
+  "亜沙 feat.くろくも": ["Ghost Dance"],
+  "カラフル・サウンズ・ポート": ["モノクロトワイライト"],
+  "黒魔": ["シャッキーーン!!"],
+  "Spiegel vs Ice": ["《破滅》 ~ Rhapsody for The End"],
+  "はるまきごはん feat.めらみぽっぷ": ["ロング・スロー・アライブ"],
+  "YM feat.かんせる": ["迷える薔薇に終わらぬ夜を"],
+  "ポリスピカデリー feat.相宮零": ["パームカルマ"],
+  "うどんゲルゲ": ["Therapeutic Hoedown"],
+  "owl*tree feat.yu*tree": ["Jörqer"],
+  "さつき が てんこもり feat.kana": ["ちゅんちゅちゅチューン"],
+  "コバヤシユウヤ(IOSYS) feat.You-Re:": ["ドルオタ忍道!楠子ノ巻"],
+  "Clean Tears feat.kukuri": ["エキセントリックコンコン"],
+  "MK&Kanae Asaba": ["U ARE"],
   "t+pazolite (HARDCORE TANO*C) feat.TANO*C ALL STARS": [
     "ハードコア・シンドローム"
   ],
-  "ETIA.": [
-    "Hainuwele"
-  ],
-  "suzu": [
-    "宿星審判",
-    "輪廻玲々"
-  ],
-  "光吉猛修 VS 目黒将司": [
-    "The Metaverse -First story of the SeelischTact-"
-  ],
-  "ツユ": [
-    "テリトリーバトル"
-  ],
-  "達見 恵 featured by 佐野宏晃": [
-    "ROAD TO DREAM"
-  ],
-  "TOKOTOKO(西沢さんP) feat.あやぽんず*": [
-    "絶対トキメキデリバリー"
-  ],
-  "Virtual Cat": [
-    "Yume no hajimari"
-  ],
-  "KOTONOHOUSE": [
-    "Hey Yeah!!"
-  ],
-  "DIVELA feat.いゔどっと": [
-    "B100d Hunter"
-  ],
-  "Laur vs CK": [
-    "Last Celebration"
-  ],
-  "owl*tree/t+pazolite": [
-    "Paqqin (tpz Despair Remix)"
-  ],
-  "くるぶっこちゃん": [
-    "宙の隣",
-    "白庭"
-  ],
-  "サルケバ": [
-    "Just You"
-  ],
-  "pan vs 7mai": [
-    "Insane Gamemode"
-  ],
-  "Potwi": [
-    "Parad'ox"
-  ],
-  "sasakure.UK VS 穴山大輔": [
-    "ANU"
-  ],
-  "3R2 as Katzeohr": [
-    "《狂乱》 ~ Cataclysm"
-  ],
-  "Ring feat.SLSMusic": [
-    "《投影》 ~ Oh My Baby Doll"
-  ],
-  "空氣載體 The AirCarrier": [
-    "《信仰》 ~ Eudaimonia"
-  ],
-  "Iris": [
-    "《選別》 ~ Refuge",
-    "《種子》 ~ Set You Free"
-  ],
-  "Spiegel vs Yukino": [
-    "《本能》 ~ ReCoda"
-  ],
-  "烏屋茶房 feat.利香": [
-    "レイニーカラー・ウォーターカラー"
-  ],
-  "柏木るざりん feat.青葉りんご": [
-    "おいでよ! 高須らいむランド"
-  ],
-  "煮ル果実×びす": [
-    "Charlatan"
-  ],
-  "李 龟琍椏 feat.娜娜苤來": [
-    "萌豚♥功夫♥大乱舞"
-  ],
-  "Neko Hacker feat.うごくちゃん": [
-    "つっぱれ!にゃんきー魂"
-  ],
-  "LamazeP feat.月乃": [
-    "Athlete Killer \"Meteor\""
-  ],
-  "かゆき": [
-    "Blazing:Storm"
-  ],
-  "PSYQUI feat.Such": [
-    "C & B"
-  ],
-  "Feryquitous feat.藍月なくる": [
-    "月詠に鳴る"
-  ],
-  "ぺのれり": [
-    "Blessed Rain"
-  ],
-  "Yooh": [
-    "Elemental Ethnic"
-  ],
-  "Silentroom": [
-    "X7124"
-  ],
+  "ETIA.": ["Hainuwele"],
+  "suzu": ["宿星審判", "輪廻玲々"],
+  "光吉猛修 VS 目黒将司": ["The Metaverse -First story of the SeelischTact-"],
+  "ツユ": ["テリトリーバトル"],
+  "達見 恵 featured by 佐野宏晃": ["ROAD TO DREAM"],
+  "TOKOTOKO(西沢さんP) feat.あやぽんず*": ["絶対トキメキデリバリー"],
+  "Virtual Cat": ["Yume no hajimari"],
+  "KOTONOHOUSE": ["Hey Yeah!!"],
+  "DIVELA feat.いゔどっと": ["B100d Hunter"],
+  "Laur vs CK": ["Last Celebration"],
+  "owl*tree/t+pazolite": ["Paqqin (tpz Despair Remix)"],
+  "くるぶっこちゃん": ["宙の隣", "白庭"],
+  "サルケバ": ["Just You"],
+  "pan vs 7mai": ["Insane Gamemode"],
+  "Potwi": ["Parad'ox"],
+  "sasakure.UK VS 穴山大輔": ["ANU"],
+  "3R2 as Katzeohr": ["《狂乱》 ~ Cataclysm"],
+  "Ring feat.SLSMusic": ["《投影》 ~ Oh My Baby Doll"],
+  "空氣載體 The AirCarrier": ["《信仰》 ~ Eudaimonia"],
+  "Iris": ["《選別》 ~ Refuge", "《種子》 ~ Set You Free"],
+  "Spiegel vs Yukino": ["《本能》 ~ ReCoda"],
+  "烏屋茶房 feat.利香": ["レイニーカラー・ウォーターカラー"],
+  "柏木るざりん feat.青葉りんご": ["おいでよ! 高須らいむランド"],
+  "煮ル果実×びす": ["Charlatan"],
+  "李 龟琍椏 feat.娜娜苤來": ["萌豚♥功夫♥大乱舞"],
+  "Neko Hacker feat.うごくちゃん": ["つっぱれ!にゃんきー魂"],
+  "LamazeP feat.月乃": ["Athlete Killer \"Meteor\""],
+  "かゆき": ["Blazing:Storm"],
+  "PSYQUI feat.Such": ["C & B"],
+  "Feryquitous feat.藍月なくる": ["月詠に鳴る"],
+  "ぺのれり": ["Blessed Rain"],
+  "Yooh": ["Elemental Ethnic"],
+  "Silentroom": ["X7124"],
   "光吉猛修 VS 穴山大輔 VS Kai VS 水野健治 VS 大国奏音": [
     "祈 -我ら神祖と共に歩む者なり-"
   ],
-  "Blacklolita": [
-    "[CRYSTAL_ACCESS]"
-  ],
-  "PRASTIK DANCEFLOOR": [
-    "TECHNOPOLIS 2085"
-  ],
-  "かしこ。 feat.Cereus": [
-    "ハルシナイト"
-  ],
-  "emon(Tes.) feat.ねんね": [
-    "Dark Diver"
-  ],
-  "みきとP feat. victream": [
-    "Tattoo"
-  ],
-  "ガルナ(オワタP) feat.水槽": [
-    "呪歌-JyuKa-"
-  ],
-  "ろくろ feat.鹿乃": [
-    "再生不能"
-  ],
-  "eoll": [
-    "UltraNeon"
-  ],
-  "かねこちはる": [
-    "雪男",
-    "轆轤首"
-  ],
-  "monaca:factory feat.NORISTRY": [
-    "DDDD"
-  ],
-  "R Sound Design feat.向日葵": [
-    "Ring"
-  ],
-  "yksb feat.MiLO": [
-    "Blazing Break"
-  ],
-  "C.G mix feat. RINA": [
-    "Give me Love♡"
-  ],
-  "はるなば feat.すずしろ": [
-    "Crack"
-  ],
-  "きくお×cosMo@暴走P feat.影縫英": [
-    "蜘蛛の糸"
-  ],
-  "稲葉曇 feat.Rairu": [
-    "夢路拍子"
-  ],
-  "れるりり feat.konoco": [
-    "人生攻略☆Tips"
-  ],
-  "アリスシャッハと魔法の楽団": [
-    "ピュグマリオンの咒文"
-  ],
-  "大嶋啓之": [
-    "創世のコンツェルティーナ"
-  ],
-  "yuigot feat.菅野真衣": [
-    "Fantasm"
-  ],
-  "Aiobahn": [
-    "Echoes"
-  ],
-  "Avec Avec": [
-    "Super Kitsch Mode"
-  ],
-  "Hercelot": [
-    "Pre Paid Pog Punk Panic"
-  ],
-  "星街すいせい(ホロライブ)": [
-    "自分勝手Dazzling"
-  ],
-  "memex": [
-    "Utopithm"
-  ],
-  "ぼっちぼろまる": [
-    "妖怪ですから"
-  ],
-  "KMNZ": [
-    "Glory Days"
-  ],
-  "Marpril": [
-    "Spiral Fortune"
-  ],
-  "Warak": [
-    "《自戒》 ~ Paganelope"
-  ],
-  "James Landino feat.Nikki Simmons": [
-    "《紀律》 ~ As One"
-  ],
-  "Juggernaut.": [
-    "Qliphothgear"
-  ],
-  "Getty vs DJ DiA": [
-    "SQUAD-Phvntom-"
-  ],
-  "Frums": [
-    "parvorbital"
-  ],
-  "owl*tree feat. ka*tree": [
-    "Inpaqq"
-  ],
-  "USAO feat.光吉猛修": [
-    "IMPACT"
-  ],
-  "TAG": [
-    "POTENTIAL"
-  ],
-  "天月-あまつき-": [
-    "タイムカプセル"
-  ],
-  "すりぃ feat.りょーくん": [
-    "パズルリボン"
-  ],
-  "Kobaryo": [
-    "Everlasting Liberty"
-  ],
-  "yuichi NAGAO": [
-    "愛のシンギュラリティ"
-  ],
-  "FANTAGIRAFF": [
-    "アナタニナルノ"
-  ],
-  "かぼちゃ": [
-    "I'll make you Super Rock Star"
-  ],
-  "とろまる": [
-    "Reverberate"
-  ],
-  "Masahiro \"Godspeed\" Aoki": [
-    "Scythe of Death"
-  ],
-  "ああ...翡翠茶漬け...": [
-    "#SUP3RORBITAL"
-  ],
-  "Zekk": [
-    "WE'RE BACK!!",
-    "TOXIC"
-  ],
-  "Masayoshi Iimori": [
-    "Brightness"
-  ],
-  "かめりあ": [
-    "Λzure Vixen"
-  ],
-  "穴山大輔 VS 光吉猛修": [
-    "MALKUTH -The Last Ruler of Terrestrials-"
-  ],
-  "水野健治 VS 大国奏音": [
-    "DA'AT -The First Seeker of Souls-"
-  ],
-  "ツミキ feat.月乃": [
-    "インパアフェクシオン・ホワイトガアル"
-  ],
-  "遼遼 feat.あじっこ": [
-    "クリーパー"
-  ],
-  "パソコン音楽クラブ": [
-    "Ignition"
-  ],
-  "桃井はるこ": [
-    "推してもダメならひいてみな!"
-  ],
-  "森羅万象": [
-    "ガチ恋ラビリンス"
-  ],
-  "山本真央樹": [
-    "CELERITAS"
-  ],
-  "MaiR": [
-    "Crawler / Flyer"
-  ],
-  "BOOGEY VOXX feat.IURA TOI": [
-    "Re:Credits"
-  ],
-  "Yaca × gaburyu": [
-    "Cheat Sheet"
-  ],
-  "MonsterZ MATE": [
-    "One Room Sky"
-  ],
-  "永倉秋斗 feat.キャサリン": [
-    "任せてJC陰陽師☆八雲ちゃん"
-  ],
-  "立秋 feat.ちょこ": [
-    "†大闘士=クライン・フォーゲル・シュピール=えりか†"
-  ],
-  "ave;new feat.佐倉紗織": [
-    "Fallin' Darlin' Rollin'"
-  ],
-  "コバヤシユウヤ(IOSYS) feat.miko": [
-    "恋するみたいに☆かませレッドヘルズ"
-  ],
-  "打打だいず": [
-    "盟月",
-    "Overhea[r]t"
-  ],
-  "mommy": [
-    "Bitter Juicy"
-  ],
-  "Akira Complex vs kiraku": [
-    "Disruptor Array"
-  ],
-  "Sobrem a.k.a. Widowmaker": [
-    "Daphnis"
-  ],
-  "uma vs. ガリガリさむし": [
-    "To:Be Continued"
-  ],
-  "薄塩指数 feat.KMNZ LIZ": [
-    "やめらんないな!"
-  ],
-  "蝶々P feat.くろくも": [
-    "Dive a Wave"
-  ],
-  "MisoilePunch♪": [
-    "Makear"
-  ],
-  "DJ Raisei vs. Setca. feat.nayuta": [
-    "うたかたのせかいで"
-  ],
-  "linear ring": [
-    "とあちゃんのおもちゃ箱"
-  ],
-  "CHUBAY×打打だいず": [
-    "REL0VE REL1VE"
-  ],
-  "しーけー": [
-    "夢と幻想の終点にて"
-  ],
-  "Sound piercer": [
-    "空間創造理論"
-  ],
-  "Aoi": [
-    "βlαnoir"
-  ],
+  "Blacklolita": ["[CRYSTAL_ACCESS]"],
+  "PRASTIK DANCEFLOOR": ["TECHNOPOLIS 2085"],
+  "かしこ。 feat.Cereus": ["ハルシナイト"],
+  "emon(Tes.) feat.ねんね": ["Dark Diver"],
+  "みきとP feat. victream": ["Tattoo"],
+  "ガルナ(オワタP) feat.水槽": ["呪歌-JyuKa-"],
+  "ろくろ feat.鹿乃": ["再生不能"],
+  "eoll": ["UltraNeon"],
+  "かねこちはる": ["雪男", "轆轤首"],
+  "monaca:factory feat.NORISTRY": ["DDDD"],
+  "R Sound Design feat.向日葵": ["Ring"],
+  "yksb feat.MiLO": ["Blazing Break"],
+  "C.G mix feat. RINA": ["Give me Love♡"],
+  "はるなば feat.すずしろ": ["Crack"],
+  "きくお×cosMo@暴走P feat.影縫英": ["蜘蛛の糸"],
+  "稲葉曇 feat.Rairu": ["夢路拍子"],
+  "れるりり feat.konoco": ["人生攻略☆Tips"],
+  "アリスシャッハと魔法の楽団": ["ピュグマリオンの咒文"],
+  "大嶋啓之": ["創世のコンツェルティーナ"],
+  "yuigot feat.菅野真衣": ["Fantasm"],
+  "Aiobahn": ["Echoes"],
+  "Avec Avec": ["Super Kitsch Mode"],
+  "Hercelot": ["Pre Paid Pog Punk Panic"],
+  "星街すいせい(ホロライブ)": ["自分勝手Dazzling"],
+  "memex": ["Utopithm"],
+  "ぼっちぼろまる": ["妖怪ですから"],
+  "KMNZ": ["Glory Days"],
+  "Marpril": ["Spiral Fortune"],
+  "Warak": ["《自戒》 ~ Paganelope"],
+  "James Landino feat.Nikki Simmons": ["《紀律》 ~ As One"],
+  "Juggernaut.": ["Qliphothgear"],
+  "Getty vs DJ DiA": ["SQUAD-Phvntom-"],
+  "Frums": ["parvorbital"],
+  "owl*tree feat. ka*tree": ["Inpaqq"],
+  "USAO feat.光吉猛修": ["IMPACT"],
+  "TAG": ["POTENTIAL"],
+  "天月-あまつき-": ["タイムカプセル"],
+  "すりぃ feat.りょーくん": ["パズルリボン"],
+  "Kobaryo": ["Everlasting Liberty"],
+  "yuichi NAGAO": ["愛のシンギュラリティ"],
+  "FANTAGIRAFF": ["アナタニナルノ"],
+  "かぼちゃ": ["I'll make you Super Rock Star"],
+  "とろまる": ["Reverberate"],
+  "Masahiro \"Godspeed\" Aoki": ["Scythe of Death"],
+  "ああ...翡翠茶漬け...": ["#SUP3RORBITAL"],
+  "Zekk": ["WE'RE BACK!!", "TOXIC"],
+  "Masayoshi Iimori": ["Brightness"],
+  "かめりあ": ["Λzure Vixen"],
+  "穴山大輔 VS 光吉猛修": ["MALKUTH -The Last Ruler of Terrestrials-"],
+  "水野健治 VS 大国奏音": ["DA'AT -The First Seeker of Souls-"],
+  "ツミキ feat.月乃": ["インパアフェクシオン・ホワイトガアル"],
+  "遼遼 feat.あじっこ": ["クリーパー"],
+  "パソコン音楽クラブ": ["Ignition"],
+  "桃井はるこ": ["推してもダメならひいてみな!"],
+  "森羅万象": ["ガチ恋ラビリンス"],
+  "山本真央樹": ["CELERITAS"],
+  "MaiR": ["Crawler / Flyer"],
+  "BOOGEY VOXX feat.IURA TOI": ["Re:Credits"],
+  "Yaca × gaburyu": ["Cheat Sheet"],
+  "MonsterZ MATE": ["One Room Sky"],
+  "永倉秋斗 feat.キャサリン": ["任せてJC陰陽師☆八雲ちゃん"],
+  "立秋 feat.ちょこ": ["†大闘士=クライン・フォーゲル・シュピール=えりか†"],
+  "ave;new feat.佐倉紗織": ["Fallin' Darlin' Rollin'"],
+  "コバヤシユウヤ(IOSYS) feat.miko": ["恋するみたいに☆かませレッドヘルズ"],
+  "打打だいず": ["盟月", "Overhea[r]t"],
+  "mommy": ["Bitter Juicy"],
+  "Akira Complex vs kiraku": ["Disruptor Array"],
+  "Sobrem a.k.a. Widowmaker": ["Daphnis"],
+  "uma vs. ガリガリさむし": ["To:Be Continued"],
+  "薄塩指数 feat.KMNZ LIZ": ["やめらんないな!"],
+  "蝶々P feat.くろくも": ["Dive a Wave"],
+  "MisoilePunch♪": ["Makear"],
+  "DJ Raisei vs. Setca. feat.nayuta": ["うたかたのせかいで"],
+  "linear ring": ["とあちゃんのおもちゃ箱"],
+  "CHUBAY×打打だいず": ["REL0VE REL1VE"],
+  "しーけー": ["夢と幻想の終点にて"],
+  "Sound piercer": ["空間創造理論"],
+  "Aoi": ["βlαnoir"],
   "林柏勲 Bo-Xun Lin feat.幻子 Maboroshiko": [
     "《真紅》 ~ Pavane Pour La Flamme"
   ],
-  "Victor Kong & Yukino": [
-    "《楽土》 ~ One and Only One"
-  ],
-  "Farhan Sarasin": [
-    "《散華》 ~ EMBARK"
-  ],
+  "Victor Kong & Yukino": ["《楽土》 ~ One and Only One"],
+  "Farhan Sarasin": ["《散華》 ~ EMBARK"],
   "Jehezukiel (feat.Sagi & KURORAK)": [
     "《慈雨》 ~ La Symphonie de Salacia: Agony Movement"
   ],
-  "TAG VS Kai": [
-    "Chaotic Ørder"
-  ],
-  "雄之助 feat.ねんね": [
-    "少女PastQ"
-  ],
+  "TAG VS Kai": ["Chaotic Ørder"],
+  "雄之助 feat.ねんね": ["少女PastQ"],
   "コバヤシユウヤ(IOSYS) feat.まるもこ": [
     "君と夏色っ!~わんダフルバケーション~"
   ],
-  "キツネリ feat.わかばやし": [
-    "MyPaceInvention"
-  ],
-  "higma feat.ほとけ": [
-    "colorful"
-  ],
-  "Se-U-Ra": [
-    "ZegalltA"
-  ],
-  "周防パトラ": [
-    "ウニの歌"
-  ],
-  "長瀬有花": [
-    "驚異の魔法"
-  ],
-  "somunia × nyankobrq": [
-    "liberate"
-  ],
-  "TEMPLIME feat.星宮とと": [
-    "lucky omen"
-  ],
-  "ミディ feat.小鈴": [
-    "ワーカーホリック"
-  ],
-  "Mameyudoufu feat.Kanata.N": [
-    "Overturn"
-  ],
-  "Carpainter": [
-    "First Light"
-  ],
-  "kamome sano": [
-    "crazy (about you)"
-  ],
-  "BlackY": [
-    "Dèfandour"
-  ],
-  "マイキP": [
-    "バッドトリッパー"
-  ],
-  "DJ SHARPNEL feat. 相川なつ": [
-    "幻想ロードオブキング"
-  ],
-  "Fushi feat.吉乃": [
-    "イーヴィルガール"
-  ],
-  "アオワイファイ feat.秋山雫": [
-    "わたしはオッセルヴァトリーチェ!"
-  ],
-  "sasakure.UK feat.ピリオ": [
-    "リ・フィクション・O"
-  ],
-  "ELEMENTAS feat.miko": [
-    "コメクエスト"
-  ],
-  "Lamanya": [
-    "DRE4M1N9"
-  ],
-  "Felysrator": [
-    "Malleus Maleficarum"
-  ],
-  "K-forest vs. Reku Mochizuki": [
-    "Elusive Enforcer"
-  ],
-  "Koke": [
-    "黎命に殉ず"
-  ],
-  "高瀬一矢 feat.R.I.N.A": [
-    "優勝Princess♡"
-  ],
-  "Len feat.SHIKI": [
-    "X.Y.Z."
-  ],
-  "A4。 feat.yamada.": [
-    "乙女戦士☆あーし。"
-  ],
-  "Shu feat. 七海うらら": [
-    "おしゃまなプリンセス"
-  ],
-  "テヅカ x Aoi feat.すずしろ": [
-    "ソーシャルワンダーランド"
-  ],
-  "EmoCosine": [
-    "Lovely Lovely Lover"
-  ],
-  "AJURIKA": [
-    "Fire Engine73"
-  ],
-  "ルゼ": [
-    "LibrariA"
-  ],
-  "深淵を覗きし者\"Gram\"": [
-    "Tuatha Dé Danann"
-  ],
-  "Yuta Imai": [
-    "Acid God"
-  ],
-  "STEAKA feat.山田じぇみ子": [
-    "メッちゅう殴打"
-  ],
-  "OUTLOUD feat.NG。": [
-    "ドリームケッチャー"
-  ],
-  "いるかアイス feat.ちょこ": [
-    "ラブリージャッジメント"
-  ],
-  "Lime": [
-    "Crystallize"
-  ],
-  "DJ Noriken": [
-    "Oracle"
-  ],
-  "Laur": [
-    "The Devil Incarnate"
-  ],
-  "Toby Fox & かめりあ": [
-    "Theatore Creatore"
-  ],
-  "南ノ南 feat.9Lana": [
-    "激烈!!!!ファミレスガールは帰しま1000!!!!"
-  ],
-  "TERU FOX × Yukino feat. Iris": [
-    "〚隔絶〛 ~Flame of Determination"
-  ],
-  "Jehezukiel × KURORAK (feat. HideKy)": [
-    "〚献身〛 ~Paradox of Choice"
-  ],
-  "P3-Studio": [
-    "〚盲従〛 ~Fantasia Sonata Flower"
-  ],
-  "Black Box × Spyro Kong": [
-    "〚空虚〛 ~Pyrophilia"
-  ],
-  "void (Mournfinale) × 水野健治": [
-    "Aether Crest: Celestial"
-  ],
-  "MintJam vs Masahiro \"Godspeed\" Aoki": [
-    "Crush the Dystopia"
-  ],
-  "ずんずんサファリ": [
-    "ずんずんサファリ"
-  ],
-  "seatrus": [
-    "HeinousЯeaper"
-  ],
-  "BlackY VS 大国奏音": [
-    "MegiddØ"
-  ],
-  "Acotto vs Potwi": [
-    "Crossmythos Rhapsodia"
-  ],
-  "Street": [
-    "χρόνος"
-  ],
-  "BilliumMoto": [
-    "並行天涯"
-  ],
-  "DÉ DÉ MOUSE": [
-    "luminoid love PART2"
-  ],
-  "NAMV & Game-i": [
-    "Wing:No.6223"
-  ],
-  "藍月なくる": [
-    "エモーション・キャプチャー"
-  ],
-  "棗いつき": [
-    "Flap&Clap"
-  ],
-  "鬱P feat.鯖": [
-    "ノーライ"
-  ],
-  "wotaku feat. SHIKI": [
-    "あの日、あの部屋で、あったこと"
-  ],
-  "ShiBa": [
-    "Star Saveler"
-  ],
-  "Kijibato feat. をとは": [
-    "内臓♡マニピ"
-  ],
-  "電気式華憐音楽集団": [
-    "Steamed on the Beat"
-  ],
-  "シャティ": [
-    "Challenger!!"
-  ],
-  "吉田夜世 feat.棗いつき": [
-    "ナラク・オン・エア"
-  ],
-  "大漠波新 feat.ウォルピスカーター": [
-    "システム"
-  ],
-  "瀬名水紀 feat.六宮": [
-    "恋伯色"
-  ],
-  "polysha": [
-    "In the Straying Story"
-  ],
-  "Laur feat.Tia": [
-    "PhenomenoN"
-  ],
-  "tn-shi": [
-    "hyperreality"
-  ],
-  "technoplanet feat. Tamako Kinoshita": [
-    "Deep Blue"
-  ],
-  "ZxNX + Redsign": [
-    "DEvourER"
-  ],
-  "Rígr feat. 光吉猛修": [
-    "神鳴"
-  ],
-  "Team Grimoire & 穴山大輔": [
-    "Tru'nembra"
-  ],
-  "USAO vs DJ Myosuke": [
-    "OUTRAGE"
-  ],
+  "キツネリ feat.わかばやし": ["MyPaceInvention"],
+  "higma feat.ほとけ": ["colorful"],
+  "Se-U-Ra": ["ZegalltA"],
+  "周防パトラ": ["ウニの歌"],
+  "長瀬有花": ["驚異の魔法"],
+  "somunia × nyankobrq": ["liberate"],
+  "TEMPLIME feat.星宮とと": ["lucky omen"],
+  "ミディ feat.小鈴": ["ワーカーホリック"],
+  "Mameyudoufu feat.Kanata.N": ["Overturn"],
+  "Carpainter": ["First Light"],
+  "kamome sano": ["crazy (about you)"],
+  "BlackY": ["Dèfandour"],
+  "マイキP": ["バッドトリッパー"],
+  "DJ SHARPNEL feat. 相川なつ": ["幻想ロードオブキング"],
+  "Fushi feat.吉乃": ["イーヴィルガール"],
+  "アオワイファイ feat.秋山雫": ["わたしはオッセルヴァトリーチェ!"],
+  "sasakure.UK feat.ピリオ": ["リ・フィクション・O"],
+  "ELEMENTAS feat.miko": ["コメクエスト"],
+  "Lamanya": ["DRE4M1N9"],
+  "Felysrator": ["Malleus Maleficarum"],
+  "K-forest vs. Reku Mochizuki": ["Elusive Enforcer"],
+  "Koke": ["黎命に殉ず"],
+  "高瀬一矢 feat.R.I.N.A": ["優勝Princess♡"],
+  "Len feat.SHIKI": ["X.Y.Z."],
+  "A4。 feat.yamada.": ["乙女戦士☆あーし。"],
+  "Shu feat. 七海うらら": ["おしゃまなプリンセス"],
+  "テヅカ x Aoi feat.すずしろ": ["ソーシャルワンダーランド"],
+  "EmoCosine": ["Lovely Lovely Lover"],
+  "AJURIKA": ["Fire Engine73"],
+  "ルゼ": ["LibrariA"],
+  "深淵を覗きし者\"Gram\"": ["Tuatha Dé Danann"],
+  "Yuta Imai": ["Acid God"],
+  "STEAKA feat.山田じぇみ子": ["メッちゅう殴打"],
+  "OUTLOUD feat.NG。": ["ドリームケッチャー"],
+  "いるかアイス feat.ちょこ": ["ラブリージャッジメント"],
+  "Lime": ["Crystallize"],
+  "DJ Noriken": ["Oracle"],
+  "Laur": ["The Devil Incarnate"],
+  "Toby Fox & かめりあ": ["Theatore Creatore"],
+  "南ノ南 feat.9Lana": ["激烈!!!!ファミレスガールは帰しま1000!!!!"],
+  "TERU FOX × Yukino feat. Iris": ["〚隔絶〛 ~Flame of Determination"],
+  "Jehezukiel × KURORAK (feat. HideKy)": ["〚献身〛 ~Paradox of Choice"],
+  "P3-Studio": ["〚盲従〛 ~Fantasia Sonata Flower"],
+  "Black Box × Spyro Kong": ["〚空虚〛 ~Pyrophilia"],
+  "void (Mournfinale) × 水野健治": ["Aether Crest: Celestial"],
+  "MintJam vs Masahiro \"Godspeed\" Aoki": ["Crush the Dystopia"],
+  "ずんずんサファリ": ["ずんずんサファリ"],
+  "seatrus": ["HeinousЯeaper"],
+  "BlackY VS 大国奏音": ["MegiddØ"],
+  "Acotto vs Potwi": ["Crossmythos Rhapsodia"],
+  "Street": ["χρόνος"],
+  "BilliumMoto": ["並行天涯"],
+  "DÉ DÉ MOUSE": ["luminoid love PART2"],
+  "NAMV & Game-i": ["Wing:No.6223"],
+  "藍月なくる": ["エモーション・キャプチャー"],
+  "棗いつき": ["Flap&Clap"],
+  "鬱P feat.鯖": ["ノーライ"],
+  "wotaku feat. SHIKI": ["あの日、あの部屋で、あったこと"],
+  "ShiBa": ["Star Saveler"],
+  "Kijibato feat. をとは": ["内臓♡マニピ"],
+  "電気式華憐音楽集団": ["Steamed on the Beat"],
+  "シャティ": ["Challenger!!"],
+  "吉田夜世 feat.棗いつき": ["ナラク・オン・エア"],
+  "大漠波新 feat.ウォルピスカーター": ["システム"],
+  "瀬名水紀 feat.六宮": ["恋伯色"],
+  "polysha": ["In the Straying Story"],
+  "Laur feat.Tia": ["PhenomenoN"],
+  "tn-shi": ["hyperreality"],
+  "technoplanet feat. Tamako Kinoshita": ["Deep Blue"],
+  "ZxNX + Redsign": ["DEvourER"],
+  "Rígr feat. 光吉猛修": ["神鳴"],
+  "Team Grimoire & 穴山大輔": ["Tru'nembra"],
+  "USAO vs DJ Myosuke": ["OUTRAGE"],
   "BlackY VS Yooh VS siromaru VS xi VS モリモリあつし": [
     "創 -汝ら新世界へ歩む者なり-"
   ],
-  "MIMI feat.wawa": [
-    "魔法に照らされたアンコール"
-  ],
-  "niki feat.DELUTAYA": [
-    "ジナ"
-  ],
-  "s-don": [
-    "Road to Aventura"
-  ],
-  "ああああ": [
-    "☆をつなぐシュトラール"
-  ],
-  "AKIRA YAMAOKA": [
-    "MOMOCO68000"
-  ],
-  "MIssionary & DCWH": [
-    "〚回帰〛 ~Scherzo ~フォルトゥーナの悪戯~"
-  ],
-  "Felysrator (feat. Lamanya)": [
-    "tHE uNcontRollaBle ciNdeRella"
-  ]
+  "MIMI feat.wawa": ["魔法に照らされたアンコール"],
+  "niki feat.DELUTAYA": ["ジナ"],
+  "s-don": ["Road to Aventura"],
+  "ああああ": ["☆をつなぐシュトラール"],
+  "AKIRA YAMAOKA": ["MOMOCO68000"],
+  "MIssionary & DCWH": ["〚回帰〛 ~Scherzo ~フォルトゥーナの悪戯~"],
+  "Felysrator (feat. Lamanya)": ["tHE uNcontRollaBle ciNdeRella"]
 }
