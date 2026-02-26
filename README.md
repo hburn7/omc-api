@@ -131,6 +131,30 @@ Install [bun](https://bun.sh/docs/installation).
 - `bun run start` - Runs the server (listens on `localhost:8080`)
 - `bun run test` - Starts tests using `vitest`
 
+## Data Format Conversion
+
+`data/convert.py` converts between the project's JSON data formats, applying [NFKC](https://unicode.org/reports/tr15/) normalization during conversion.
+
+### Formats
+
+| ID | Name | Structure |
+|----|------|-----------|
+| 0 | Artist/title groups | `[{"artist": "", "title": ""}]` |
+| 1 | Artist track list (keyed) | `{"Artist": {"tracks": [""]}}` |
+| 2 | Artist track list | `{"Artist": [""]}` |
+
+### Usage
+
+```
+python3 data/convert.py -i <input> -o <output> -if <format_id> -of <format_id>
+```
+
+Example — convert from artist track list (2) to artist/title groups (0):
+
+```
+python3 data/convert.py -i data/labels/banned.json -o out.json -if 2 -of 0
+```
+
 ## Logging
 
 Structured JSON logs are emitted at `DEBUG`, `INFO`, `WARN`, and `ERROR` levels. Configure the minimum level with the `LOG_LEVEL` environment variable in your `.env` file (defaults to `DEBUG`).
