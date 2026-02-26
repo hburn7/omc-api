@@ -57,6 +57,8 @@ Response:
             "cover": "https://assets.ppy.sh/beatmaps/1404115/covers/cover.jpg?1622561423",
             "artist": "Frums",
             "title": "memoryfactory.lzh",
+            "artist_unicode": "Frums",
+            "title_unicode": "memoryfactory.lzh",
             "ownerId": 4903197,
             "ownerUsername": "Bekko",
             "status": "graveyard",
@@ -85,7 +87,7 @@ Request:
 curl --location 'http://localhost:8080/validate-metadata' \
 --header 'X-Api-Key: wow' \
 --header 'Content-Type: application/json' \
---data '[{"artist": "Frums", "title": "memoryfactory.lzh"}]'
+--data '[{"artist": "Frums", "title": "memoryfactory.lzh", "artist_unicode": "Frums", "title_unicode": "memoryfactory.lzh"}]'
 ```
 
 Response:
@@ -97,6 +99,8 @@ Response:
         "complianceStatusString": "POTENTIALLY_DISALLOWED",
         "artist": "Frums",
         "title": "memoryfactory.lzh",
+        "artist_unicode": "Frums",
+        "title_unicode": "memoryfactory.lzh",
         "notes": "Refer to Frums' [non-commercial use requirements](https://docs.google.com/spreadsheets/d/1_M0BqHSrbE1HOF0uhKX5ebVCvWnqlx0qz_wIEZzSFG0/edit?gid=0#gid=0) for songs not included in their Featured Artist listing."
     }
 ]
