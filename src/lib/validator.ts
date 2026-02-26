@@ -47,9 +47,9 @@ const labels: LabelData[] = labelFiles.map((file) => {
   }
   const raw = JSON.parse(content) as LabelData;
   return Object.fromEntries(
-    Object.entries(raw).map(([artist, data]) => [
+    Object.entries(raw).map(([artist, tracks]) => [
       nfkc(artist),
-      { tracks: data.tracks.map(nfkc) },
+      tracks.map(nfkc),
     ]),
   );
 });
@@ -281,9 +281,9 @@ function isLabelViolation(artist: string, title: string): boolean {
 
   const titleLower = title.toLowerCase();
 
-  for (const [labelArtist, data] of Object.entries(labelData)) {
+  for (const [labelArtist, tracks] of Object.entries(labelData)) {
     if (labelArtist.toLowerCase() === artist.toLowerCase()) {
-      for (const track of data.tracks) {
+      for (const track of tracks) {
 
         // Since the artists are equal,
         // see whether the beatmap's title

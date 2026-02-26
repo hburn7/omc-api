@@ -57,9 +57,7 @@ export interface FlaggedArtistData {
 }
 
 export interface LabelData {
-  [artist: string]: {
-    tracks: string[];
-  };
+  [artist: string]: string[];
 }
 
 export interface Override {
