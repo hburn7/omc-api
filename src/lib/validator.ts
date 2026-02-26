@@ -529,9 +529,11 @@ function escapeRegex(str: string): string {
 }
 
 export function validateRawMetadata(input: RawMetadataInput, strict: boolean = false): RawValidationResult {
-  const { artist_unicode, title_unicode, isFeaturedArtist, status, source, tags } = input;
-  const artist = nfkc(artist_unicode);
-  const title = nfkc(title_unicode);
+  const { artist: artistInput, title: titleInput, artist_unicode, title_unicode, isFeaturedArtist, status, source, tags } = input;
+  const artistUnicode = nfkc(artist_unicode);
+  const titleUnicode = nfkc(title_unicode);
+  const artist = nfkc(artistInput);
+  const title = nfkc(titleInput);
   const trackId = isFeaturedArtist ? 1 : null;
 
   const buildResult = (
@@ -542,8 +544,8 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     const result: RawValidationResult = {
       complianceStatus,
       complianceStatusString: getComplianceStatusString(complianceStatus),
-      artist,
-      title,
+      artist: artistUnicode,
+      title: titleUnicode,
     };
 
     if (failureReason !== undefined) {
@@ -558,7 +560,7 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     return result;
   };
 
-  const override = findOverride(artist, title);
+  const override = findOverride(artistUnicode, titleUnicode) || findOverride(artist, title);
   if (override) {
     const overrideStatus = parseOverrideStatus(override.resultOverride);
     if (overrideStatus === ComplianceStatus.OK) {
@@ -594,7 +596,7 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     );
   }
 
-  if (isLabelViolation(artist, title)) {
+  if (isLabelViolation(artistUnicode, titleUnicode) || isLabelViolation(artist, title)) {
     return buildResult(
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_BY_RIGHTSHOLDER,
@@ -602,7 +604,7 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     );
   }
 
-  const artistKey = flagKeyMatch(artist);
+  const artistKey = flagKeyMatch(artistUnicode) || flagKeyMatch(artist);
   if (artistKey && artistKey in flaggedArtists) {
     const flaggedArtist = flaggedArtists[artistKey];
     if (flaggedArtist) {
@@ -632,7 +634,10 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     }
   }
 
-  const [titleArtist, titleStatus] = getFlaggedArtistInTitle(title);
+  let [titleArtist, titleStatus] = getFlaggedArtistInTitle(titleUnicode);
+  if (!titleArtist || !titleStatus) {
+    [titleArtist, titleStatus] = getFlaggedArtistInTitle(title);
+  }
   if (titleArtist && titleStatus) {
     const flaggedArtist = flaggedArtists[titleArtist];
 
@@ -661,7 +666,7 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     }
   }
 
-  if (strict && isStrictSourceViolation(artist, title)) {
+  if (strict && (isStrictSourceViolation(artistUnicode, titleUnicode) || isStrictSourceViolation(artist, title))) {
     return buildResult(
       ComplianceStatus.DISALLOWED,
       ComplianceFailureReason.DISALLOWED_SOURCE,

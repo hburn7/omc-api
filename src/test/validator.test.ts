@@ -1430,15 +1430,15 @@ describe("Validator", () => {
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
-    it("should use unicode field exclusively, ignoring romanized field", () => {
-      // romanized artist is a disallowed artist, but unicode is clean
+    it("should detect disallowed artist from romanized field as fallback", () => {
+      // romanized artist is a disallowed artist — should be caught even when unicode is clean
       const result = validator.validateRawMetadata(rawInput({
         artist: "Igorrr",
         title: "Some Track",
         artist_unicode: "Clean Artist",
         title_unicode: "Some Track",
       }));
-      expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
     });
 
     it("should detect disallowed artist from unicode field even when romanized is clean", () => {
