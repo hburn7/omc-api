@@ -119,8 +119,10 @@ function buildValidationResult(
     complianceStatusString: getComplianceStatusString(status),
     cover:
       beatmapset.covers?.cover || beatmapset.covers?.["cover@2x"] || undefined,
-    artist: nfkc(beatmapset.artist_unicode),
-    title: nfkc(beatmapset.title_unicode),
+    artist: nfkc(beatmapset.artist),
+    title: nfkc(beatmapset.title),
+    artist_unicode: nfkc(beatmapset.artist_unicode),
+    title_unicode: nfkc(beatmapset.title_unicode),
     ownerId: beatmapset.user_id,
     ownerUsername: beatmapset.creator,
     status: beatmapset.status
@@ -544,8 +546,10 @@ export function validateRawMetadata(input: RawMetadataInput, strict: boolean = f
     const result: RawValidationResult = {
       complianceStatus,
       complianceStatusString: getComplianceStatusString(complianceStatus),
-      artist: artistUnicode,
-      title: titleUnicode,
+      artist,
+      title,
+      artist_unicode: artistUnicode,
+      title_unicode: titleUnicode,
     };
 
     if (failureReason !== undefined) {

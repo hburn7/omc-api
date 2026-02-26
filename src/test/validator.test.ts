@@ -1206,6 +1206,7 @@ describe("Validator", () => {
           id: 1,
           artist: "Morimori Atsushi",
           artist_unicode: "Morimori Atsushi",
+          title: "Test",
           title_unicode: "Test",
           track_id: 1234,
         } as Beatmapset.Extended;
@@ -1217,6 +1218,7 @@ describe("Validator", () => {
           id: 1,
           artist: "Igorrr",
           artist_unicode: "Igorrr",
+          title: "Test",
           title_unicode: "Test",
           track_id: null,
         } as Beatmapset.Extended;
@@ -1232,6 +1234,7 @@ describe("Validator", () => {
           id: 1,
           artist: "Yuyoyuppe",
           artist_unicode: "Yuyoyuppe",
+          title: "Test",
           title_unicode: "Test",
           track_id: null,
         } as Beatmapset.Extended;
@@ -1247,6 +1250,7 @@ describe("Validator", () => {
           id: 1,
           artist: "Zekk",
           artist_unicode: "Zekk",
+          title: "Test",
           title_unicode: "Test",
           track_id: null,
         } as Beatmapset.Extended;
@@ -1485,7 +1489,7 @@ describe("Validator", () => {
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
-    it("should report unicode artist/title in result", () => {
+    it("should report romanized and unicode artist/title in result", () => {
       const beatmap = createTestBeatmap();
       beatmap.beatmapset.artist = "sakuzyo";
       beatmap.beatmapset.artist_unicode = "\u524A\u9664";
@@ -1494,8 +1498,10 @@ describe("Validator", () => {
 
       const results = validator.validate([beatmap]);
       expect(results).toHaveLength(1);
-      expect(results[0]!.artist).toBe("\u524A\u9664");
-      expect(results[0]!.title).toBe("\u660E\u308B\u3044\u672A\u6765");
+      expect(results[0]!.artist).toBe("sakuzyo");
+      expect(results[0]!.title).toBe("Some Song");
+      expect(results[0]!.artist_unicode).toBe("\u524A\u9664");
+      expect(results[0]!.title_unicode).toBe("\u660E\u308B\u3044\u672A\u6765");
     });
   });
 

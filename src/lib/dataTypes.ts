@@ -41,6 +41,8 @@ export interface ValidationResult {
   cover?: string | undefined;
   artist?: string | undefined;
   title?: string | undefined;
+  artist_unicode?: string | undefined;
+  title_unicode?: string | undefined;
   ownerId?: number | undefined;
   ownerUsername?: string | undefined;
   status: string;
@@ -86,6 +88,8 @@ export interface RawValidationResult {
   notes?: string;
   artist: string;
   title: string;
+  artist_unicode: string;
+  title_unicode: string;
 }
 
 // Re-export Beatmap types for convenience
