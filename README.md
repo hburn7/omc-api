@@ -127,7 +127,7 @@ Both endpoints accept an optional `?strict=true` query parameter. Strict mode is
 
 Both endpoints accept an optional `?skipLeaderboardCheck=true` query parameter. When set, beatmapsets that are ranked, approved, or loved are **not** short-circuited to OK solely on leaderboard status; tags, sources, labels, artist restrictions, and (if strict mode is on) strict-source checks still run as usual. Overrides, Featured Artist licensing, and DMCA handling are unchanged. Disabled by default.
 
-You can combine flags, for example `?strict=true&skipLeaderboardCheck=true`.
+Flags can be combined, for example `?strict=true&skipLeaderboardCheck=true`.
 
 ## Usage
 
