@@ -1345,6 +1345,21 @@ describe("Validator", () => {
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
 
+    it("should not short-circuit on ranked status when skipLeaderboardCheck is true", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "Igorrr",
+          title: "Some Track",
+          status: "ranked",
+        }),
+        { skipLeaderboardCheck: true },
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_ARTIST,
+      );
+    });
+
     it("should return OK for loved status", () => {
       const result = validator.validateRawMetadata(
         rawInput({
@@ -1590,7 +1605,7 @@ describe("Validator", () => {
           artist: "cubesato",
           title: "My First Phone",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
       expect(result.complianceFailureReason).toBe(
@@ -1605,7 +1620,6 @@ describe("Validator", () => {
           artist: "cubesato",
           title: "My First Phone",
         }),
-        false,
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
@@ -1618,7 +1632,7 @@ describe("Validator", () => {
           artist_unicode: "\u524A\u9664",
           title_unicode: "Cyberozar",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
       expect(result.complianceFailureReason).toBe(
@@ -1635,7 +1649,7 @@ describe("Validator", () => {
           artist_unicode: "owl\uFF0Atree",
           title_unicode: "Teriqma",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
       expect(result.complianceFailureReason).toBe(
@@ -1649,7 +1663,7 @@ describe("Validator", () => {
           artist: "cubesato",
           title: "Nonexistent Track",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
@@ -1660,7 +1674,7 @@ describe("Validator", () => {
           artist: "Morimori Atsushi",
           title: "Tits or get the fuck out!!",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
@@ -1672,7 +1686,7 @@ describe("Validator", () => {
           title: "My First Phone",
           isFeaturedArtist: true,
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
     });
@@ -1684,9 +1698,24 @@ describe("Validator", () => {
           title: "My First Phone",
           status: "ranked",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.OK);
+    });
+
+    it("should apply strict mode to ranked maps when skipLeaderboardCheck is true", () => {
+      const result = validator.validateRawMetadata(
+        rawInput({
+          artist: "cubesato",
+          title: "My First Phone",
+          status: "ranked",
+        }),
+        { strict: true, skipLeaderboardCheck: true },
+      );
+      expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
+      expect(result.complianceFailureReason).toBe(
+        ComplianceFailureReason.DISALLOWED_SOURCE,
+      );
     });
 
     it("should thread strict through validate()", () => {
@@ -1694,11 +1723,13 @@ describe("Validator", () => {
       setArtist(beatmap, "cubesato");
       setTitle(beatmap, "My First Phone");
 
-      const resultsNonStrict = validator.validate([beatmap], false);
+      const resultsNonStrict = validator.validate([beatmap], {
+        strict: false,
+      });
       expect(resultsNonStrict).toHaveLength(1);
       expect(resultsNonStrict[0]!.complianceStatus).toBe(ComplianceStatus.OK);
 
-      const resultsStrict = validator.validate([beatmap], true);
+      const resultsStrict = validator.validate([beatmap], { strict: true });
       expect(resultsStrict).toHaveLength(1);
       expect(resultsStrict[0]!.complianceStatus).toBe(
         ComplianceStatus.DISALLOWED,
@@ -1715,7 +1746,7 @@ describe("Validator", () => {
           artist: "Igorrr",
           title: "Some Track",
         }),
-        true,
+        { strict: true },
       );
       expect(result.complianceStatus).toBe(ComplianceStatus.DISALLOWED);
       expect(result.complianceFailureReason).toBe(

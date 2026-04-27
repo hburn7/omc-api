@@ -50,11 +50,17 @@ server.post("/validate", validateOpts, async (request, reply) => {
     return;
   }
 
-  const strict = (request.query as { strict?: string })?.strict === "true";
+  const query = request.query as {
+    strict?: string;
+    skipLeaderboardCheck?: string;
+  };
+  const strict = query?.strict === "true";
+  const skipLeaderboardCheck = query?.skipLeaderboardCheck === "true";
 
   logger.debug("Processing validation request", {
     beatmapCount: beatmapIds.length,
     strict,
+    skipLeaderboardCheck,
   });
 
   for (let i = 0; i < beatmapIds.length; i += chunkSize) {
@@ -72,7 +78,10 @@ server.post("/validate", validateOpts, async (request, reply) => {
     allFailures = allFailures.union(new Set(fetchResult.failures));
 
     // Validate beatmaps and get results per beatmapset
-    const results = validator.validate(fetchResult.beatmaps, strict);
+    const results = validator.validate(fetchResult.beatmaps, {
+      strict,
+      skipLeaderboardCheck,
+    });
     allResults.push(...results);
   }
 
@@ -147,15 +156,24 @@ server.post(
     }
 
     const inputs = request.body as RawMetadataInput[];
-    const strict = (request.query as { strict?: string })?.strict === "true";
+    const query = request.query as {
+      strict?: string;
+      skipLeaderboardCheck?: string;
+    };
+    const strict = query?.strict === "true";
+    const skipLeaderboardCheck = query?.skipLeaderboardCheck === "true";
 
     logger.debug("Processing metadata validation request", {
       count: inputs.length,
       strict,
+      skipLeaderboardCheck,
     });
 
     const results = inputs.map((input) =>
-      validator.validateRawMetadata(input, strict),
+      validator.validateRawMetadata(input, {
+        strict,
+        skipLeaderboardCheck,
+      }),
     );
 
     const resultStatuses = results.reduce(
