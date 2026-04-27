@@ -84,10 +84,15 @@ try {
   strictSources = {};
 }
 
+export interface ValidateOptions {
+  strict?: boolean;
+  skipLeaderboardCheck?: boolean;
+}
+
 // Main validation function - accepts array of beatmaps and returns one result per unique beatmapset
 export function validate(
   beatmaps: BeatmapWithBeatmapset[],
-  strict: boolean = false,
+  options: ValidateOptions = {},
 ): ValidationResult[] {
   const beatmapsetMap = new Map<number, BeatmapWithBeatmapset[]>();
 
@@ -110,7 +115,7 @@ export function validate(
       continue;
     }
 
-    const result = validateBeatmapset(beatmapset, strict);
+    const result = validateBeatmapset(beatmapset, options);
     result.beatmapIds = beatmapGroup.map((b) => b.id);
 
     results.push(result);
@@ -175,7 +180,7 @@ function beatmapsetToRawMetadataInput(
 
 function validateBeatmapset(
   beatmapset: Beatmapset.Extended,
-  strict: boolean = false,
+  options: ValidateOptions = {},
 ): ValidationResult {
   if (isDmca(beatmapset)) {
     return buildValidationResult(
@@ -187,7 +192,7 @@ function validateBeatmapset(
   }
 
   const rawInput = beatmapsetToRawMetadataInput(beatmapset);
-  const rawResult = validateRawMetadata(rawInput, strict);
+  const rawResult = validateRawMetadata(rawInput, options);
 
   return buildValidationResult(
     beatmapset,
@@ -556,8 +561,9 @@ function escapeRegex(str: string): string {
 
 export function validateRawMetadata(
   input: RawMetadataInput,
-  strict: boolean = false,
+  options: ValidateOptions = {},
 ): RawValidationResult {
+  const { strict = false, skipLeaderboardCheck = false } = options;
   const {
     artist: artistInput,
     title: titleInput,
@@ -618,7 +624,11 @@ export function validateRawMetadata(
     return buildResult(ComplianceStatus.OK);
   }
 
-  if (status && isStatusApproved(getRankStatus(status))) {
+  if (
+    !skipLeaderboardCheck &&
+    status &&
+    isStatusApproved(getRankStatus(status))
+  ) {
     return buildResult(ComplianceStatus.OK);
   }
 
