@@ -194,7 +194,15 @@ server.post(
   },
 );
 
-server.listen({ port: 8080 }, (err, address) => {
+const listenOptions: { port: number; host?: string } = {
+  port: parseInt(process.env.OMC_PORT ?? "8080"),
+};
+
+if (process.env.OMC_HOST) {
+  listenOptions.host = process.env.OMC_HOST;
+}
+
+server.listen(listenOptions, (err, address) => {
   if (err) {
     logger.error("Failed to start server", { error: err });
     process.exit(1);
